@@ -1,0 +1,416 @@
+{
+  "version": 1,
+  "source_repository": "tiangong-ai/knowledge-base",
+  "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+  "scope": "KB control-plane source migration chain; not a live production schema dump or legacy domain baseline",
+  "assets": [
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605040001_kb_control_plane_foundation.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605040001_kb_control_plane_foundation.sql",
+      "sha256": "46d98ff599fb7ea2068b0f61beb8cda54b4d7603ec3cab3d2b516aa0d86a6dba"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605040002_kb_enable_rls.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605040002_kb_enable_rls.sql",
+      "sha256": "2ceff9ec361cf2167bedeca2c5f1f0c9ba9634449c178e27a428ece28765a0bf"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605040003_kb_queue_lifecycle.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605040003_kb_queue_lifecycle.sql",
+      "sha256": "3c2917a19554e43ce13fe9e9941720d1c754f172820c80ae64f7a1af089e145a"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605050001_kb_authorization_audit.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605050001_kb_authorization_audit.sql",
+      "sha256": "da559583971b1d8c6cc686fe8749db0b0e989d814ab912aac65ed2b6ea4155dd"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605050002_kb_parse_local_ready_and_worker_lock.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605050002_kb_parse_local_ready_and_worker_lock.sql",
+      "sha256": "7c626deafb9549f88fa13d5817da6465dd091e7cd5275b7ca0c1777bbaf213e5"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605050003_kb_reserve_document.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605050003_kb_reserve_document.sql",
+      "sha256": "ede7f217c8f707020b6a819d5e35f23692f42530cfe99a28e51e5b9e071862c7"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605060001_kb_public_queue_read.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605060001_kb_public_queue_read.sql",
+      "sha256": "197274f64bffe4870596e255c6f28756a2e1f9b64c5e233e9af2e2b6e8db2f46"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605060002_kb_fix_public_queue_read.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605060002_kb_fix_public_queue_read.sql",
+      "sha256": "197274f64bffe4870596e255c6f28756a2e1f9b64c5e233e9af2e2b6e8db2f46"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605060003_kb_delete_retry_reindex.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605060003_kb_delete_retry_reindex.sql",
+      "sha256": "5012b17fa17dcde5e0f121309447c16d68f83f9f3cc7af01529a7b355b480071"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605060004_kb_admin_read_rpc.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605060004_kb_admin_read_rpc.sql",
+      "sha256": "084fc0841e383b7537003c4a70f18b05806774cf7da8525ed47cd1ac632fa4e0"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605060005_kb_admin_capability_names.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605060005_kb_admin_capability_names.sql",
+      "sha256": "d9b54ce906908a60fd7ec1ab4ef1405473c257255d55f9e606d743208eec2864"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605060006_kb_s3_ready_stage.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605060006_kb_s3_ready_stage.sql",
+      "sha256": "fc2aea0fcff9f14fa8daa1571b7facd0a8f3f24dc8c35753d4823743da15fcef"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605060007_kb_async_s3_ready.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605060007_kb_async_s3_ready.sql",
+      "sha256": "10ac56cbce9bc6eb173ace2be40d9e560db8c83ea9f0076ec92f1cbeda45e632"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605070001_kb_search_partitions.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605070001_kb_search_partitions.sql",
+      "sha256": "40b94dfd5131700de6febe368c5d75e9eb95984c879a66dcd140022d899f0be0"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605080001_kb_query_search_partitions.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605080001_kb_query_search_partitions.sql",
+      "sha256": "16bfc0e7606ac8eed4c57d353f5c5fc6a644a55bf3e8e3a6babe109733e5efab"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605080002_kb_pinecone_partition_namespace.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605080002_kb_pinecone_partition_namespace.sql",
+      "sha256": "96251c18dd32c8480f592067cc914c5b11b852f578e83d03e300f0ed91e934a6"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605080003_kb_api_keys.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605080003_kb_api_keys.sql",
+      "sha256": "476e8ec672170766e7620c5ebdc2c2adb5a94a16cfd23120ca4a80926021518a"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605080004_kb_api_key_auth_rpc.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605080004_kb_api_key_auth_rpc.sql",
+      "sha256": "0018b65c5f023b2d65b51cc15c988d8ba87cc8931bd0238823c60e4e79082b24"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605080005_kb_parse_claim_snapshot.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605080005_kb_parse_claim_snapshot.sql",
+      "sha256": "63bf0da0d93d3d605d66a32423f119b8e4fdc1ed985b3fcac1a7716089551361"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605090001_kb_index_records_rls.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605090001_kb_index_records_rls.sql",
+      "sha256": "b6375ea5b164677ce3a0b6540b3d316018271bdb172cfb6e535de509c5d4eef0"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605090002_kb_thu_humanities_metadata_schema.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605090002_kb_thu_humanities_metadata_schema.sql",
+      "sha256": "22041baadc8fafd9106ccd40fa47dede961d48208198968d7a68278b94d8cf5d"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605110001_kb_job_retry_backoff_dlq.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605110001_kb_job_retry_backoff_dlq.sql",
+      "sha256": "9e3807b7a2271324a481573eb77d6227a11465761d2aa9b0aa52af4d8db7956e"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605110002_kb_retry_wakeup_index_ledger_contract.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605110002_kb_retry_wakeup_index_ledger_contract.sql",
+      "sha256": "231ba4ac58502b11edd87d8a1ca1dbf22d17d2fbf3af06f52515776a0570e3dc"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605110003_kb_index_record_target_uniqueness_fix.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605110003_kb_index_record_target_uniqueness_fix.sql",
+      "sha256": "8ca2f1b4fb8e161627060cc368caeaaecb6ce9f0e3549636f892e1390766f599"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605130001_kb_s3_ready_queue_allowlist.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605130001_kb_s3_ready_queue_allowlist.sql",
+      "sha256": "98532bf735857782a06ef148bef515be02dd0e8868e861b2895c435af8c725df"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605140001_kb_collection_retention_defaults.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605140001_kb_collection_retention_defaults.sql",
+      "sha256": "0bd1d501f6019fee5b64f17ab762a42b5ed9617e2ac774bc9cabb63ed1b21bce"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605150001_kb_parse_local_ready_idempotent.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605150001_kb_parse_local_ready_idempotent.sql",
+      "sha256": "35ce36fa10b697b87e621083a8daa4e6fce92446c72d84ea942681fe8955eaa2"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605150002_kb_finalization_replay_idempotency.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605150002_kb_finalization_replay_idempotency.sql",
+      "sha256": "26dfb9173809bc99e29e88690b42abb59fcc79643ffa2ca7dce17d3afb92ab80"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605160001_kb_claim_rpc_disambiguation.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605160001_kb_claim_rpc_disambiguation.sql",
+      "sha256": "cb61f73827eb28591165a6b4d3d218d272280a76d751a6cf06e90be121af80f4"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605160002_kb_parse_finalization_replay.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605160002_kb_parse_finalization_replay.sql",
+      "sha256": "b91a5bf0359483137b0e88502eed0b3c54f296e0f39a80835592d7f0544b3e2b"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605160003_kb_claim_succeeded_archive.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605160003_kb_claim_succeeded_archive.sql",
+      "sha256": "59255d5723bdcf40a1b2543199e0bac38ddc48669f245f30193f1ad8dab9a2cc"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605210001_kb_parse_two_stage_async.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605210001_kb_parse_two_stage_async.sql",
+      "sha256": "3b8b816898b1945eae579394c910532f539efcd659ba9ff4630a9d8a6d109d1e"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/202605220001_kb_admin_health_ignore_deleted_dead.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/202605220001_kb_admin_health_ignore_deleted_dead.sql",
+      "sha256": "c81b5af5914b7f849dafcce961cad174cbdf91c9c7f045ffefa19befa44e3b6b"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/20260601105346_kb_ingest_pipeline_health.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/20260601105346_kb_ingest_pipeline_health.sql",
+      "sha256": "d81c0f4731a560c25d2f80c5dcc7403e344aac22ef13eac3c3f10e5ab67b5880"
+    },
+    {
+      "kind": "migration",
+      "path": "supabase/migrations/20260715100748_optimize_kb_admin_health_io.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "supabase/migrations/20260715100748_optimize_kb_admin_health_io.sql",
+      "sha256": "b54730cfde5cc5bbb5b020b97c5fee1e74bc83ff945e0fb8f7eee2ce3ea22f7a"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_admin_read_rpc_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_admin_read_rpc_smoke.sql",
+      "sha256": "3098d90738a8a7948f35446830404d6b3c137ac471a0f57ed9f3f044e86104cd"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_api_key_auth_rpc_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_api_key_auth_rpc_smoke.sql",
+      "sha256": "0a3c84c90a65d30552ed82402a0137df035596626de14d1bfd2a253ef96bd341"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_api_keys_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_api_keys_smoke.sql",
+      "sha256": "f4ecc540e3289fb8f4aefa18f48ea81cd395ac6f7254898e27b5e6a59e657c7e"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_authorization_audit_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_authorization_audit_smoke.sql",
+      "sha256": "ff7aec41ca1ff6ef71369dba6b4f44a15eeaf8cd9007b841fae4eaa8291e2963"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_control_plane_foundation_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_control_plane_foundation_smoke.sql",
+      "sha256": "f4de4739063ce7eefbba5f487d7ad527e54c2ffb1663582be46fc4735f79fa91"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_control_plane_rls_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_control_plane_rls_smoke.sql",
+      "sha256": "c8f19492c0f45339222fdac4bfc20b5213e4dd97394d742bab4c5946c51e3444"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_delete_retry_reindex_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_delete_retry_reindex_smoke.sql",
+      "sha256": "c7f05bb41faeaea95fea2bb78744ae85cf79a9c52a70966f888606d54cbad34a"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_idempotency_race_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_idempotency_race_smoke.sql",
+      "sha256": "1a695d6688599718fad35c38a7084c6856e6e3b2551310567b451dd0da30e432"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_parse_two_stage_async_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_parse_two_stage_async_smoke.sql",
+      "sha256": "9be515d2db5c6f1cdb03e117b1dfc51de2ec6380573429e6149892b8706302cd"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_query_search_partitions_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_query_search_partitions_smoke.sql",
+      "sha256": "ddb975f615c003066c725ad392d9310d5d4d7dd3cf84801c6e4683d659518672"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_queue_lifecycle_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_queue_lifecycle_smoke.sql",
+      "sha256": "d6465319d14b90f8344c04f74d41626be6c9eccb5f1b85decde14cd146d31ab3"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_reserve_document_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_reserve_document_smoke.sql",
+      "sha256": "37323f046c9aaf8ff55a9f7637666b89fb87070233bee9c398279312fa96e281"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_retry_backoff_dlq_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_retry_backoff_dlq_smoke.sql",
+      "sha256": "c0adddc10ab8dc60551cfca7502e949182069fb0ef988b4be4b603953936de32"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_retry_wakeup_index_ledger_contract_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_retry_wakeup_index_ledger_contract_smoke.sql",
+      "sha256": "6bc507f9bb3855bbea42015f72e0c5ce9196bf1e361906070d499f484de36bb2"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_search_partitions_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_search_partitions_smoke.sql",
+      "sha256": "6a71a0b8ca2d9d15e47c9900daaf26b62e3a86a359530bbed7e440dcb362b8d7"
+    },
+    {
+      "kind": "smoke",
+      "path": "tests/sql/kb_thu_humanities_metadata_schema_smoke.sql",
+      "source_repository": "tiangong-ai/knowledge-base",
+      "source_commit": "b0fdc4c21f2e9256a352672ca83bb818708e9676",
+      "source_path": "tests/sql/kb_thu_humanities_metadata_schema_smoke.sql",
+      "sha256": "67b4e08ab9f2518ec0b8f03297d621a601a08fc9e7af0416efdfc2f96a81ee82"
+    }
+  ]
+}

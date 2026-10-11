@@ -1,0 +1,108 @@
+---
+docType: runbook
+scope: repo
+status: current
+authoritative: true
+owner: database
+language: en
+whenToUse: "When exporting schema, authoring migrations or selecting a database target."
+whenToUpdate: "When helper CLI contracts, dependencies or adoption steps change."
+checkPaths: [scripts/**, supabase/config.toml, .env.*.example]
+lastReviewedAt: 2026-10-11
+lastReviewedCommit: 45198730c6217992902b6f0b203a417961c6bdee
+---
+
+# Development
+
+Use Python 3.11+ and Supabase CLI 2.120.0 (the verified stable version at
+bootstrap). Docker is needed for local Supabase and schema dumping. Set
+`SUPABASE_CLI=/absolute/path/to/supabase` when it is not on PATH. Tool scripts
+use only Python's standard library. Discover each command's options with
+`python3 scripts/<name>.py --help`.
+
+## Local workflow
+
+1. Run the offline unit tests, then `scripts/test-database.sh` for disposable
+   local database qualification.
+2. For an interactive local database, run `supabase start` from this repo and
+   `supabase db reset --local`. Do not reset a database with data you need.
+3. Export/inspect schema with `scripts/export_remote_schema.py` and
+   `scripts/build_schema_workspace.py` (both default to local). The builder
+   also accepts `--schema-file` for a schema-only SQL file without connecting.
+4. Use `scripts/copy_workspace_file_to_changes.py` to copy a generated object
+   into the changes overlay. Existing edits must not be overwritten silently.
+5. Prepare explicit SQL, then use `scripts/new_migration.py`. This invokes
+   `supabase migration new` to allocate the filename and writes only a local
+   migration file. It does not apply SQL or infer destructive transformations.
+6. Run the full local gate and review the migration. Use
+   `scripts/build_database_types.py` when a consumer needs refreshed types.
+
+Tool command-line usage and examples are available from `--help`; this keeps
+argument definitions in one executable source. Scripts should be invoked with
+`python3` unless their executable mode explicitly supports direct execution.
+
+For example, after starting the local stack:
+
+```sh
+python3 scripts/build_schema_workspace.py --environment local --schemas public
+python3 scripts/copy_workspace_file_to_changes.py --source-path supabase/workspace/schemas/public/tables/kb_documents/table.sql
+python3 scripts/build_database_types.py --environment local --schemas public
+python3 scripts/build_database_types.py --environment local --schemas public --check
+```
+
+The copied table definition is inspection context, not automatically valid
+upgrade SQL. After writing an explicit change in a repository-local file:
+
+```sh
+python3 scripts/new_migration.py --name describe_the_change --source-path supabase/workspace/changes/reviewed_change.sql
+```
+
+Use a new version for each migration. Generation rejects an already allocated
+timestamp even when the proposed descriptive name differs. The short-lived
+`supabase/migrations/.migration-authoring.lock` serializes local authors;
+after an interrupted process, verify its recorded PID is no longer running
+before removing a stale lock.
+
+Schema export replaces only the canonical generated `remote_schema.sql`.
+`--output-file supabase/workspace/exports/name.sql` creates a new ignored export
+and refuses to replace an existing file. Migration history, manual changes,
+code and configuration cannot be selected as dump destinations.
+
+## Remote reads
+
+Select `--environment dev` or `--environment main` explicitly and supply
+`SUPABASE_DB_URL`, or copy the matching `.env.supabase.<environment>.local.example`
+to an ignored file without `.example`. Use a least-privilege schema-read
+credential. No real target is included. Never paste URLs with credentials into
+Git, PRs, logs or command arguments. Dumped SQL may contain sensitive function
+literals even without rows; review it before sharing. The helper never applies
+migrations remotely.
+
+## Existing KB database adoption
+
+The KB operator runner uses `public.kb_schema_migrations`, keyed by the complete
+filename. Supabase CLI uses its own migration-history schema. These are
+different ledgers. Existing deployments continue using the KB runner with
+`KB_DATABASE_DIR` pointing at this checkout; moving sources must not trigger
+reapplication or automatic ledger repair.
+
+Before changing that operational path: identify the target, take an operator
+backup, read the existing ledger, compare all imported filenames and schema
+state, and review an explicit reconciliation plan. Never run `supabase db push`
+against an existing KB deployment merely because this repo has been added.
+The old ledger has no content checksums; import hashes establish source-byte
+continuity but cannot prove what was applied historically. Supabase local
+replay proves the checked-in chain independently, not remote reconciliation.
+
+Keep each migration's transaction boundary. Some enum additions must commit
+before a later migration uses the new value. No hosted deployment workflow is
+installed. Operator execution and its evidence require a separately tracked
+task with an exact environment and revision.
+
+## Governance
+
+`scripts/docpact` locates and enforces version 0.1.9, matching the workspace.
+Install the binary with `cargo install docpact --version 0.1.9 --locked` if
+needed. `scripts/install-git-hooks.sh` installs the optional non-overwriting
+pre-push gate, comparing to `origin/main`. Use an explicit base for stacked
+changes. Run strict config validation and an explicit-diff lint before PRs.
