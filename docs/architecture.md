@@ -9,7 +9,7 @@ whenToUse: "When deciding source ownership, schema scope or generated-path bound
 whenToUpdate: "When schema ownership, imported scope or consumer contracts change."
 checkPaths: [supabase/**, scripts/**, tests/sql/**, docs/source-inventory.json]
 lastReviewedAt: 2026-10-11
-lastReviewedCommit: a38d22f
+lastReviewedCommit: 45198730c6217992902b6f0b203a417961c6bdee
 ---
 
 # Database architecture
@@ -20,7 +20,11 @@ lastReviewedCommit: a38d22f
 control plane. Existing migrations are immutable after publication; append
 corrections with a new migration. `tests/sql/` owns database-side smoke tests.
 The import manifest records the source repository, revision, original path and
-SHA-256; it describes the import, not the state of a live database.
+SHA-256; it describes the import, not the state of a live database. The initial
+byte-identical import was committed as `45198730c6217992902b6f0b203a417961c6bdee`.
+Migration hashes remain enforced. Smoke tests may be corrected as the schema
+evolves; their manifest hashes describe the original import, not a prohibition
+on maintaining tests. Preserve the import commit through a merge commit.
 
 KB ingestion, worker orchestration and the existing operator migration runner
 remain consumers in `tiangong-ai/knowledge-base`. That runner resolves this

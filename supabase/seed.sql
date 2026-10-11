@@ -1,0 +1,3 @@
+-- Intentionally empty. Migrations define the knowledge-base schema.
+-- No production documents, API keys, user identities, or LCA data are seeded.
+-- SQL smoke tests create their own fixtures inside transactions and roll them back.

@@ -9,7 +9,7 @@ whenToUse: "When exporting schema, authoring migrations or selecting a database 
 whenToUpdate: "When helper CLI contracts, dependencies or adoption steps change."
 checkPaths: [scripts/**, supabase/config.toml, .env.*.example]
 lastReviewedAt: 2026-10-11
-lastReviewedCommit: a38d22f
+lastReviewedCommit: 45198730c6217992902b6f0b203a417961c6bdee
 ---
 
 # Development
@@ -40,6 +40,33 @@ use only Python's standard library. Discover each command's options with
 Tool command-line usage and examples are available from `--help`; this keeps
 argument definitions in one executable source. Scripts should be invoked with
 `python3` unless their executable mode explicitly supports direct execution.
+
+For example, after starting the local stack:
+
+```sh
+python3 scripts/build_schema_workspace.py --environment local --schemas public
+python3 scripts/copy_workspace_file_to_changes.py --source-path supabase/workspace/schemas/public/tables/kb_documents/table.sql
+python3 scripts/build_database_types.py --environment local --schemas public
+python3 scripts/build_database_types.py --environment local --schemas public --check
+```
+
+The copied table definition is inspection context, not automatically valid
+upgrade SQL. After writing an explicit change in a repository-local file:
+
+```sh
+python3 scripts/new_migration.py --name describe_the_change --source-path supabase/workspace/changes/reviewed_change.sql
+```
+
+Use a new version for each migration. Generation rejects an already allocated
+timestamp even when the proposed descriptive name differs. The short-lived
+`supabase/migrations/.migration-authoring.lock` serializes local authors;
+after an interrupted process, verify its recorded PID is no longer running
+before removing a stale lock.
+
+Schema export replaces only the canonical generated `remote_schema.sql`.
+`--output-file supabase/workspace/exports/name.sql` creates a new ignored export
+and refuses to replace an existing file. Migration history, manual changes,
+code and configuration cannot be selected as dump destinations.
 
 ## Remote reads
 
