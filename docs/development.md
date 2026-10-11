@@ -9,7 +9,7 @@ whenToUse: "When exporting schema, authoring migrations or selecting a database 
 whenToUpdate: "When helper CLI contracts, dependencies or adoption steps change."
 checkPaths: [scripts/**, supabase/config.toml, .env.*.example]
 lastReviewedAt: 2026-10-11
-lastReviewedCommit: 45198730c6217992902b6f0b203a417961c6bdee
+lastReviewedCommit: a022a6c67d6ed57565a7a433f347c815f4d88e2c
 ---
 
 # Development
@@ -82,9 +82,10 @@ migrations remotely.
 
 The KB operator runner uses `public.kb_schema_migrations`, keyed by the complete
 filename. Supabase CLI uses its own migration-history schema. These are
-different ledgers. Existing deployments continue using the KB runner with
-`KB_DATABASE_DIR` pointing at this checkout; moving sources must not trigger
-reapplication or automatic ledger repair.
+different ledgers. Before hosted adoption, existing deployments can use the KB
+runner with `KB_DATABASE_DIR` pointing here; moving sources alone must not
+trigger reapplication or automatic repair. After the Knowledge Base project's
+explicit adoption, use Supabase history and its GitHub workflow instead.
 
 Before changing that operational path: identify the target, take an operator
 backup, read the existing ledger, compare all imported filenames and schema
@@ -95,9 +96,9 @@ continuity but cannot prove what was applied historically. Supabase local
 replay proves the checked-in chain independently, not remote reconciliation.
 
 Keep each migration's transaction boundary. Some enum additions must commit
-before a later migration uses the new value. No hosted deployment workflow is
-installed. Operator execution and its evidence require a separately tracked
-task with an exact environment and revision.
+before a later migration uses the new value. Hosted deployment and one-time
+history reconciliation follow `docs/supabase-integration.md`. Operator execution
+and its evidence require a tracked task with exact environment and revision.
 
 ## Governance
 

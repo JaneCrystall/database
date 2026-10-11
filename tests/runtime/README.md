@@ -30,3 +30,21 @@ to contain exactly two jobs although it had inserted three for that document.
 The independent two-stage running parse fixture now uses the existing private
 document. This preserves the failed-job, job-detail and two-stage health
 assertions, and preserves the migration history and unique index.
+
+## Historical adoption qualification
+
+The local chain additionally restores
+`20260528084934_kb_admin_rpc_performance_hotfix.sql` byte-for-byte from
+`tiangong-ai/knowledge-base` commit
+`8473292ce24f61a75a397ac7128c524da15c5872`. It restores the historical admin
+document/audit RPC definitions, three supporting indexes, and the
+`service_role` statement timeout. The existing SQL smoke assertions remain
+unchanged when qualifying this restoration.
+
+Versions `20261011095659_auth_bench_68_setup` and
+`20261011101728_auth_bench_68_cleanup` are explicit adoption receipts containing
+comments and `select 1`, rather than copies of the original benchmark SQL.
+Their comments record each original stored-statement SHA-256. The temporary
+synthetic benchmark fixtures and private schema had already been removed;
+only their final absence is adopted. Local replay does not recreate those
+fixtures or rewrite any existing production migration ledger record.

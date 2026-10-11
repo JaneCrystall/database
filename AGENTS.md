@@ -15,7 +15,7 @@ checkPaths:
   - tests/**
   - docs/**
 lastReviewedAt: 2026-10-11
-lastReviewedCommit: 45198730c6217992902b6f0b203a417961c6bdee
+lastReviewedCommit: a022a6c67d6ed57565a7a433f347c815f4d88e2c
 ---
 
 # Tiangong AI Database Contract
@@ -31,7 +31,8 @@ Read this file, `.docpact/config.yaml`, then run `scripts/docpact route --root .
 --paths <csv> --format json` and read the recommended docs before editing.
 `docs/architecture.md` owns source/generated boundaries and adoption scope;
 `docs/development.md` owns commands and database targeting;
-`docs/validation.md` owns required proof.
+`docs/validation.md` owns required proof; `docs/supabase-integration.md` owns
+the hosted GitHub Integration and initial history adoption.
 
 ## Sources and operating boundaries
 
@@ -43,8 +44,9 @@ Read this file, `.docpact/config.yaml`, then run `scripts/docpact route --root .
   local inspection files; keep edits in `supabase/workspace/changes/`.
 - Never commit credentials, environment bindings, database rows or remote
   dumps. Review SQL definitions for embedded secrets before publishing.
-- Local development is the default. Remote reads require an explicit target;
-  remote migration application is a separate operator action, never CI's job.
+- Local development is the default. Remote reads require an explicit target.
+  Hosted deployment follows the preview/adoption gates in the integration
+  runbook; ordinary GitHub Actions never receive production DB credentials.
 - The imported chain is the KB control plane, not a complete production
   snapshot. Missing legacy/domain schemas are listed in `docs/architecture.md`.
 - Do not mix the existing `public.kb_schema_migrations` ledger with Supabase's

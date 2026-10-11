@@ -16,8 +16,9 @@ lastReviewedCommit: a38d22f
 
 The PostgreSQL/Supabase source repository for the **Tiangong AI knowledge
 base**. It starts with 35 existing KB migrations and 16 SQL smoke tests,
-preserving their original bytes and migration names. It does not contain the
-Tiangong LCA database.
+preserving their original bytes and migration names. A subsequently recovered
+KB hotfix and two explicit benchmark history receipts bring the replay chain
+to 38 files. It does not contain the Tiangong LCA database.
 
 [中文说明](README.zh-CN.md) · [Architecture](docs/architecture.md) ·
 [Development](docs/development.md) · [Validation](docs/validation.md)
@@ -51,4 +52,6 @@ a different migration ledger from Supabase CLI; read the adoption section in
 [Development](docs/development.md) before any remote application.
 
 This repository uses `main` for development and PRs. CI validates local
-databases only; no hosted project or automatic deployment is configured.
+databases; the existing Knowledge Base project connects through the official
+[Supabase GitHub Integration](docs/supabase-integration.md). Its adoption task
+records preview qualification and production activation evidence.

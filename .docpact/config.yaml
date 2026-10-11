@@ -1,7 +1,7 @@
 version: 1
 layout: repo
 lastReviewedAt: "2026-10-11"
-lastReviewedCommit: "45198730c6217992902b6f0b203a417961c6bdee"
+lastReviewedCommit: "a022a6c67d6ed57565a7a433f347c815f4d88e2c"
 repo:
   id: database
 routing:
@@ -36,6 +36,22 @@ freshness:
   warn_after_days: 90
   critical_after_days: 180
 rules:
+  - id: database-hosted-integration
+    scope: repo
+    repo: database
+    triggers:
+      - path: docs/supabase-adoption-evidence.json
+        kind: remote-adoption-evidence
+      - path: docs/supabase-integration.md
+        kind: hosted-runbook
+      - path: supabase/config.toml
+        kind: branch-configuration
+    requiredDocs:
+      - path: docs/supabase-integration.md
+        mode: review_or_update
+      - path: AGENTS.md
+        mode: review_or_update
+    reason: Hosted target selection and history adoption must preserve existing database state.
   - id: database-schema
     scope: repo
     repo: database
