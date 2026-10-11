@@ -9,7 +9,7 @@ whenToUse: "When deciding source ownership, schema scope or generated-path bound
 whenToUpdate: "When schema ownership, imported scope or consumer contracts change."
 checkPaths: [supabase/**, scripts/**, tests/sql/**, docs/source-inventory.json]
 lastReviewedAt: 2026-10-11
-lastReviewedCommit: 45198730c6217992902b6f0b203a417961c6bdee
+lastReviewedCommit: a022a6c67d6ed57565a7a433f347c815f4d88e2c
 ---
 
 # Database architecture
@@ -41,6 +41,11 @@ partition metadata and health queries. They require PostgreSQL with `pgcrypto`,
 `pgmq`, and the Supabase roles (including `service_role`). General/course
 partition configuration contained in those migrations is preserved.
 
+Hosted-integration adoption restores the already-applied May 28 hotfix and adds
+two no-op receipts for cleaned-up remote benchmark versions. These additions
+make 38 replay files and are separate from the immutable initial import. See
+`supabase-adoption-evidence.json` for source and live catalog evidence.
+
 The source checkout did **not** supply a full DDL baseline for legacy content
 tables such as `edu_meta`, `esg_meta`, `standards`, `reports`, `internal_use`,
 `green_deal_meta`, `journals`, and `journals_issn`, or the
@@ -67,6 +72,6 @@ reviewed contract. No fabricated production types are committed at bootstrap.
 
 `local` is the default tool target. `dev` and `main` are explicit operator
 environment names backed by ignored local env files; they do not assert that
-hosted projects or Supabase GitHub branching have been configured. Git uses
-one `main` trunk. LCA project refs, auth URLs, schemas and branch bindings are
-not part of this repository.
+hosted targets through local env names. The Knowledge Base GitHub Integration
+is governed by `docs/supabase-integration.md`; Git uses one `main` trunk. LCA
+project refs, auth URLs, schemas and branch bindings are not part of this repo.

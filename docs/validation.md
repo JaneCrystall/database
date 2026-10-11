@@ -9,7 +9,7 @@ whenToUse: "Before submitting or integrating database changes."
 whenToUpdate: "When test commands, qualification scope or CI changes."
 checkPaths: [scripts/**, tests/**, .github/workflows/**, .docpact/**]
 lastReviewedAt: 2026-10-11
-lastReviewedCommit: 45198730c6217992902b6f0b203a417961c6bdee
+lastReviewedCommit: a022a6c67d6ed57565a7a433f347c815f4d88e2c
 ---
 
 # Validation
@@ -62,3 +62,8 @@ The PR records the tested commit, commands/results, source provenance,
 consumer compatibility and operational limits. Root integration additionally
 requires the reviewed child SHA, paired KB consumer revision, exact gitlinks,
 repo graph and root governance evidence. Production application is separate.
+
+Hosted integration changes additionally require the official Supabase Preview
+check and preview catalog qualification before applying the verified pending
+production migration. Follow `docs/supabase-integration.md`; local green tests
+do not authorize repairing unapplied history entries.

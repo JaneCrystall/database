@@ -1,0 +1,11 @@
+-- This is an adoption receipt, not original SQL.
+-- Existing Supabase history record: 20261011101728_auth_bench_68_cleanup
+-- SHA-256 of the original stored statement:
+-- f52f4666ff11128b7a03e5323a191f3baf56ccac95a671f3fd44d59f4cd4c5d4
+-- The original setup created temporary synthetic authorization benchmark fixtures
+-- and a private benchmark schema. The original cleanup removed them completely.
+-- Only the final absence of those temporary objects is adopted by this source tree.
+-- The benchmark setup and cleanup SQL are intentionally not replayed locally.
+-- This receipt does not alter the existing production migration ledger record.
+-- The filename restores an observed historical version; it is not a new allocation.
+select 1;

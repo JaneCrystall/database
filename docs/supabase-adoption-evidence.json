@@ -1,0 +1,631 @@
+{
+  "schema_version": 1,
+  "project_ref": "qyyqlnwqwgvzxnccnbgm",
+  "observed_at_utc": "2026-10-11 15:03:42 UTC",
+  "observation_mode": "SELECT-only migration metadata and pg_catalog; no business rows, credentials, function bodies, repair, or DDL retained",
+  "source_revision": {
+    "database_base": "a022a6c67d6ed57565a7a433f347c815f4d88e2c",
+    "database_import_commit": "45198730c6217992902b6f0b203a417961c6bdee",
+    "hotfix_repository": "tiangong-ai/knowledge-base",
+    "hotfix_commit": "8473292ce24f61a75a397ac7128c524da15c5872",
+    "hotfix_path": "supabase/migrations/20260528084934_kb_admin_rpc_performance_hotfix.sql",
+    "hotfix_sha256": "24b46d970ee5fddc1cb9622b714a5a29ef88808a35ee39369a5e4928b44b8676"
+  },
+  "legacy_ledger": {
+    "count": 34,
+    "imported_filenames": [
+      "202605040001_kb_control_plane_foundation.sql",
+      "202605040002_kb_enable_rls.sql",
+      "202605040003_kb_queue_lifecycle.sql",
+      "202605050001_kb_authorization_audit.sql",
+      "202605050002_kb_parse_local_ready_and_worker_lock.sql",
+      "202605050003_kb_reserve_document.sql",
+      "202605060001_kb_public_queue_read.sql",
+      "202605060002_kb_fix_public_queue_read.sql",
+      "202605060003_kb_delete_retry_reindex.sql",
+      "202605060004_kb_admin_read_rpc.sql",
+      "202605060005_kb_admin_capability_names.sql",
+      "202605060006_kb_s3_ready_stage.sql",
+      "202605060007_kb_async_s3_ready.sql",
+      "202605070001_kb_search_partitions.sql",
+      "202605080001_kb_query_search_partitions.sql",
+      "202605080002_kb_pinecone_partition_namespace.sql",
+      "202605080003_kb_api_keys.sql",
+      "202605080004_kb_api_key_auth_rpc.sql",
+      "202605080005_kb_parse_claim_snapshot.sql",
+      "202605090001_kb_index_records_rls.sql",
+      "202605090002_kb_thu_humanities_metadata_schema.sql",
+      "202605110001_kb_job_retry_backoff_dlq.sql",
+      "202605110002_kb_retry_wakeup_index_ledger_contract.sql",
+      "202605110003_kb_index_record_target_uniqueness_fix.sql",
+      "202605130001_kb_s3_ready_queue_allowlist.sql",
+      "202605140001_kb_collection_retention_defaults.sql",
+      "202605150001_kb_parse_local_ready_idempotent.sql",
+      "202605150002_kb_finalization_replay_idempotency.sql",
+      "202605160001_kb_claim_rpc_disambiguation.sql",
+      "202605160002_kb_parse_finalization_replay.sql",
+      "202605160003_kb_claim_succeeded_archive.sql",
+      "202605210001_kb_parse_two_stage_async.sql",
+      "202605220001_kb_admin_health_ignore_deleted_dead.sql"
+    ],
+    "additional_hotfix_filename": "20260528084934_kb_admin_rpc_performance_hotfix.sql"
+  },
+  "existing_supabase_ledger": [
+    {
+      "version": "20260601105346",
+      "name": "kb_ingest_pipeline_health",
+      "statement_count": 2,
+      "sql_length": 3833,
+      "statements_sha256": "b703bf871219ec00a1298f7e39555fd5ea955a791671ea255abe924b22a71dae"
+    },
+    {
+      "version": "20261011095659",
+      "name": "auth_bench_68_setup",
+      "statement_count": 1,
+      "sql_length": 118175,
+      "statements_sha256": "507bc30b7026f1907386188733ffc5d1d55d3f88114b989545b8ca18154e2e25"
+    },
+    {
+      "version": "20261011101728",
+      "name": "auth_bench_68_cleanup",
+      "statement_count": 1,
+      "sql_length": 216,
+      "statements_sha256": "f52f4666ff11128b7a03e5323a191f3baf56ccac95a671f3fd44d59f4cd4c5d4"
+    }
+  ],
+  "kb_function_comparison": {
+    "method": "Last CREATE/REPLACE body per function in chronological imported source plus the exact May 28 hotfix, compared to md5(pg_proc.prosrc). Exactly one live signature per source function was observed.",
+    "source_function_count": 66,
+    "live_function_count": 66,
+    "exact_body_matches": 65,
+    "missing_functions": [],
+    "extra_kb_functions": [],
+    "fingerprints": [
+      {
+        "name": "add_kb_group_member",
+        "signature": "p_actor_id uuid, p_group_id uuid, p_user_id uuid, p_role text, p_request_id text",
+        "live_prosrc_md5": "ea8b151a0f43a81c0be3ea84e1489b80",
+        "source_prosrc_md5": "ea8b151a0f43a81c0be3ea84e1489b80",
+        "last_source_migration": "202605050001_kb_authorization_audit.sql"
+      },
+      {
+        "name": "archive_job_message",
+        "signature": "p_job_id uuid, p_worker_id text",
+        "live_prosrc_md5": "e65828ec6e36770462edf2fc9610c42f",
+        "source_prosrc_md5": "e65828ec6e36770462edf2fc9610c42f",
+        "last_source_migration": "202605040003_kb_queue_lifecycle.sql"
+      },
+      {
+        "name": "archive_job_message_by_id",
+        "signature": "p_queue text, p_msg_id bigint",
+        "live_prosrc_md5": "a3149ac04ff4f5e7623af51855c2e709",
+        "source_prosrc_md5": "a3149ac04ff4f5e7623af51855c2e709",
+        "last_source_migration": "202605110002_kb_retry_wakeup_index_ledger_contract.sql"
+      },
+      {
+        "name": "authorize_kb_api_key_collection_action",
+        "signature": "p_token_prefix text, p_token_hash text, p_required_scopes text[], p_collection_selector jsonb, p_action text, p_request_context jsonb",
+        "live_prosrc_md5": "f2d405fa57a5656ef8e3c5214e7a7ef4",
+        "source_prosrc_md5": "f2d405fa57a5656ef8e3c5214e7a7ef4",
+        "last_source_migration": "202605080004_kb_api_key_auth_rpc.sql"
+      },
+      {
+        "name": "can_collection_action",
+        "signature": "p_actor_id uuid, p_collection_id uuid, p_action kb_grant_action",
+        "live_prosrc_md5": "40c91a1f1899b502d8744801c5abb9e5",
+        "source_prosrc_md5": "40c91a1f1899b502d8744801c5abb9e5",
+        "last_source_migration": "202605050001_kb_authorization_audit.sql"
+      },
+      {
+        "name": "can_document_action",
+        "signature": "p_actor_id uuid, p_document_id uuid, p_action kb_grant_action",
+        "live_prosrc_md5": "886571333904bcc31b433dd667e72ed7",
+        "source_prosrc_md5": "886571333904bcc31b433dd667e72ed7",
+        "last_source_migration": "202605050001_kb_authorization_audit.sql"
+      },
+      {
+        "name": "can_read_document",
+        "signature": "p_actor_id uuid, p_document_id uuid",
+        "live_prosrc_md5": "fd58f6ab522ce4fac54db69130550e93",
+        "source_prosrc_md5": "fd58f6ab522ce4fac54db69130550e93",
+        "last_source_migration": "202605050001_kb_authorization_audit.sql"
+      },
+      {
+        "name": "claim_job_from_pgmq_message",
+        "signature": "p_job_id uuid, p_queue text, p_msg_id bigint, p_worker_id text, p_lock_seconds integer",
+        "live_prosrc_md5": "7b4255d6e09cd37009574df4cd170ea9",
+        "source_prosrc_md5": "7b4255d6e09cd37009574df4cd170ea9",
+        "last_source_migration": "202605160003_kb_claim_succeeded_archive.sql"
+      },
+      {
+        "name": "claim_parse_two_stage_task",
+        "signature": "p_worker_id text, p_lock_seconds integer",
+        "live_prosrc_md5": "66e3922cb50998a97c192e0683e70d78",
+        "source_prosrc_md5": "66e3922cb50998a97c192e0683e70d78",
+        "last_source_migration": "202605210001_kb_parse_two_stage_async.sql"
+      },
+      {
+        "name": "complete_delete",
+        "signature": "p_job_id uuid, p_worker_id text, p_document_id uuid, p_document_version integer, p_delete_generation integer, p_cleanup_json jsonb",
+        "live_prosrc_md5": "af48487245be1f55a1285abe52e80ccb",
+        "source_prosrc_md5": "af48487245be1f55a1285abe52e80ccb",
+        "last_source_migration": "202605060003_kb_delete_retry_reindex.sql"
+      },
+      {
+        "name": "complete_index",
+        "signature": "p_job_id uuid, p_worker_id text, p_document_id uuid, p_document_version integer, p_opensearch_indexed boolean, p_pinecone_indexed boolean",
+        "live_prosrc_md5": "2d2d0350b507a867920734923c5eb793",
+        "source_prosrc_md5": "2d2d0350b507a867920734923c5eb793",
+        "last_source_migration": "202605040003_kb_queue_lifecycle.sql"
+      },
+      {
+        "name": "complete_parse_local_ready_and_enqueue_s3_check",
+        "signature": "p_job_id uuid, p_worker_id text, p_document_id uuid, p_document_version integer, p_processed_manifest_local_uri text, p_artifact_uuid uuid, p_manifest_hash text, p_chunk_count integer, p_metadata_json jsonb, p_s3_ready_payload_json jsonb",
+        "live_prosrc_md5": "f0f8e2be8a6e799d12776fec85b7fb56",
+        "source_prosrc_md5": "f0f8e2be8a6e799d12776fec85b7fb56",
+        "last_source_migration": "202605150001_kb_parse_local_ready_idempotent.sql"
+      },
+      {
+        "name": "complete_s3_ready_check",
+        "signature": "p_job_id uuid, p_worker_id text, p_document_id uuid, p_document_version integer, p_manifest_s3_key text, p_manifest_hash text, p_artifact_uuid uuid, p_manifest_local_uri text, p_chunk_count integer",
+        "live_prosrc_md5": "07d882187d1a581003e74aa24d684b5f",
+        "source_prosrc_md5": "07d882187d1a581003e74aa24d684b5f",
+        "last_source_migration": "202605150002_kb_finalization_replay_idempotency.sql"
+      },
+      {
+        "name": "count_active_kb_index_records",
+        "signature": "p_document_id uuid, p_document_version integer",
+        "live_prosrc_md5": "b969ce1719e0d4151d5168deec7f723e",
+        "source_prosrc_md5": "b969ce1719e0d4151d5168deec7f723e",
+        "last_source_migration": "202605110002_kb_retry_wakeup_index_ledger_contract.sql"
+      },
+      {
+        "name": "create_kb_grant",
+        "signature": "p_actor_id uuid, p_resource_type kb_resource_type, p_resource_id uuid, p_principal_type kb_principal_type, p_principal_id uuid, p_actions kb_grant_action[], p_expires_at timestamp with time zone, p_request_id text",
+        "live_prosrc_md5": "ff50722f3d2b32f55f429d138080e07c",
+        "source_prosrc_md5": "ff50722f3d2b32f55f429d138080e07c",
+        "last_source_migration": "202605050001_kb_authorization_audit.sql"
+      },
+      {
+        "name": "create_kb_group",
+        "signature": "p_actor_id uuid, p_name text, p_request_id text",
+        "live_prosrc_md5": "f35043444a40fc327346d603534c2a25",
+        "source_prosrc_md5": "f35043444a40fc327346d603534c2a25",
+        "last_source_migration": "202605050001_kb_authorization_audit.sql"
+      },
+      {
+        "name": "enqueue_due_retry_wakeups",
+        "signature": "p_limit integer",
+        "live_prosrc_md5": "dfebbcd4e67b0e1a9bbf25b0e9a64e56",
+        "source_prosrc_md5": "dfebbcd4e67b0e1a9bbf25b0e9a64e56",
+        "last_source_migration": "202605110003_kb_index_record_target_uniqueness_fix.sql"
+      },
+      {
+        "name": "enqueue_index_from_processed_s3_ready",
+        "signature": "p_document_id uuid, p_actor_id uuid, p_request_id text, p_payload_json jsonb",
+        "live_prosrc_md5": "dc74084d1029dcc072b71069b3b99048",
+        "source_prosrc_md5": "dc74084d1029dcc072b71069b3b99048",
+        "last_source_migration": "202605040003_kb_queue_lifecycle.sql"
+      },
+      {
+        "name": "fail_job",
+        "signature": "p_job_id uuid, p_worker_id text, p_retryable boolean, p_error text, p_error_stage kb_job_stage",
+        "live_prosrc_md5": "1c71b9b6c9f49877ad91b2a08504c33a",
+        "source_prosrc_md5": "1c71b9b6c9f49877ad91b2a08504c33a",
+        "last_source_migration": "202605110002_kb_retry_wakeup_index_ledger_contract.sql"
+      },
+      {
+        "name": "fail_job_v2",
+        "signature": "p_job_id uuid, p_worker_id text, p_retryable boolean, p_error text, p_error_stage kb_job_stage",
+        "live_prosrc_md5": "966da635d519e099c68b663cabcdcc3e",
+        "source_prosrc_md5": "966da635d519e099c68b663cabcdcc3e",
+        "last_source_migration": "202605160001_kb_claim_rpc_disambiguation.sql"
+      },
+      {
+        "name": "get_kb_admin_capabilities",
+        "signature": "p_actor_id uuid",
+        "live_prosrc_md5": "c9dfc5b0bfbce0db68aefe8cf75a0a07",
+        "source_prosrc_md5": "c9dfc5b0bfbce0db68aefe8cf75a0a07",
+        "last_source_migration": "202605060005_kb_admin_capability_names.sql"
+      },
+      {
+        "name": "get_kb_admin_document_detail",
+        "signature": "p_actor_id uuid, p_document_id uuid",
+        "live_prosrc_md5": "c9500b2e1e9c696e33fbd7cbccd951d2",
+        "source_prosrc_md5": "c9500b2e1e9c696e33fbd7cbccd951d2",
+        "last_source_migration": "202605060004_kb_admin_read_rpc.sql"
+      },
+      {
+        "name": "get_kb_admin_health",
+        "signature": "p_actor_id uuid",
+        "live_prosrc_md5": "0e734f9595a708e67da5b62a93928d0c",
+        "source_prosrc_md5": "6d451cb32596e7077716e47f8d643483",
+        "last_source_migration": "20260715100748_optimize_kb_admin_health_io.sql"
+      },
+      {
+        "name": "get_kb_ingest_pipeline_health",
+        "signature": "p_actor_id uuid, p_collection_id uuid",
+        "live_prosrc_md5": "c490ece9a27fe9c1477ceb9daa02705b",
+        "source_prosrc_md5": "c490ece9a27fe9c1477ceb9daa02705b",
+        "last_source_migration": "20260601105346_kb_ingest_pipeline_health.sql"
+      },
+      {
+        "name": "heartbeat_job",
+        "signature": "p_job_id uuid, p_worker_id text, p_lock_seconds integer, p_vt_seconds integer",
+        "live_prosrc_md5": "6f5d3841b1c9de7ee3db3662886c1c05",
+        "source_prosrc_md5": "6f5d3841b1c9de7ee3db3662886c1c05",
+        "last_source_migration": "202605040003_kb_queue_lifecycle.sql"
+      },
+      {
+        "name": "kb_actor_can_access_admin_document",
+        "signature": "p_actor_id uuid, p_document_id uuid",
+        "live_prosrc_md5": "7a3cd590d928c740f3d0bfcf5e57f27e",
+        "source_prosrc_md5": "7a3cd590d928c740f3d0bfcf5e57f27e",
+        "last_source_migration": "202605060004_kb_admin_read_rpc.sql"
+      },
+      {
+        "name": "kb_actor_has_any_grant_action",
+        "signature": "p_actor_id uuid, p_actions kb_grant_action[]",
+        "live_prosrc_md5": "678b05b461de7c7934aa6b453ed3bf78",
+        "source_prosrc_md5": "678b05b461de7c7934aa6b453ed3bf78",
+        "last_source_migration": "202605060004_kb_admin_read_rpc.sql"
+      },
+      {
+        "name": "kb_actor_principals",
+        "signature": "p_actor_id uuid",
+        "live_prosrc_md5": "9b7c14422c23408374b3e4d90a96baa4",
+        "source_prosrc_md5": "9b7c14422c23408374b3e4d90a96baa4",
+        "last_source_migration": "202605050001_kb_authorization_audit.sql"
+      },
+      {
+        "name": "kb_archive_job_message_by_id",
+        "signature": "p_queue text, p_msg_id bigint",
+        "live_prosrc_md5": "581c9d36138cd936c6021b4920dd7f58",
+        "source_prosrc_md5": "581c9d36138cd936c6021b4920dd7f58",
+        "last_source_migration": "202605060003_kb_delete_retry_reindex.sql"
+      },
+      {
+        "name": "kb_cancel_jobs_on_document_delete",
+        "signature": "",
+        "live_prosrc_md5": "9c2c503ddc607dba0ef25c56f2310624",
+        "source_prosrc_md5": "9c2c503ddc607dba0ef25c56f2310624",
+        "last_source_migration": "202605060007_kb_async_s3_ready.sql"
+      },
+      {
+        "name": "kb_default_collection_search_partition",
+        "signature": "",
+        "live_prosrc_md5": "d2107ab514410d71b4bb90d6207e46ac",
+        "source_prosrc_md5": "d2107ab514410d71b4bb90d6207e46ac",
+        "last_source_migration": "202605070001_kb_search_partitions.sql"
+      },
+      {
+        "name": "kb_job_retry_backoff",
+        "signature": "p_attempt_count integer",
+        "live_prosrc_md5": "88ebcba1adc8fcf9a28441f2f954e88b",
+        "source_prosrc_md5": "88ebcba1adc8fcf9a28441f2f954e88b",
+        "last_source_migration": "202605110001_kb_job_retry_backoff_dlq.sql"
+      },
+      {
+        "name": "kb_normalize_collection_path",
+        "signature": "p_path text",
+        "live_prosrc_md5": "bb0de5c70eb5306492b4c04155091cf5",
+        "source_prosrc_md5": "bb0de5c70eb5306492b4c04155091cf5",
+        "last_source_migration": "202605080004_kb_api_key_auth_rpc.sql"
+      },
+      {
+        "name": "kb_queue_depth",
+        "signature": "p_queue text",
+        "live_prosrc_md5": "f540b125188cc53a82b241ef6260e49b",
+        "source_prosrc_md5": "f540b125188cc53a82b241ef6260e49b",
+        "last_source_migration": "202605130001_kb_s3_ready_queue_allowlist.sql"
+      },
+      {
+        "name": "kb_queue_for_stage",
+        "signature": "p_stage kb_job_stage",
+        "live_prosrc_md5": "193d030d1b7e3a9254b59c39051c6a0d",
+        "source_prosrc_md5": "193d030d1b7e3a9254b59c39051c6a0d",
+        "last_source_migration": "202605060007_kb_async_s3_ready.sql"
+      },
+      {
+        "name": "kb_set_updated_at",
+        "signature": "",
+        "live_prosrc_md5": "9b1889f56258bf9d6554213c05019c76",
+        "source_prosrc_md5": "9b1889f56258bf9d6554213c05019c76",
+        "last_source_migration": "202605040001_kb_control_plane_foundation.sql"
+      },
+      {
+        "name": "list_active_kb_index_records",
+        "signature": "p_document_id uuid, p_document_version integer",
+        "live_prosrc_md5": "28d954215f3ad0867d3380deb8f0981b",
+        "source_prosrc_md5": "28d954215f3ad0867d3380deb8f0981b",
+        "last_source_migration": "202605110002_kb_retry_wakeup_index_ledger_contract.sql"
+      },
+      {
+        "name": "list_kb_admin_audit_events",
+        "signature": "p_actor_id uuid, p_filters jsonb, p_limit integer, p_offset integer",
+        "live_prosrc_md5": "08c9e0b776d6e331d3db544ea6f2e58a",
+        "source_prosrc_md5": "08c9e0b776d6e331d3db544ea6f2e58a",
+        "last_source_migration": "20260528084934_kb_admin_rpc_performance_hotfix.sql"
+      },
+      {
+        "name": "list_kb_admin_documents",
+        "signature": "p_actor_id uuid, p_filters jsonb, p_limit integer, p_offset integer, p_sort text, p_dir text",
+        "live_prosrc_md5": "d66405c468160901cc0ad00e3ce95de3",
+        "source_prosrc_md5": "d66405c468160901cc0ad00e3ce95de3",
+        "last_source_migration": "20260528084934_kb_admin_rpc_performance_hotfix.sql"
+      },
+      {
+        "name": "list_kb_admin_jobs",
+        "signature": "p_actor_id uuid, p_filters jsonb, p_limit integer, p_offset integer, p_sort text, p_dir text",
+        "live_prosrc_md5": "65c263f55b18d5eaaa5b0538e8e42f3c",
+        "source_prosrc_md5": "65c263f55b18d5eaaa5b0538e8e42f3c",
+        "last_source_migration": "202605110001_kb_job_retry_backoff_dlq.sql"
+      },
+      {
+        "name": "list_kb_dead_letter_jobs",
+        "signature": "p_actor_id uuid, p_limit integer, p_offset integer",
+        "live_prosrc_md5": "a8d28cb2796986f2a0cf64d02218225c",
+        "source_prosrc_md5": "a8d28cb2796986f2a0cf64d02218225c",
+        "last_source_migration": "202605110001_kb_job_retry_backoff_dlq.sql"
+      },
+      {
+        "name": "list_kb_grants_for_principal",
+        "signature": "p_principal_type kb_principal_type, p_principal_id uuid",
+        "live_prosrc_md5": "8b7fd15fbfc627e588b7d3d140b379a8",
+        "source_prosrc_md5": "8b7fd15fbfc627e588b7d3d140b379a8",
+        "last_source_migration": "202605050001_kb_authorization_audit.sql"
+      },
+      {
+        "name": "list_kb_grants_for_resource",
+        "signature": "p_resource_type kb_resource_type, p_resource_id uuid",
+        "live_prosrc_md5": "eb710360c70626689df8c5c6e6062176",
+        "source_prosrc_md5": "eb710360c70626689df8c5c6e6062176",
+        "last_source_migration": "202605050001_kb_authorization_audit.sql"
+      },
+      {
+        "name": "mark_document_ingest_failed",
+        "signature": "p_document_id uuid, p_actor_id uuid, p_request_id text, p_error text, p_stage kb_job_stage",
+        "live_prosrc_md5": "7f7a6577f3fa3b9e542bf26b1669bead",
+        "source_prosrc_md5": "7f7a6577f3fa3b9e542bf26b1669bead",
+        "last_source_migration": "202605050003_kb_reserve_document.sql"
+      },
+      {
+        "name": "mark_kb_index_records_deleted",
+        "signature": "p_document_id uuid, p_record_ids text[], p_document_version integer, p_job_id uuid, p_record_refs jsonb",
+        "live_prosrc_md5": "864ed77487048c210592a036ee5805e1",
+        "source_prosrc_md5": "864ed77487048c210592a036ee5805e1",
+        "last_source_migration": "202605110002_kb_retry_wakeup_index_ledger_contract.sql"
+      },
+      {
+        "name": "mark_parse_local_ready",
+        "signature": "p_job_id uuid, p_worker_id text, p_document_id uuid, p_document_version integer, p_processed_manifest_local_uri text, p_artifact_uuid uuid, p_manifest_hash text, p_chunk_count integer, p_metadata_json jsonb",
+        "live_prosrc_md5": "738e2a6691161651ad21ad545b997b70",
+        "source_prosrc_md5": "738e2a6691161651ad21ad545b997b70",
+        "last_source_migration": "202605050002_kb_parse_local_ready_and_worker_lock.sql"
+      },
+      {
+        "name": "mark_parse_two_stage_task_state",
+        "signature": "p_job_id uuid, p_worker_id text, p_state text, p_error text, p_lock_seconds integer",
+        "live_prosrc_md5": "8ca3991e99e589b1247cc022f905e159",
+        "source_prosrc_md5": "8ca3991e99e589b1247cc022f905e159",
+        "last_source_migration": "202605210001_kb_parse_two_stage_async.sql"
+      },
+      {
+        "name": "mark_processed_s3_ready",
+        "signature": "p_job_id uuid, p_worker_id text, p_document_id uuid, p_document_version integer, p_manifest_s3_key text, p_manifest_hash text, p_artifact_uuid uuid, p_manifest_local_uri text, p_chunk_count integer",
+        "live_prosrc_md5": "ec1f4d2cf9d475369f3ab083ef88f734",
+        "source_prosrc_md5": "ec1f4d2cf9d475369f3ab083ef88f734",
+        "last_source_migration": "202605050002_kb_parse_local_ready_and_worker_lock.sql"
+      },
+      {
+        "name": "mark_raw_ready_and_enqueue_parse",
+        "signature": "p_document_id uuid, p_raw_uri text, p_file_size bigint, p_sha256 text, p_actor_id uuid, p_request_id text, p_payload_json jsonb",
+        "live_prosrc_md5": "73e9759c8fbc9ce7ceb20092826ab88a",
+        "source_prosrc_md5": "73e9759c8fbc9ce7ceb20092826ab88a",
+        "last_source_migration": "202605040003_kb_queue_lifecycle.sql"
+      },
+      {
+        "name": "read_queue_messages",
+        "signature": "p_queue text, p_vt integer, p_qty integer",
+        "live_prosrc_md5": "eec0c7c30011cbd699e0a186a3f42858",
+        "source_prosrc_md5": "eec0c7c30011cbd699e0a186a3f42858",
+        "last_source_migration": "202605130001_kb_s3_ready_queue_allowlist.sql"
+      },
+      {
+        "name": "register_parse_two_stage_task",
+        "signature": "p_job_id uuid, p_worker_id text, p_task_id text, p_task_url text, p_status_url text, p_queue_name text, p_msg_id bigint, p_lock_seconds integer, p_backlog_json jsonb",
+        "live_prosrc_md5": "c3a1bd4724a5fe8e6427954c94dce9a6",
+        "source_prosrc_md5": "c3a1bd4724a5fe8e6427954c94dce9a6",
+        "last_source_migration": "202605210001_kb_parse_two_stage_async.sql"
+      },
+      {
+        "name": "remove_kb_group_member",
+        "signature": "p_actor_id uuid, p_group_id uuid, p_user_id uuid, p_request_id text",
+        "live_prosrc_md5": "4fc36bb3c70c2626455b7002eacfd8bb",
+        "source_prosrc_md5": "4fc36bb3c70c2626455b7002eacfd8bb",
+        "last_source_migration": "202605050001_kb_authorization_audit.sql"
+      },
+      {
+        "name": "replay_parse_local_ready_from_artifact",
+        "signature": "p_job_id uuid, p_worker_id text, p_document_id uuid, p_document_version integer, p_processed_manifest_local_uri text, p_artifact_uuid uuid, p_manifest_hash text, p_chunk_count integer, p_metadata_json jsonb, p_s3_ready_payload_json jsonb, p_replay_reason text",
+        "live_prosrc_md5": "2f64f7ff0da0a7e0db1df8f8117f8752",
+        "source_prosrc_md5": "2f64f7ff0da0a7e0db1df8f8117f8752",
+        "last_source_migration": "202605160002_kb_parse_finalization_replay.sql"
+      },
+      {
+        "name": "request_delete",
+        "signature": "p_document_id uuid, p_actor_id uuid, p_reason text, p_request_id text",
+        "live_prosrc_md5": "011dce4cc99e6e7f111bd77f4910cbeb",
+        "source_prosrc_md5": "011dce4cc99e6e7f111bd77f4910cbeb",
+        "last_source_migration": "202605060003_kb_delete_retry_reindex.sql"
+      },
+      {
+        "name": "request_reindex",
+        "signature": "p_document_id uuid, p_actor_id uuid, p_reason text, p_request_id text",
+        "live_prosrc_md5": "c601b6e4953a1cf0073ccbf59c0026db",
+        "source_prosrc_md5": "c601b6e4953a1cf0073ccbf59c0026db",
+        "last_source_migration": "202605060003_kb_delete_retry_reindex.sql"
+      },
+      {
+        "name": "request_reparse",
+        "signature": "p_document_id uuid, p_actor_id uuid, p_reason text, p_request_id text",
+        "live_prosrc_md5": "de51d00e9cae4c77b04dcd26d26af945",
+        "source_prosrc_md5": "de51d00e9cae4c77b04dcd26d26af945",
+        "last_source_migration": "202605060003_kb_delete_retry_reindex.sql"
+      },
+      {
+        "name": "request_retry",
+        "signature": "p_document_id uuid, p_actor_id uuid, p_stage kb_job_stage, p_reason text, p_request_id text",
+        "live_prosrc_md5": "ffa436184050f0d9ad5d21797cd773a3",
+        "source_prosrc_md5": "ffa436184050f0d9ad5d21797cd773a3",
+        "last_source_migration": "202605060007_kb_async_s3_ready.sql"
+      },
+      {
+        "name": "reserve_document",
+        "signature": "p_collection_id uuid, p_dedupe_scope text, p_original_filename text, p_file_ext text, p_file_size bigint, p_sha256 text, p_actor_id uuid, p_metadata_json jsonb, p_request_id text",
+        "live_prosrc_md5": "5875952b8ac9ef61e8002c3217135c70",
+        "source_prosrc_md5": "5875952b8ac9ef61e8002c3217135c70",
+        "last_source_migration": "202605050003_kb_reserve_document.sql"
+      },
+      {
+        "name": "resolve_document_search_partition",
+        "signature": "p_document_id uuid",
+        "live_prosrc_md5": "d34630be2456910077ef7c59d0a2ab94",
+        "source_prosrc_md5": "d34630be2456910077ef7c59d0a2ab94",
+        "last_source_migration": "202605070001_kb_search_partitions.sql"
+      },
+      {
+        "name": "resolve_query_search_partitions",
+        "signature": "p_collection_ids uuid[], p_include_descendants boolean, p_include_inactive boolean",
+        "live_prosrc_md5": "2feb657e6e5f13075aa994fb8c54252b",
+        "source_prosrc_md5": "2feb657e6e5f13075aa994fb8c54252b",
+        "last_source_migration": "202605080001_kb_query_search_partitions.sql"
+      },
+      {
+        "name": "review_kb_document_metadata",
+        "signature": "p_actor_id uuid, p_document_id uuid, p_metadata_json jsonb, p_metadata_status kb_metadata_status, p_metadata_confidence numeric, p_reason text, p_request_id text",
+        "live_prosrc_md5": "b3b6a8bad7926640f937198201847a84",
+        "source_prosrc_md5": "b3b6a8bad7926640f937198201847a84",
+        "last_source_migration": "202605060004_kb_admin_read_rpc.sql"
+      },
+      {
+        "name": "revoke_kb_grant",
+        "signature": "p_actor_id uuid, p_grant_id uuid, p_reason text, p_request_id text",
+        "live_prosrc_md5": "bd9ca0d5a56def593a94d0e6088cd2de",
+        "source_prosrc_md5": "bd9ca0d5a56def593a94d0e6088cd2de",
+        "last_source_migration": "202605050001_kb_authorization_audit.sql"
+      },
+      {
+        "name": "start_job_from_pgmq_message",
+        "signature": "p_job_id uuid, p_queue text, p_msg_id bigint, p_worker_id text, p_lock_seconds integer",
+        "live_prosrc_md5": "82703a2dc7d0fd279d4d47e149e7d858",
+        "source_prosrc_md5": "82703a2dc7d0fd279d4d47e149e7d858",
+        "last_source_migration": "202605110002_kb_retry_wakeup_index_ledger_contract.sql"
+      },
+      {
+        "name": "upsert_kb_index_records",
+        "signature": "p_job_id uuid, p_document_id uuid, p_document_version integer, p_records jsonb",
+        "live_prosrc_md5": "c7cfa9be2e09f6c07e7dc2817479af4b",
+        "source_prosrc_md5": "c7cfa9be2e09f6c07e7dc2817479af4b",
+        "last_source_migration": "202605110002_kb_retry_wakeup_index_ledger_contract.sql"
+      },
+      {
+        "name": "verify_kb_api_key",
+        "signature": "p_token_prefix text, p_token_hash text, p_required_scopes text[], p_request_context jsonb",
+        "live_prosrc_md5": "8ec28750177f43dc807b81d0dd6dcee1",
+        "source_prosrc_md5": "8ec28750177f43dc807b81d0dd6dcee1",
+        "last_source_migration": "202605080004_kb_api_key_auth_rpc.sql"
+      },
+      {
+        "name": "write_kb_audit_event",
+        "signature": "p_actor_id uuid, p_action text, p_document_id uuid, p_collection_id uuid, p_scope_json jsonb, p_request_id text, p_payload_json jsonb",
+        "live_prosrc_md5": "963927d6fe0e09262e434304c4b17d1e",
+        "source_prosrc_md5": "963927d6fe0e09262e434304c4b17d1e",
+        "last_source_migration": "202605050001_kb_authorization_audit.sql"
+      }
+    ]
+  },
+  "hotfix_catalog": {
+    "indexes": [
+      {
+        "name": "kb_audit_events_created_idx",
+        "schema": "public",
+        "definition": "CREATE INDEX kb_audit_events_created_idx ON public.kb_audit_events USING btree (created_at DESC, id)"
+      },
+      {
+        "name": "kb_documents_active_created_idx",
+        "schema": "public",
+        "definition": "CREATE INDEX kb_documents_active_created_idx ON public.kb_documents USING btree (created_at DESC, id) WHERE (deleted_at IS NULL)"
+      },
+      {
+        "name": "kb_documents_active_updated_idx",
+        "schema": "public",
+        "definition": "CREATE INDEX kb_documents_active_updated_idx ON public.kb_documents USING btree (updated_at DESC, id) WHERE (deleted_at IS NULL)"
+      }
+    ],
+    "service_role_settings": [
+      "statement_timeout=20s"
+    ],
+    "benchmark_schema_exists": false,
+    "benchmark_function_exists": false
+  },
+  "july_gap": {
+    "migration": "20260715100748_optimize_kb_admin_health_io.sql",
+    "function": "public.get_kb_admin_health(uuid)",
+    "live_prosrc_md5": "0e734f9595a708e67da5b62a93928d0c",
+    "live_body_length": 5374,
+    "live_matches_migration": "202605220001_kb_admin_health_ignore_deleted_dead.sql",
+    "source_prosrc_md5": "6d451cb32596e7077716e47f8d643483",
+    "source_body_length": 7574,
+    "present_in_legacy_ledger": false,
+    "present_in_supabase_ledger": false,
+    "decision": "A real pending function implementation; do not mark it applied as a metadata-only reconciliation. Its application requires a separately authorized production change."
+  },
+  "june_equivalence": {
+    "version": "20260601105346",
+    "function": "public.get_kb_ingest_pipeline_health(uuid, uuid)",
+    "prosrc_md5": "c490ece9a27fe9c1477ceb9daa02705b",
+    "acl": "{postgres=X/postgres,service_role=X/postgres}",
+    "statement_md5s_without_final_semicolons": [
+      "d4eb77c98929984a6a35b9901d4be315",
+      "c78c553159197f9b74ecba7853a207e4"
+    ],
+    "evidence": "Both stored remote migration statements exactly match the source statements after removing their final semicolons; the live function body also matches."
+  },
+  "benchmark_receipts": {
+    "setup_version": "20261011095659",
+    "cleanup_version": "20261011101728",
+    "original_setup_statements_sha256": "507bc30b7026f1907386188733ffc5d1d55d3f88114b989545b8ca18154e2e25",
+    "original_cleanup_statements_sha256": "f52f4666ff11128b7a03e5323a191f3baf56ccac95a671f3fd44d59f4cd4c5d4",
+    "original_setup_length": 118175,
+    "original_cleanup_length": 216,
+    "setup_scope": "Temporary auth_bench_68 schema/table and public.auth_bench_68_verify(text); 1000 unique bench-* subjects and 64-hex test key hashes. No business KB tables, raw bearer tokens, or network URLs observed in the stored statements.",
+    "cleanup_scope": "Drops the temporary function/table/schema; transaction-local timeouts and schema-cache notification only.",
+    "schema_exists": false,
+    "function_exists": false,
+    "proposed_public_representation": "Explicit historical baseline receipt files at the observed versions, with provenance and original statement hashes, and SELECT 1 as no-op content. These are receipts, not byte-identical imports of the temporary benchmark SQL.",
+    "net_effect": "Skipping setup and cleanup on a fresh replay yields the same final catalog for these temporary benchmark objects. Preserve both original production ledger entries and their stored SQL unchanged."
+  },
+  "minimal_plan": [
+    "Keep production automatic deployment disabled during adoption.",
+    "Import the exact May 28 hotfix source and provenance; add explicitly documented no-op receipts for the two already-cleaned benchmark versions.",
+    "Qualify the resulting source chain on a disposable local database; do not execute the benchmark fixtures again.",
+    "Immediately before any separately authorized remote metadata update, rerun every SELECT below and require the expected ledgers, 66 function fingerprints, hotfix catalog facts, and benchmark absence.",
+    "Map only the 34 legacy filenames (33 imported plus hotfix) into the Supabase history through a separately authorized metadata-only operation. Preserve the existing June and two benchmark entries; do not alter public.kb_schema_migrations or mark July applied.",
+    "After that metadata step, local history contains 38 versions and remote contains 37; July is the sole genuine pending migration. Resolve it through separately authorized production application and validation before enabling automatic production deployment."
+  ],
+  "limitations": [
+    "This is not a full production schema export or full table/RLS/ACL comparison.",
+    "Legacy ledger rows do not contain source checksums, so historical byte execution cannot be proved by filenames alone.",
+    "The July optimization has not been tested against production rows or executed; matching behavior to the current function is not asserted.",
+    "Supabase dashboard integration configuration is outside these SQL observations."
+  ],
+  "rerunnable_select_queries": {
+    "migration_ledgers": "select 'legacy' as ledger,version,null::text as name from public.kb_schema_migrations union all select 'supabase',version,name from supabase_migrations.schema_migrations order by ledger,version",
+    "supabase_history_digests": "select version,name,cardinality(statements) as statement_count,length(array_to_string(statements,E'\\n')) as sql_length,encode(sha256(convert_to(array_to_string(statements,E'\\n'),'UTF8')),'hex') as statements_sha256 from supabase_migrations.schema_migrations order by version",
+    "kb_functions": "select p.proname,pg_get_function_identity_arguments(p.oid) as arguments,pg_get_function_result(p.oid) as returns,md5(p.prosrc) as body_md5,length(p.prosrc) as body_length,l.lanname as language,p.provolatile,p.prosecdef,p.proconfig from pg_proc p join pg_namespace n on n.oid=p.pronamespace join pg_language l on l.oid=p.prolang where n.nspname='public' and (p.proname in ('add_kb_group_member','archive_job_message','archive_job_message_by_id','authorize_kb_api_key_collection_action','can_collection_action','can_document_action','can_read_document','claim_job_from_pgmq_message','claim_parse_two_stage_task','complete_delete','complete_index','complete_parse_local_ready_and_enqueue_s3_check','complete_s3_ready_check','count_active_kb_index_records','create_kb_grant','create_kb_group','enqueue_due_retry_wakeups','enqueue_index_from_processed_s3_ready','fail_job','fail_job_v2','get_kb_admin_capabilities','get_kb_admin_document_detail','get_kb_admin_health','get_kb_ingest_pipeline_health','heartbeat_job','kb_actor_can_access_admin_document','kb_actor_has_any_grant_action','kb_actor_principals','kb_archive_job_message_by_id','kb_cancel_jobs_on_document_delete','kb_default_collection_search_partition','kb_job_retry_backoff','kb_normalize_collection_path','kb_queue_depth','kb_queue_for_stage','kb_set_updated_at','list_active_kb_index_records','list_kb_admin_audit_events','list_kb_admin_documents','list_kb_admin_jobs','list_kb_dead_letter_jobs','list_kb_grants_for_principal','list_kb_grants_for_resource','mark_document_ingest_failed','mark_kb_index_records_deleted','mark_parse_local_ready','mark_parse_two_stage_task_state','mark_processed_s3_ready','mark_raw_ready_and_enqueue_parse','read_queue_messages','register_parse_two_stage_task','remove_kb_group_member','replay_parse_local_ready_from_artifact','request_delete','request_reindex','request_reparse','request_retry','reserve_document','resolve_document_search_partition','resolve_query_search_partitions','review_kb_document_metadata','revoke_kb_grant','start_job_from_pgmq_message','upsert_kb_index_records','verify_kb_api_key','write_kb_audit_event') or p.proname ~ '(^kb_|_kb_)' or p.prosrc ~ '\\mkb_(documents|jobs|collections|grants|api_keys|index_records|query_logs|audit_events)\\M') order by p.proname,arguments",
+    "hotfix_and_benchmark_catalog": "select jsonb_build_object('indexes',(select jsonb_agg(jsonb_build_object('schema',schemaname,'name',indexname,'definition',indexdef) order by indexname) from pg_indexes where schemaname='public' and indexname in ('kb_documents_active_updated_idx','kb_documents_active_created_idx','kb_audit_events_created_idx')),'service_role_settings',(select rolconfig from pg_roles where rolname='service_role'),'benchmark_schema_exists',exists(select 1 from pg_namespace where nspname='auth_bench_68'),'benchmark_function_exists',to_regprocedure('public.auth_bench_68_verify(text)') is not null) as evidence",
+    "june_statement_fingerprints": "select s.ordinality as statement_number,md5(s.statement) as statement_md5,length(s.statement) as sql_length from supabase_migrations.schema_migrations m cross join lateral unnest(m.statements) with ordinality s(statement,ordinality) where m.version='20260601105346' order by s.ordinality",
+    "june_function_acl": "select p.proname,pg_get_function_identity_arguments(p.oid) as arguments,md5(p.prosrc) as body_md5,p.proacl::text as acl from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname='get_kb_ingest_pipeline_health'"
+  }
+}
