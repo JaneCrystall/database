@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+
+repo_root="$(git rev-parse --show-toplevel)"
+
+while IFS= read -r pre_push_ref; do
+  :
+done
+
+exec "$repo_root/scripts/docpact-gate.sh"

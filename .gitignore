@@ -1,0 +1,17 @@
+.env
+.env.*
+!.env.*.example
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.docpact/runs/
+supabase/.temp/
+supabase/.branches/
+supabase/workspace/remote_schema.sql
+supabase/workspace/global/
+supabase/workspace/schemas/
+types/*.ts
+*.dump
+*.backup

@@ -1,0 +1,108 @@
+version: 1
+layout: repo
+lastReviewedAt: "2026-10-11"
+lastReviewedCommit: "a38d22f"
+repo:
+  id: database
+routing:
+  intents:
+    schema:
+      paths: [supabase/migrations/**, tests/sql/**, docs/source-inventory.json]
+    tooling:
+      paths: [scripts/**, tests/test_*.py, supabase/workspace/**, types/**]
+    validation:
+      paths: [.github/workflows/**, tests/**, supabase/config.toml]
+    governance:
+      paths: [AGENTS.md, README*, docs/**, .docpact/**]
+coverage:
+  include: ["**"]
+  exclude:
+    - .git/**
+    - .docpact/runs/**
+    - "**/__pycache__/**"
+    - .venv/**
+    - .pytest_cache/**
+    - .DS_Store
+    - supabase/.temp/**
+    - supabase/.branches/**
+    - supabase/workspace/remote_schema.sql
+    - supabase/workspace/global/**
+    - supabase/workspace/schemas/**
+docInventory:
+  include: [AGENTS.md, README.md, README.zh-CN.md, docs/**/*.md, .docpact/config.yaml]
+  exclude: [.docpact/runs/**]
+freshness:
+  warn_after_commits: 50
+  warn_after_days: 90
+  critical_after_days: 180
+rules:
+  - id: database-schema
+    scope: repo
+    repo: database
+    triggers:
+      - path: supabase/migrations/**
+        kind: migration
+      - path: supabase/seed.sql
+        kind: seed
+      - path: tests/sql/**
+        kind: sql-test
+      - path: docs/source-inventory.json
+        kind: provenance
+    requiredDocs:
+      - path: docs/architecture.md
+        mode: review_or_update
+      - path: docs/validation.md
+        mode: review_or_update
+    reason: Database contract and migration provenance must match scope and proof.
+  - id: database-tooling
+    scope: repo
+    repo: database
+    triggers:
+      - path: scripts/**
+        kind: tooling
+      - path: tests/**
+        kind: validation
+      - path: supabase/config.toml
+        kind: local-runtime
+      - path: supabase/workspace/**
+        kind: authoring
+      - path: types/**
+        kind: generated-contract
+      - path: .github/**
+        kind: ci
+      - path: .githooks/**
+        kind: governance-gate
+      - path: .env.*.example
+        kind: environment-example
+    requiredDocs:
+      - path: docs/development.md
+        mode: review_or_update
+      - path: docs/validation.md
+        mode: review_or_update
+    reason: Tool targeting and validation behavior must have executable instructions.
+  - id: database-governance
+    scope: repo
+    repo: database
+    triggers:
+      - path: AGENTS.md
+        kind: contract
+      - path: README*
+        kind: entry
+      - path: docs/**
+        kind: documentation
+      - path: .docpact/**
+        kind: governance
+      - path: .gitignore
+        kind: publication
+      - path: .gitattributes
+        kind: source-normalization
+      - path: LICENSE
+        kind: license
+      - path: NOTICE.md
+        kind: attribution
+    requiredDocs:
+      - path: AGENTS.md
+        mode: review_or_update
+      - path: .docpact/config.yaml
+        mode: review_or_update
+    reason: Ownership and standalone governance must remain explicit.
