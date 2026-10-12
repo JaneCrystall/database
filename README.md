@@ -18,8 +18,9 @@ The PostgreSQL/Supabase source repository for the **Tiangong AI knowledge
 base**. It starts with 35 existing KB migrations and 16 SQL smoke tests,
 preserving their original bytes and migration names. A subsequently recovered
 KB hotfix and two explicit benchmark history receipts bring the replay chain
-to 38 files. A 39th migration captures the remaining public application schema
-without production data. It does not contain the Tiangong LCA database.
+to 38 files. Two further migrations capture the remaining public application schema and
+explicit existing object privileges, bringing the chain to 40 files without
+production data. It does not contain the Tiangong LCA database.
 
 [中文说明](README.zh-CN.md) · [Architecture](docs/architecture.md) ·
 [Development](docs/development.md) · [Validation](docs/validation.md)

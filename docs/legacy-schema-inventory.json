@@ -805,5 +805,11 @@
     "tables": 24,
     "functions": 72,
     "enum_types": 11
+  },
+  "explicit_privilege_migration": "supabase/migrations/20261012035302_capture_explicit_kb_object_privileges.sql",
+  "explicit_privilege_capture": {
+    "relation_count": 11,
+    "function_count": 66,
+    "reason": "Preview integration reproduces missing inherited default privileges; explicit object ACLs must match captured production without importing default privileges or role memberships."
   }
 }

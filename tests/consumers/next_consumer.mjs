@@ -2,6 +2,12 @@
 import {readFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import assert from 'node:assert/strict';
+process.on('uncaughtException',error=>{
+ const label=error?.code==='ERR_ASSERTION'?String(error.message).split('\n')[0]:'Unexpected Next consumer execution error';
+ const observed=Number.isInteger(error.actual)&&error.actual>=100&&error.actual<=599?error.actual:undefined;
+ console.log(JSON.stringify({schema_version:1,failed:true,consumer:'Next',assertion:label,http_status:observed}));
+ process.exitCode=1;
+});
 const target=JSON.parse(await readFile(process.argv[2],'utf8'));
 const base=process.argv[3];
 const require=createRequire(new URL('./package.json',import.meta.url));

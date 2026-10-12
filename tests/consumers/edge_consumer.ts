@@ -1,8 +1,9 @@
 /** Execute unchanged Edge handlers under Deno with real HTTP/Auth/PostgREST. */
 import {configure, observations} from './external_mocks/providers.ts';
 
+class ConsumerAssertion extends Error {}
 function assert(condition: unknown, message: string): asserts condition {
-  if (!condition) throw new Error(message);
+  if (!condition) throw new ConsumerAssertion(message);
 }
 const target = JSON.parse(await Deno.readTextFile(Deno.args[0]));
 const url = target.api_url ?? target.supabase_url;
@@ -85,4 +86,8 @@ try {
   for (const author of fixture.journal_authors) assert(rendered.includes(author),'sci journal author missing');
   results.push({consumer:'sci_search:getMeta',passed:true,real_database_hydration:true});
   console.log(JSON.stringify({schema_version:1,runtime:'Deno exact Edge source + local HTTP; external SDK doubles only',mode:target.mode,results}));
+} catch(error) {
+  console.log(JSON.stringify({schema_version:1,failed:true,consumer:'Edge',
+    assertion:error instanceof ConsumerAssertion?error.message:'Unexpected Edge consumer execution error'}));
+  Deno.exitCode=1;
 } finally {await server.shutdown();}

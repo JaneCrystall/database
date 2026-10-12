@@ -31,6 +31,15 @@ class LegacyCaptureTests(unittest.TestCase):
         self.assertNotIn('CREATE ROLE journals_reader LOGIN',content)
         self.assertIn('CREATE ROLE journals_reader NOLOGIN',content)
 
+    def test_catalog_comparison_detects_an_extra_function_overload(self):
+        spec=importlib.util.spec_from_file_location('catalog_check',ROOT/'tests/schema/check_catalog.py')
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        expected=json.loads((ROOT/'tests/schema/public_catalog.expected.json').read_text())
+        actual=json.loads(json.dumps(expected))
+        extra=dict(actual['functions'][0]);extra['arguments']='synthetic_other_signature text'
+        actual['functions'].insert(0,extra)
+        self.assertTrue(module.differences(expected,actual))
+
     def test_catalog_contract_covers_authorization_and_dependencies(self):
         snapshot=json.loads((ROOT/'tests/schema/public_catalog.expected.json').read_text())
         self.assertEqual(len(snapshot['relations']),24)

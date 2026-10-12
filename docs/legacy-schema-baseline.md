@@ -48,7 +48,12 @@ It also includes `lang`, six missing functions (`esg_full_text`,
 `standards_full_text`, `has_service_role`, `set_created_by`,
 `set_last_updated_by`, `set_last_updated_time`), 18 explicit indexes, constraints,
 three triggers, 12 policies and object privileges. The existing 66 KB function
-bodies already match production; they are not replaced by this capture.
+bodies already match production; they are not replaced by this capture. A
+second migration records explicit ACLs for the existing 11 KB tables and 66
+functions, because hosted previews do not inherit the older production defaults.
+It revokes the named API/PUBLIC privileges and restores exactly the observed
+object grants, without importing environment-wide default privileges.
+The source chain now contains 40 migration files.
 
 External dependencies are platform `auth.users`/`auth.uid()`, UUID generation and
 PGroonga operators/indexes. Platform/extension-owned auth, storage, realtime,
@@ -112,3 +117,9 @@ reviewed sibling source checkouts and their existing locked dependencies; the
 public database repository does not vendor their private source or credentials.
 The database-only hosted CI replays schema/SQL tests and enforces catalog parity;
 consumer qualification requires those checkouts and is recorded separately.
+
+The first real Preview failed catalog parity and the Next humanities route
+because inherited KB privileges were absent. The explicit ACL migration is the
+regression fix; catalog parity and the same failed route must pass on Preview
+before qualification. Fixture cleanup tolerates only an already-deleted Auth
+user (404); authorization errors still fail.

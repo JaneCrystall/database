@@ -9,7 +9,7 @@ whenToUse: "When deciding source ownership, schema scope or generated-path bound
 whenToUpdate: "When schema ownership, imported scope or consumer contracts change."
 checkPaths: [supabase/**, scripts/**, tests/sql/**, docs/source-inventory.json]
 lastReviewedAt: 2026-10-12
-lastReviewedCommit: 1a051fd0d177c8967302adc6e35c4f8e7d783842
+lastReviewedCommit: a17367cbb824f94b04f63779e8d68b299fdec3e4
 ---
 
 # Database architecture

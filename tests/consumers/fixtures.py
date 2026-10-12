@@ -10,13 +10,13 @@ import sys
 from urllib.error import HTTPError
 from urllib.request import Request,urlopen
 import uuid
-import psycopg2
-from psycopg2 import sql
-from psycopg2.extras import Json
-from runtime import load_private,private_json,validate_target
+try:
+    from .runtime import load_private,private_json,validate_target
+except ImportError:  # Direct script entrypoint.
+    from runtime import load_private,private_json,validate_target
 
 
-def auth_request(target,method,path,body=None):
+def auth_request(target,method,path,body=None,*,allow_missing=False):
     validate_target(target)
     request=Request(target['api_url']+'/auth/v1/'+path,method=method,
         headers={'apikey':target['service_role_key'],'Authorization':'Bearer '+target['service_role_key'],'Content-Type':'application/json'},
@@ -26,11 +26,15 @@ def auth_request(target,method,path,body=None):
             raw=response.read()
             return json.loads(raw) if raw else {}
     except HTTPError as error:
+        if allow_missing and method=='DELETE' and path.startswith('admin/users/') and error.code==404:
+            return {'already_absent':True}
         raise RuntimeError(f'Synthetic Auth operation failed with HTTP {error.code}; response withheld') from None
 
 
 def setup(path):
     target=load_private(path);validate_target(target)
+    import psycopg2
+    from psycopg2.extras import Json
     if 'fixtures' in target:raise RuntimeError('Fixture manifest already exists; clean it before a new run')
     run=target['run_id'];marker='synthetic'+run
     uid=lambda:str(uuid.uuid4())
@@ -83,6 +87,8 @@ def setup(path):
 
 def cleanup(path):
     target=load_private(path);validate_target(target)
+    import psycopg2
+    from psycopg2 import sql
     f=target.get('fixtures',{});ids=f.get('resource_ids',{})
     if f:
         with psycopg2.connect(target['db_url'],connect_timeout=15) as conn:
@@ -98,7 +104,7 @@ def cleanup(path):
                 cur.execute('select count(*) from public.edu_meta where id=%s',(f.get('edu_secondary_id'),));assert cur.fetchone()[0]==0
                 cur.execute('delete from public.esg_category where code=%s and name=%s',(f.get('category_code'),f['marker']+'category'))
                 cur.execute('delete from public.esg_country where code=%s and name=%s',(f.get('country_code'),f['marker']+'country'))
-        for user_id in target.get('fixture_users',[]):auth_request(target,'DELETE','admin/users/'+user_id)
+        for user_id in target.get('fixture_users',[]):auth_request(target,'DELETE','admin/users/'+user_id,allow_missing=True)
     target['fixture_state']='cleaned';private_json(path,target)
     print(json.dumps({'status':'cleaned','run_id':target['run_id']}))
 

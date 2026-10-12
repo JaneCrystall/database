@@ -8,8 +8,9 @@ from pathlib import Path
 def differences(expected,actual):
     result=[]
     for kind in ('relations','functions'):
-        left={r['name']:r for r in expected[kind] or []}
-        right={r['name']:r for r in actual[kind] or []}
+        key=lambda r: r['name'] if kind=='relations' else r['name']+'('+r['arguments']+')'
+        left={key(r):r for r in expected[kind] or []}
+        right={key(r):r for r in actual[kind] or []}
         for name in sorted(left.keys()|right.keys()):
             if left.get(name)!=right.get(name):
                 fields=sorted(f for f in set(left.get(name,{}))|set(right.get(name,{})) if left.get(name,{}).get(f)!=right.get(name,{}).get(f))

@@ -9,7 +9,7 @@ whenToUse: "When exporting schema, authoring migrations or selecting a database 
 whenToUpdate: "When helper CLI contracts, dependencies or adoption steps change."
 checkPaths: [scripts/**, supabase/config.toml, .env.*.example]
 lastReviewedAt: 2026-10-12
-lastReviewedCommit: 1a051fd0d177c8967302adc6e35c4f8e7d783842
+lastReviewedCommit: a17367cbb824f94b04f63779e8d68b299fdec3e4
 ---
 
 # Development
