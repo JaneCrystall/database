@@ -1,0 +1,97 @@
+# Disposable consumer runtime
+
+The consumer runtime is separate from `scripts/test-database.sh`. It starts
+an independent PostgreSQL 17, Auth, Kong and PostgREST stack from this repo's
+SQL sources. It copies no host environment files, project links or credentials.
+Each local session has a unique project ID and randomly allocated local ports.
+No existing local stack is reused or reset.
+Project IDs stay below CLI 2.120.0's 40-character limit. Cleanup checks the
+owning container's workdir/project labels and verifies containers and volumes
+are absent after stop; a successful CLI exit alone is not cleanup proof.
+
+Use Python 3.11+, Supabase CLI 2.120.0 and a local Docker socket:
+
+```sh
+SUPABASE_CLI=/absolute/path/to/supabase scripts/test-consumers.sh start-local --session-dir /private/tmp/consumer-session-unique
+scripts/test-consumers.sh validate-target --target /private/tmp/consumer-session-unique/target.json
+scripts/test-consumers.sh stop --session-dir /private/tmp/consumer-session-unique
+```
+
+Start returns a JSON receipt containing the target-file path, run ID, project
+ref and API URL. It never prints keys or database credentials. The stack stays
+running until stop, so separate consumer scenarios can reuse it without
+replaying the chain. Failed startup cleans up only the stack it attempted to
+create. Stop removes that stack's volumes and private target file; it retains
+non-secret session metadata. Consumers must finish their fixture cleanup before
+stop. No remote functions are deployed by this runtime.
+
+## Target interface
+
+`target.json` and `session.json` use permissions 0600; the session directory
+uses 0700. Consumers read the private JSON and call `runtime.validate_target`
+before connecting. The target contains:
+
+- `schema_version`: 1, `mode`: `local` or `preview`, `run_id`: 32 hex characters.
+- `api_url`, `publishable_key` (local anon key), `service_role_key`, `db_url`.
+- `project_ref`, `parent_project_ref`, `branch_name`, `session_dir`.
+- Local only: `project_id`, `workdir` (the session root).
+- Preview only: `verification_receipt` (the verified branch metadata).
+
+The fixture owner can append `user` and `fixtures` records using the same
+private-file permissions. The runtime does not create users or synthetic rows.
+The run ID must identify every fixture and cleanup manifest. Authentication
+and PostgREST stay real; consumer-specific external provider fixtures belong
+to their own harnesses. Keys, passwords, DB URLs and unredacted CLI diagnostics
+must not enter public reports. HTTP mutations commit independently; cleanup
+must enumerate only this run's fixtures rather than assuming SQL rollback.
+
+After preparing fixtures, run the existing consumer entrypoints against the
+same target without restarting the stack:
+
+```sh
+/absolute/path/to/knowledge-base/.venv/bin/python tests/consumers/fixtures.py setup --target /private/tmp/consumer-session-unique/target.json
+python3 tests/consumers/run_web_edge.py --target /private/tmp/consumer-session-unique/target.json --report /private/tmp/consumer-session-unique/web-edge-receipt.json
+/absolute/path/to/knowledge-base/.venv/bin/python tests/consumers/journals_consumer.py --target /private/tmp/consumer-session-unique/target.json
+/absolute/path/to/knowledge-base/.venv/bin/python tests/consumers/verify_catalog.py --target /private/tmp/consumer-session-unique/target.json
+/absolute/path/to/knowledge-base/.venv/bin/python tests/consumers/fixtures.py cleanup --target /private/tmp/consumer-session-unique/target.json
+```
+
+Use a new report path for each run. Always invoke fixture cleanup on failures
+before stopping the session. The journal runner uses the KB/skills code and
+its frozen Python dependencies. The web/Edge runner requires the owning Next
+checkout's installed dependencies, Node and Deno. Its receipt identifies exact
+Route Handler/source hashes, real local HTTP/Auth/PostgREST qualification, and
+external provider doubles. Its Edge tests execute the unchanged handler source
+under Deno HTTP; they do not claim a hosted Edge deployment or Supabase gateway
+qualification. Test reports must preserve this runtime distinction.
+
+## Explicit preview binding
+
+The caller supplies two private JSON files and exact expected metadata:
+
+```sh
+scripts/test-consumers.sh prepare-preview --session-dir /private/tmp/preview-session-unique --credentials-file /private/path/credentials.json --receipt-file /private/path/receipt.json --expected-ref PREVIEW_REF --expected-parent PARENT_REF --expected-branch PR_BRANCH
+```
+
+Credentials contain only `api_url`, `publishable_key`, `service_role_key` and
+`db_url`, all belonging to the selected preview. The management receipt must
+have `verification_source: "supabase-management-mcp"`, the matching
+`project_ref`, `parent_project_ref` and `branch_name`, `is_preview: true`,
+`status: "ACTIVE_HEALTHY"`, and an ISO UTC `verified_at` within 24 hours.
+The task's operator creates this receipt after actually checking management
+metadata. It is an input evidence contract, not a cryptographic attestation;
+writing those fields without performing the check is not verification.
+
+The runtime rejects the production Knowledge Base ref
+`qyyqlnwqwgvzxnccnbgm`, mismatched API/DB hosts, absent/stale branch evidence,
+or a preview ref equal to its parent. It supports the preview's direct DB host
+or a Supabase pooler connection whose username names that preview. Stop in
+preview mode only removes the local target file; it does not reset, modify,
+delete or deploy to the hosted project. Fixture cleanup is a separate explicit
+consumer operation using this validated target.
+
+Run offline runtime safety checks with:
+
+```sh
+python3 -m unittest discover -s tests/consumers -p 'test_runtime_safety.py'
+```
