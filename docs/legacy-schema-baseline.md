@@ -123,3 +123,8 @@ because inherited KB privileges were absent. The explicit ACL migration is the
 regression fix; catalog parity and the same failed route must pass on Preview
 before qualification. Fixture cleanup tolerates only an already-deleted Auth
 user (404); authorization errors still fail.
+
+The synthetic legacy SQL behavior contract additionally executes insert/update
+triggers, full-text RPC matching, own-row role visibility, anonymous denial,
+journal-reader read-only access and out_user RLS denial. Test-only SET ROLE
+membership and all synthetic Auth/table rows are transactionally rolled back.

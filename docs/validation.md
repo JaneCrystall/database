@@ -74,3 +74,7 @@ and all 11 enum definitions, plus the real consumer matrix in
 'test_*.py'` for lifecycle safety checks. Empty local and verified preview
 targets must independently pass catalog and consumer qualification; no production
 business-data fixture or database mocking is permitted.
+
+`tests/schema/legacy_behaviors.sql` supplements catalog equality with real
+trigger/RPC/RLS/role behavior using rollback-scoped synthetic records. It runs
+in the local gate and on the verified preview, never production.
