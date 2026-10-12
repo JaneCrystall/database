@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "reviewed_workspace_sources": {
+    "tiangong-ai-next": "459a8791d567cee72a2c70842ebab9aa87b7f70d",
+    "tiangong-ai-edge-function": "52facc5a486527a6013cb49d0090947e67aad3f5",
+    "TianGong-AI-KB": "67d3469db51313e5ae431834b8646abff0c16114",
+    "skills": "5e692461708a4e02c1012086a59d2bd75da99673"
+  },
+  "scope": "Source identity for actual consumer qualification; dependencies follow each repository lockfile. No consumer code or credentials are vendored here."
+}

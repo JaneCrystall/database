@@ -8,8 +8,8 @@ language: en
 whenToUse: "When deciding source ownership, schema scope or generated-path boundaries."
 whenToUpdate: "When schema ownership, imported scope or consumer contracts change."
 checkPaths: [supabase/**, scripts/**, tests/sql/**, docs/source-inventory.json]
-lastReviewedAt: 2026-10-11
-lastReviewedCommit: a022a6c67d6ed57565a7a433f347c815f4d88e2c
+lastReviewedAt: 2026-10-12
+lastReviewedCommit: a17367cbb824f94b04f63779e8d68b299fdec3e4
 ---
 
 # Database architecture
@@ -46,14 +46,15 @@ two no-op receipts for cleaned-up remote benchmark versions. These additions
 make 38 replay files and are separate from the immutable initial import. See
 `supabase-adoption-evidence.json` for source and live catalog evidence.
 
-The source checkout did **not** supply a full DDL baseline for legacy content
-tables such as `edu_meta`, `esg_meta`, `standards`, `reports`, `internal_use`,
-`green_deal_meta`, `journals`, and `journals_issn`, or the
-`esg_full_text` / `standards_full_text` RPCs. Do not invent these definitions or
-claim that successful control-plane tests establish the full production DB.
-A future import must use an explicitly identified, read-only schema export,
-review public-source suitability, and reconcile dependencies and migration
-history before adopting it. Database rows are outside this repository.
+The subsequent read-only legacy baseline capture supplies the missing content
+schema, authorization helpers and empty legacy ledger structure. The full public
+application catalog contains 24 tables, 72 functions and 11 enums. Its exact
+columns, defaults, constraints, indexes, triggers, RLS/policies, ACLs and function
+fingerprints are enforced by `tests/schema/public_catalog.expected.json`.
+See [legacy baseline](legacy-schema-baseline.md) for capture provenance,
+portable-role differences, consumer qualification and the production-read-only
+boundary. Platform-managed schemas and extension internals remain owned by
+Supabase; production data, identities and role memberships are never imported.
 
 ## Schema workspace
 

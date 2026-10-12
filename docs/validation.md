@@ -8,8 +8,8 @@ language: en
 whenToUse: "Before submitting or integrating database changes."
 whenToUpdate: "When test commands, qualification scope or CI changes."
 checkPaths: [scripts/**, tests/**, .github/workflows/**, .docpact/**]
-lastReviewedAt: 2026-10-11
-lastReviewedCommit: a022a6c67d6ed57565a7a433f347c815f4d88e2c
+lastReviewedAt: 2026-10-12
+lastReviewedCommit: a17367cbb824f94b04f63779e8d68b299fdec3e4
 ---
 
 # Validation
@@ -67,3 +67,14 @@ Hosted integration changes additionally require the official Supabase Preview
 check and preview catalog qualification before applying the verified pending
 production migration. Follow `docs/supabase-integration.md`; local green tests
 do not authorize repairing unapplied history entries.
+
+The legacy baseline requires exact parity for 24 public tables, 72 functions
+and all 11 enum definitions, plus the real consumer matrix in
+`docs/legacy-schema-baseline.md`. Run `unittest discover -s tests/consumers -p
+'test_*.py'` for lifecycle safety checks. Empty local and verified preview
+targets must independently pass catalog and consumer qualification; no production
+business-data fixture or database mocking is permitted.
+
+`tests/schema/legacy_behaviors.sql` supplements catalog equality with real
+trigger/RPC/RLS/role behavior using rollback-scoped synthetic records. It runs
+in the local gate and on the verified preview, never production.

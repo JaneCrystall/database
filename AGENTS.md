@@ -14,8 +14,8 @@ checkPaths:
   - scripts/**
   - tests/**
   - docs/**
-lastReviewedAt: 2026-10-11
-lastReviewedCommit: a022a6c67d6ed57565a7a433f347c815f4d88e2c
+lastReviewedAt: 2026-10-12
+lastReviewedCommit: 2cc979d30117a1491e9d1daad93cacb2001dfff5
 ---
 
 # Tiangong AI Database Contract
@@ -47,8 +47,12 @@ the hosted GitHub Integration and initial history adoption.
 - Local development is the default. Remote reads require an explicit target.
   Hosted deployment follows the preview/adoption gates in the integration
   runbook; ordinary GitHub Actions never receive production DB credentials.
-- The imported chain is the KB control plane, not a complete production
-  snapshot. Missing legacy/domain schemas are listed in `docs/architecture.md`.
+- The source chain includes the captured public application schema. Validate
+  catalog parity and actual consumers under `docs/legacy-schema-baseline.md`;
+  platform-managed schemas, production rows and login identities are excluded.
+- Production schema capture is read-only. Do not merge the baseline while
+  automatic deployment would replay it on existing production objects without
+  an explicitly authorized metadata-adoption plan.
 - Do not mix the existing `public.kb_schema_migrations` ledger with Supabase's
   migration ledger without a reviewed reconciliation. Moving files alone does
   not mean an existing database should replay them.

@@ -86,8 +86,9 @@ use history repair to conceal an unexecuted or failed migration.
 New migrations are reviewed here, qualified locally and on a PR preview, then
 deployed from `main` by Supabase. The legacy KB runner remains compatibility
 code; **do not run it against this adopted production project**, because its
-independent filename ledger does not own new migrations. Missing legacy
-content-table/RPC source remains an explicit limitation of preview completeness.
+independent filename ledger does not own new migrations. The later legacy schema capture is documented in `legacy-schema-baseline.md`.
+Its production-read-only capture does not itself authorize marking or replaying
+the new baseline against existing production objects.
 
 Preview compute is separate usage and not covered by the Spend Cap. Avoid
 abandoned PR branches. See [GitHub Integration](https://supabase.com/docs/guides/deployment/branching/github-integration)

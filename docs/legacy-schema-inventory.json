@@ -1,0 +1,815 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-10-12",
+  "project_name": "Knowledge Base",
+  "project_ref": "qyyqlnwqwgvzxnccnbgm",
+  "source_kind": "PostgreSQL 17 schema-only pg_dump with read-only connection",
+  "raw_export_sha256": "09ae5bdc041f2e6b57cf8f32af7dfd2b7d30abe33c373a2095a0b4dde2e01e50",
+  "export_flags": [
+    "--schema-only",
+    "--schema=public",
+    "--no-owner",
+    "--no-comments",
+    "--no-security-labels",
+    "--no-publications",
+    "--no-subscriptions",
+    "--quote-all-identifiers"
+  ],
+  "data_policy": "No business table queries, table rows, sequence current values, role passwords, user IDs or role memberships; unreviewed original export remains private outside Git",
+  "migration": "supabase/migrations/20261012033228_capture_legacy_knowledge_base_schema.sql",
+  "tables": [
+    "edu_meta",
+    "edu_textbooks",
+    "esg_category",
+    "esg_country",
+    "esg_meta",
+    "green_deal_meta",
+    "internal_use",
+    "journals",
+    "journals_issn",
+    "reports",
+    "standards",
+    "user_roles",
+    "kb_schema_migrations"
+  ],
+  "functions": [
+    "esg_full_text",
+    "standards_full_text",
+    "has_service_role",
+    "set_created_by",
+    "set_last_updated_by",
+    "set_last_updated_time"
+  ],
+  "types": [
+    "lang"
+  ],
+  "dependencies": [
+    "auth.users(id)",
+    "auth.uid()",
+    "extensions.uuid_generate_v4()",
+    "pgroonga operators/index access method",
+    "journals_reader role",
+    "out_user role"
+  ],
+  "portable_role_policy": "Create absent custom privilege roles as NOLOGIN without production memberships; journals_reader production LOGIN is intentionally not exported. Existing roles are never altered.",
+  "selected_statement_count": 144,
+  "statement_classes": {
+    "CREATE TYPE": 1,
+    "CREATE FUNCTION": 6,
+    "CREATE TABLE": 13,
+    "ALTER TABLE": 30,
+    "CREATE UNIQUE": 2,
+    "CREATE INDEX": 16,
+    "CREATE TRIGGER": 3,
+    "CREATE POLICY": 12,
+    "GRANT ALL": 18,
+    "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE": 39,
+    "GRANT SELECT": 3,
+    "GRANT SELECT,INSERT,DELETE,UPDATE": 1
+  },
+  "statements": [
+    {
+      "ordinal": 1,
+      "kind": "CREATE TYPE",
+      "sha256": "5f91f31ae0021756273e42dac03c0d75f4b5846c59a34368ef7f1e8374b53bb1"
+    },
+    {
+      "ordinal": 2,
+      "kind": "CREATE FUNCTION",
+      "sha256": "c95d475847b3f27a75158100bf57d7b912c49090e34b8b878fde457a6a32fb37"
+    },
+    {
+      "ordinal": 3,
+      "kind": "CREATE FUNCTION",
+      "sha256": "dfb80dcb42462218dc69583649ee9f89ba79ff24c87d2f6f560194eeea95ff69"
+    },
+    {
+      "ordinal": 4,
+      "kind": "CREATE FUNCTION",
+      "sha256": "7d0fb0ae6b912cb6ee28ad819e970c8a78b9d266e3d5e1988255fdf4c5490975"
+    },
+    {
+      "ordinal": 5,
+      "kind": "CREATE FUNCTION",
+      "sha256": "681cf120cb1981a1de174843ceeee4e4aec73b3b470eaea5e67f88014b68b5b5"
+    },
+    {
+      "ordinal": 6,
+      "kind": "CREATE FUNCTION",
+      "sha256": "1da623f74df92c65324a696e4dedce1763f97ef55d5f64c512410f67e05d8dfd"
+    },
+    {
+      "ordinal": 7,
+      "kind": "CREATE FUNCTION",
+      "sha256": "22c30eb89f51f30679a2acdd27a9303c34fd43ac118af6c057893b3975ae1e00"
+    },
+    {
+      "ordinal": 8,
+      "kind": "CREATE TABLE",
+      "sha256": "0125838d17717f115a8a79cf15056f546cbaaa10b4b2b573fbab914e2426e7ec"
+    },
+    {
+      "ordinal": 9,
+      "kind": "CREATE TABLE",
+      "sha256": "97d097e1fcf8558d82688a2d9c19d33b1f7d192a97dc2575dfa2f9e2bef22add"
+    },
+    {
+      "ordinal": 10,
+      "kind": "CREATE TABLE",
+      "sha256": "8a65b96005178d7d74a68292ccc6789065934c1c6f919f54d1bc319cfaafa014"
+    },
+    {
+      "ordinal": 11,
+      "kind": "CREATE TABLE",
+      "sha256": "16ed4499d6a95dac220145dda11d3dd97db1cb53d2823872f98ea2135c42c4fd"
+    },
+    {
+      "ordinal": 12,
+      "kind": "CREATE TABLE",
+      "sha256": "17c3e64fdb90310f330fb04ad0e67179b1e77b9d6ede86b0d8dc023574b8ca2a"
+    },
+    {
+      "ordinal": 13,
+      "kind": "ALTER TABLE",
+      "sha256": "89b3a162529043d4fdef452e80fb34aa62dd266a3804219dcec881b3fb55e6e6"
+    },
+    {
+      "ordinal": 14,
+      "kind": "CREATE TABLE",
+      "sha256": "f5ae4b29fa53a6e844d3e3719cfb08a4669846968b69cadf96646453fdc488ef"
+    },
+    {
+      "ordinal": 15,
+      "kind": "CREATE TABLE",
+      "sha256": "eab13dd361659358f7cedb1b63d69ad17b3ecec1283985d3ec5ef3ea7cf2f09b"
+    },
+    {
+      "ordinal": 16,
+      "kind": "CREATE TABLE",
+      "sha256": "6e70607303076d155abdc22b5a08143f8d9fee182da35a57bacddeed0c436f8e"
+    },
+    {
+      "ordinal": 17,
+      "kind": "CREATE TABLE",
+      "sha256": "60b23f86c4a434230546d8d50071865a55f9b0739241d1d3708fdf03a698ecce"
+    },
+    {
+      "ordinal": 18,
+      "kind": "CREATE TABLE",
+      "sha256": "043a875e87e7604d56cd3e54dd7630259e8ff14b6da7c504eb30dfea150b4bb7"
+    },
+    {
+      "ordinal": 19,
+      "kind": "CREATE TABLE",
+      "sha256": "6a0c535b338c493775a20629680f21d8dfb5c1f8e294fc480f51e37f9d11ccbb"
+    },
+    {
+      "ordinal": 20,
+      "kind": "CREATE TABLE",
+      "sha256": "3c053410d568e23d65887675a441b598bfd20defb68725afa68bcc76f102d10e"
+    },
+    {
+      "ordinal": 21,
+      "kind": "CREATE TABLE",
+      "sha256": "9116cfe5eac2f7bf71e6a2db82192f128384e72afa44105c07da24b19d575e64"
+    },
+    {
+      "ordinal": 22,
+      "kind": "ALTER TABLE",
+      "sha256": "a308077034ffb4969e18281139be917e61854db1d7152e4f1574ba9daf01386e"
+    },
+    {
+      "ordinal": 23,
+      "kind": "ALTER TABLE",
+      "sha256": "634eaf8aa6f951df53ae05e48c9a87775f70deec2c522ceefe33ff01c78e7943"
+    },
+    {
+      "ordinal": 24,
+      "kind": "ALTER TABLE",
+      "sha256": "4d2ac625831771834c2a3a6a1e693634f74b123fef80332a9beb83b0ea28a621"
+    },
+    {
+      "ordinal": 25,
+      "kind": "ALTER TABLE",
+      "sha256": "23177361e9e2c843db276fab36436a8627561ec95d3dcf9b18813b724f9460b6"
+    },
+    {
+      "ordinal": 26,
+      "kind": "ALTER TABLE",
+      "sha256": "e4da7ee48260357853053885553c136d9b20f5b98b33e8bdd5c137305ae5f7ee"
+    },
+    {
+      "ordinal": 27,
+      "kind": "ALTER TABLE",
+      "sha256": "74271cd77ac31c021f044a22e27ce75ab1d0f6a373a7e83c8dbf0de4611e891c"
+    },
+    {
+      "ordinal": 28,
+      "kind": "ALTER TABLE",
+      "sha256": "281af28e735580169496ddbcda21f09f32584cdce8d666a9f056f36c48624491"
+    },
+    {
+      "ordinal": 29,
+      "kind": "ALTER TABLE",
+      "sha256": "ac014342fbe1b49a4c972583b7b1c18dcc36b4f5b66a5b9df034c10ef68f0b81"
+    },
+    {
+      "ordinal": 30,
+      "kind": "ALTER TABLE",
+      "sha256": "57c127ac80cc4970acec7c00943f69282c1676483be80da5969152ab68453882"
+    },
+    {
+      "ordinal": 31,
+      "kind": "ALTER TABLE",
+      "sha256": "e0044ff6a27c8b05b34fc01049942a70679cfd5a0e522ce264791ce1dd889563"
+    },
+    {
+      "ordinal": 32,
+      "kind": "ALTER TABLE",
+      "sha256": "e8803f2308b3b92c255f512cdd8ae78a4ee938a4d092a2eb3fef7fcf07d525ab"
+    },
+    {
+      "ordinal": 33,
+      "kind": "ALTER TABLE",
+      "sha256": "ae5d773f6a5adfc62661fe0b88196aafb901d80e08b0dfae538e84c936b4e7b4"
+    },
+    {
+      "ordinal": 34,
+      "kind": "ALTER TABLE",
+      "sha256": "34cb281528fc4774e285ef118600b3ed95916afe5b15e9e5261dd3f677f40471"
+    },
+    {
+      "ordinal": 35,
+      "kind": "ALTER TABLE",
+      "sha256": "be51bf3f37c27a989bb5ee210b2040fad3e6cdf9e2aaeb867a4a975690bb25d4"
+    },
+    {
+      "ordinal": 36,
+      "kind": "CREATE UNIQUE",
+      "sha256": "64f6d223de98454a7f35ecfc0b3024aa8b1b011428a25cbe70722511f2656b73"
+    },
+    {
+      "ordinal": 37,
+      "kind": "CREATE INDEX",
+      "sha256": "8f0828c138d2302acea8dd579ec9bae57fd38cbd49aadb35002262b25c5b215a"
+    },
+    {
+      "ordinal": 38,
+      "kind": "CREATE UNIQUE",
+      "sha256": "e7ccceee29e2105399a553256f65a55f94089bcacfb8da25e1f10f0cb546a752"
+    },
+    {
+      "ordinal": 39,
+      "kind": "CREATE INDEX",
+      "sha256": "d60d9ea45f8c87fc31891c33e767fc3393aae969d828b65490ca118191099d1d"
+    },
+    {
+      "ordinal": 40,
+      "kind": "CREATE INDEX",
+      "sha256": "6bf76d4817225108bc44547d191101600efa131bb61216109e9626100d006fbd"
+    },
+    {
+      "ordinal": 41,
+      "kind": "CREATE INDEX",
+      "sha256": "8e0ece772f71d60c708b30ef94c5264ed2ecfbd0b62f80eedf219cf90549ce69"
+    },
+    {
+      "ordinal": 42,
+      "kind": "CREATE INDEX",
+      "sha256": "f2440909cad90521cc8a0279e3c5b03cd57b74a48d513a762aec3e13ae10ab48"
+    },
+    {
+      "ordinal": 43,
+      "kind": "CREATE INDEX",
+      "sha256": "93bb291082133281b830e0a933bd8c6bc404d58c570d8e0f718922fe989a438b"
+    },
+    {
+      "ordinal": 44,
+      "kind": "CREATE INDEX",
+      "sha256": "b630b363e3c4da2501b6416c946ec60331a2617de8f236d5acc5b5f202e4d1c7"
+    },
+    {
+      "ordinal": 45,
+      "kind": "CREATE INDEX",
+      "sha256": "3c4eb7ebb23170304232c563bd863527e5f7ddedfefd566df20aeb74813cd505"
+    },
+    {
+      "ordinal": 46,
+      "kind": "CREATE INDEX",
+      "sha256": "9d4f2f5994c7a4451e1712a8609cc33d4b0711584a99e9216fd4726155405562"
+    },
+    {
+      "ordinal": 47,
+      "kind": "CREATE INDEX",
+      "sha256": "273b189e6c04f69558507444233478e80b7d6a1cac59ae74ebe24af3e0f9ce6b"
+    },
+    {
+      "ordinal": 48,
+      "kind": "CREATE INDEX",
+      "sha256": "b7538ac17df401a08927ad91ca196eda4246eaf5b66210d17a77a8b678ddd207"
+    },
+    {
+      "ordinal": 49,
+      "kind": "CREATE INDEX",
+      "sha256": "969eaaccf2acd7eca42eb8760745a74b91dc801e1e761e07c60c5677227bbae2"
+    },
+    {
+      "ordinal": 50,
+      "kind": "CREATE INDEX",
+      "sha256": "9594e985e5fe9dd22ac20a0c10ba3b4dc34f57708a2efb42d99beba568469a9c"
+    },
+    {
+      "ordinal": 51,
+      "kind": "CREATE INDEX",
+      "sha256": "4b8ca3e0f786e78d6ad0dba691b7f68cd643cac76212a9685d6e9dbfc431deac"
+    },
+    {
+      "ordinal": 52,
+      "kind": "CREATE INDEX",
+      "sha256": "d74db06a3fc213732ab1b3c46513bfd09a5e4b4b3aeff89c8e1a1d916f9f11ad"
+    },
+    {
+      "ordinal": 53,
+      "kind": "CREATE INDEX",
+      "sha256": "4bf3b1fc6b790b5b473595476ac1763d3a290306e0e22da387b8d16e02878341"
+    },
+    {
+      "ordinal": 54,
+      "kind": "CREATE TRIGGER",
+      "sha256": "fe14c4db30fb65bbcd46d5b10ee61064f6f1ed6ed95c4472a98b581b11ede915"
+    },
+    {
+      "ordinal": 55,
+      "kind": "CREATE TRIGGER",
+      "sha256": "4e8700abead1740dad92cde6bb9c78c48598ebadc18d3db20ba6ab784acb0f10"
+    },
+    {
+      "ordinal": 56,
+      "kind": "CREATE TRIGGER",
+      "sha256": "023b3b79893b01626a1fa1dcce990367ef4d4fca6d60c86c0c6a1c0d32be97b3"
+    },
+    {
+      "ordinal": 57,
+      "kind": "ALTER TABLE",
+      "sha256": "17430b4a2a92da1662247ea5f8ace8127dc918dffeeaadb2d18130b0fff8f71c"
+    },
+    {
+      "ordinal": 58,
+      "kind": "ALTER TABLE",
+      "sha256": "c6aa4dafd7021febac7d5332b3a7a0ad34eb9c38650532d2c8d8b8485991ba2b"
+    },
+    {
+      "ordinal": 59,
+      "kind": "CREATE POLICY",
+      "sha256": "4949be872bb2b8fa79205a6a6d7b7d305f42bc70a7ed5ca298bb8f20ec8ff343"
+    },
+    {
+      "ordinal": 60,
+      "kind": "CREATE POLICY",
+      "sha256": "6148af3c851ab2c09959d9e86950bf568340cfc9af0f8a49a0a768459122385d"
+    },
+    {
+      "ordinal": 61,
+      "kind": "CREATE POLICY",
+      "sha256": "07e1c0740c7fef9b6d7c3cca8b00a55c1d7cd67cd1d863e96957df44e50ac683"
+    },
+    {
+      "ordinal": 62,
+      "kind": "CREATE POLICY",
+      "sha256": "83fe8e45d54c9466f600e14287b81097ca13c8a1a5c01b565ee3c19374a7a3bb"
+    },
+    {
+      "ordinal": 63,
+      "kind": "CREATE POLICY",
+      "sha256": "4a22463dec6e96b047a1ada5dae2bb8dd658991b194e1f8ccb5b902b23243cfb"
+    },
+    {
+      "ordinal": 64,
+      "kind": "CREATE POLICY",
+      "sha256": "9eb094be2d91d2249612fdb949ae89a68572a88b451307e3a9c27f6da20bf0cb"
+    },
+    {
+      "ordinal": 65,
+      "kind": "CREATE POLICY",
+      "sha256": "bf152423aef21e2244aacf0b4a0fb945ae595b9b5a40347205a3f9f1ac22c52c"
+    },
+    {
+      "ordinal": 66,
+      "kind": "CREATE POLICY",
+      "sha256": "69ebe86bfffb2a0d0b820ca6b5ec9a5f3f4f3c5fdfe5f8c9c65d20b2008fef25"
+    },
+    {
+      "ordinal": 67,
+      "kind": "CREATE POLICY",
+      "sha256": "140f8dc4a86e679d831be342342e32cc24c44b9a21c2861bb12ccc4dbbed3539"
+    },
+    {
+      "ordinal": 68,
+      "kind": "CREATE POLICY",
+      "sha256": "5a6f8dc4764d8cb14bef1eaf79e13cabbe58c768dc4f50edc5f2f47c0dd8ca6b"
+    },
+    {
+      "ordinal": 69,
+      "kind": "ALTER TABLE",
+      "sha256": "e041e66522f4b39ea1e85e15bd15f98bae7991c203b24314e252575a01822d9d"
+    },
+    {
+      "ordinal": 70,
+      "kind": "ALTER TABLE",
+      "sha256": "2a9dee5f5f2df792e3fbbedd4251dd614ac95074d860dd1f9ee03d487f7d7034"
+    },
+    {
+      "ordinal": 71,
+      "kind": "ALTER TABLE",
+      "sha256": "f88d29a0c9d36b3ec1ddedbbcdf48dcbd758e25f47081076fba27921444082b7"
+    },
+    {
+      "ordinal": 72,
+      "kind": "ALTER TABLE",
+      "sha256": "6021c9564f099ae60d3add677ff31d028be8ce2d704450a80f3469852ff3ee0d"
+    },
+    {
+      "ordinal": 73,
+      "kind": "ALTER TABLE",
+      "sha256": "755b007d2c8ae193f02369b138ceb8d03a9a0582313b28e5c34e41744d3f27f8"
+    },
+    {
+      "ordinal": 74,
+      "kind": "ALTER TABLE",
+      "sha256": "4a64c6be6666553f983299f73cbb485beb9a3a119e2536d1078915afa4fd926e"
+    },
+    {
+      "ordinal": 75,
+      "kind": "ALTER TABLE",
+      "sha256": "259d8214fe15306aee07dcc22f0d634fda1be9048abb0bba1a2bc7e3c04afad5"
+    },
+    {
+      "ordinal": 76,
+      "kind": "ALTER TABLE",
+      "sha256": "4e8949c1d879481d0c5a97a121fdf1bcdaca484f1b054b0b01e8bd0e0bcfbc3a"
+    },
+    {
+      "ordinal": 77,
+      "kind": "ALTER TABLE",
+      "sha256": "682f7da33f7808f6464416c4ff7751c1b6b60c851bae21c8775ab7bfc4b3ee1b"
+    },
+    {
+      "ordinal": 78,
+      "kind": "CREATE POLICY",
+      "sha256": "51ef6f07f38a1e08d37747826ecd9b28704bcfa52eddd767745e7516077ff60d"
+    },
+    {
+      "ordinal": 79,
+      "kind": "ALTER TABLE",
+      "sha256": "5e42c14a92f5c08302788df1e64f19d9bccb5e7bbcc4aad88d8f65f8100cef7b"
+    },
+    {
+      "ordinal": 80,
+      "kind": "ALTER TABLE",
+      "sha256": "6b739f0d464be2611b073ef3645d50101c6056a40b1a35f691412a3d437d051e"
+    },
+    {
+      "ordinal": 81,
+      "kind": "CREATE POLICY",
+      "sha256": "5e0477ebd9a7e5cd16bfbf6389e64eeb37030466cd8f3792b421852852231332"
+    },
+    {
+      "ordinal": 82,
+      "kind": "ALTER TABLE",
+      "sha256": "dd797f58b72835e8d5d54bca911f1b70ffcbc82cef3c82d86c7916dce1d765b1"
+    },
+    {
+      "ordinal": 83,
+      "kind": "ALTER TABLE",
+      "sha256": "222b42a1584fc8d359c0afc0c7a4ae9b3b076d1f2b44b32043fb306a9af68b23"
+    },
+    {
+      "ordinal": 84,
+      "kind": "GRANT ALL",
+      "sha256": "4b3eb638317546ca10b0fcc4a1fbbf7c5ce813e38b8da7c2b85972ff08a5f6b5"
+    },
+    {
+      "ordinal": 85,
+      "kind": "GRANT ALL",
+      "sha256": "a980a54a9d4c58ed9242b77f783e0b1aa932f4874a1769e85a6528a5aa55966f"
+    },
+    {
+      "ordinal": 86,
+      "kind": "GRANT ALL",
+      "sha256": "737ce555969e9bf0ccade125f6ef009219792e52b5e2d2e1625cda6f51dc9e0c"
+    },
+    {
+      "ordinal": 87,
+      "kind": "GRANT ALL",
+      "sha256": "fe7cb68eb2b086fd22bb0945d70d4813eaeb526f77f8c5cebcc2be2ef11ae142"
+    },
+    {
+      "ordinal": 88,
+      "kind": "GRANT ALL",
+      "sha256": "59e81f063f463334a3903be4d26c5d58def259875f12cb181a99465f5898aae3"
+    },
+    {
+      "ordinal": 89,
+      "kind": "GRANT ALL",
+      "sha256": "dbcc4f7db86b3d6d8734149545e364ca76903b9ee66705b7ca6f570a3cff2fd1"
+    },
+    {
+      "ordinal": 90,
+      "kind": "GRANT ALL",
+      "sha256": "80c950fea574637b231c13f69778f6f244fb8425cbdaca42db8a350e2dce1631"
+    },
+    {
+      "ordinal": 91,
+      "kind": "GRANT ALL",
+      "sha256": "f3a539e1c0b154d840c944fa65efea74897c39698870dac5a3870bb4258fd09c"
+    },
+    {
+      "ordinal": 92,
+      "kind": "GRANT ALL",
+      "sha256": "87db4304739f9cedcf05dd25c3c94b7b5b9e82db160ba2cec264d52e7f389c52"
+    },
+    {
+      "ordinal": 93,
+      "kind": "GRANT ALL",
+      "sha256": "7a88ed8a40144b29d1e066adc2b982a13bb3f4888dcf2b3aecc4715fecb08d95"
+    },
+    {
+      "ordinal": 94,
+      "kind": "GRANT ALL",
+      "sha256": "2611cbecf71cef6f3178a34026a58e9fed2f265260b56b00404500404c8c3d83"
+    },
+    {
+      "ordinal": 95,
+      "kind": "GRANT ALL",
+      "sha256": "7c6427a1ffa023b4fec55e40ae42db0e98d121efef98d9a66611f9135420a574"
+    },
+    {
+      "ordinal": 96,
+      "kind": "GRANT ALL",
+      "sha256": "dac8b430d67de3e6c5aa04bbc1a9d8d3d97bd2e102b6382edcb61e5ce43c0320"
+    },
+    {
+      "ordinal": 97,
+      "kind": "GRANT ALL",
+      "sha256": "911186bf3f993953f8aa61549bcf653145137256ccbaab1474b0b23099aa6013"
+    },
+    {
+      "ordinal": 98,
+      "kind": "GRANT ALL",
+      "sha256": "5f190b17c0852424533f215e2a6744898c99d87173767c584c3767893a3e3d58"
+    },
+    {
+      "ordinal": 99,
+      "kind": "GRANT ALL",
+      "sha256": "1a65b37d1bf052b65b7370e87b90ee8e953bebe449888354ed8df94912f63cd3"
+    },
+    {
+      "ordinal": 100,
+      "kind": "GRANT ALL",
+      "sha256": "0f96510db3ae554190616d2b2a1b3b63aef19459af699de18e1f65ade3c79763"
+    },
+    {
+      "ordinal": 101,
+      "kind": "GRANT ALL",
+      "sha256": "28ce9449708dd15a403316d5f0410581a536c8c84c779836080f83e6146082c2"
+    },
+    {
+      "ordinal": 102,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "bf1b9e17bf2275845827005aef93c7fb6620495096fa1768002b7137ac888fbd"
+    },
+    {
+      "ordinal": 103,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "5bed18134cb5858ec617ffd070d2838f9173053ac697a082ba1b9ffe4f52ba05"
+    },
+    {
+      "ordinal": 104,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "96bc6e9c9c8dc57d8caecfcc07217e24d0271f767ada72ce5a66429702eb2985"
+    },
+    {
+      "ordinal": 105,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "1ace829627d9904aabae247cb82d08a60a65b09170ce470300bdeed3b3aca828"
+    },
+    {
+      "ordinal": 106,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "fb1aff238c9688f89d2fd22b47a8fe9361d4fd41a5ebd513ccea70fb26a0b05f"
+    },
+    {
+      "ordinal": 107,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "75f148f471178eb29d59abd1daee7ce7a18953e65e6096652c40458ab127c9d0"
+    },
+    {
+      "ordinal": 108,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "6a81856d4b06521345313362a4a011bc04ee475edb465906a42707a8a151e2db"
+    },
+    {
+      "ordinal": 109,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "885f6489a4e41e8742c9c7565501ec71d968037ee3496930991ff6fa432c1ace"
+    },
+    {
+      "ordinal": 110,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "315e9b1319db770dac3f4edf5fc2a3dbad847007e3ea70db6b237fc847fd3d15"
+    },
+    {
+      "ordinal": 111,
+      "kind": "GRANT SELECT",
+      "sha256": "025b1d8c3b0f12b56a3d0634e40ea581214170eb96e7b12c9101228bf89958f8"
+    },
+    {
+      "ordinal": 112,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "a8da460a7c60927cf8ea8a7c5c08004aea8a058d167a4a1cc60e58bcaf2a2665"
+    },
+    {
+      "ordinal": 113,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "8ad4d9d9d188411107d6f096031b30f4e14a88e02cd560de3edca2d6f090e3bd"
+    },
+    {
+      "ordinal": 114,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "ca9b4c9d467cdd4ec0fa02f472d94c098ab79674b223fb724a3bac401f6e1987"
+    },
+    {
+      "ordinal": 115,
+      "kind": "GRANT SELECT",
+      "sha256": "3abf594b43a3a17eeecd6d1e5a05e6291aef4451775dc93700abb3a0c5b4f558"
+    },
+    {
+      "ordinal": 116,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "c2743ed04e271b49f55debc3a54ee9ab2059b387865ba995058bac279301ee45"
+    },
+    {
+      "ordinal": 117,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "29a4352ea3670130bc4fdf0c293199e78392725864eee0df2b15d39ceae0c55d"
+    },
+    {
+      "ordinal": 118,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "81183ba948c61b1433fbb5a9e0967fa2c762e368da97cb1bbffafa64dbcbaa8a"
+    },
+    {
+      "ordinal": 119,
+      "kind": "GRANT SELECT,INSERT,DELETE,UPDATE",
+      "sha256": "175a4994cb1fda0e6e61f6e1bc6763ea7c6a2e3ecfb8ef8ed6f4b7c73b97009d"
+    },
+    {
+      "ordinal": 120,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "0616b76e2b4f7f7f3ee4742387c76a77d6ffcc044a5b7f027024fd89316f4bed"
+    },
+    {
+      "ordinal": 121,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "408cf368f785ea4baa5452be6a436a71f7f259d97bc6b7b98523d6173a096d17"
+    },
+    {
+      "ordinal": 122,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "8b0ab0e5050e23d8bcc51237ad04d535d3d8376c3364b7b1b3cbaa80f3c23526"
+    },
+    {
+      "ordinal": 123,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "f2c5dff0b4b562c995b17fd076c7f115e68f2e06fd590064f14bce263f6de386"
+    },
+    {
+      "ordinal": 124,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "ece2f7a6273f95538340bb1412363e15b50476c6b3a7ad472eb1b4673081a691"
+    },
+    {
+      "ordinal": 125,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "599b03c5b59d52976647ecaa280d2806ff5439f27df874b08175e04bb9aa09f6"
+    },
+    {
+      "ordinal": 126,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "3af546bd41adda6b77bb80659e7f086725dd36f9f30c3bf115bc053d17929fb9"
+    },
+    {
+      "ordinal": 127,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "2837d82bc87fbc3a8e340fac0c6c67bd74aeae1e5e9cf047aa15e8fe949a0925"
+    },
+    {
+      "ordinal": 128,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "fbbf6911926490edd76d09268ec50737f94eb60017b5f5eee925f2109f887433"
+    },
+    {
+      "ordinal": 129,
+      "kind": "GRANT SELECT",
+      "sha256": "eb8344d4701d4682285412fec221721e6d6fa241f40935d98ddb51e75020ce1d"
+    },
+    {
+      "ordinal": 130,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "ef4af2572505b747ac504326912b27df62acea008d12b5afe813b24c22435b04"
+    },
+    {
+      "ordinal": 131,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "39b7c0b1e21750ef8e4d7ad5d381ba6f1d76bfe94baa252aae56a2d4985b4eac"
+    },
+    {
+      "ordinal": 132,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "99255b4c30557122672e1005283aa9f2968780d159fe98bfc746aa8d40eae223"
+    },
+    {
+      "ordinal": 133,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "a63fd4d34dc15d481724610904729bad04b05cf61d3ecef8e9f798412b5b5a1c"
+    },
+    {
+      "ordinal": 134,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "f21ddeabd4b4804f3470d31945af670fa82e71c2a1c1339de637c6f3a909cded"
+    },
+    {
+      "ordinal": 135,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "4b80cd02b2f593bbfdc1209f6af7b80ba62c8b37ac454a4cbdd5f73b50b174bc"
+    },
+    {
+      "ordinal": 136,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "9e83658dab78a2c932f96a4ad40a287448e2435e236da42f4ff15ed652f032bc"
+    },
+    {
+      "ordinal": 137,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "ffbb4f88b994c5a73f544deef2edb4d44dbf4ed67596968af4a34f7bd8565312"
+    },
+    {
+      "ordinal": 138,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "58bddedb6eb53a731f1570e2f10575ea91fdc22c012ab0419a389a66a7fac6b0"
+    },
+    {
+      "ordinal": 139,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "9d18c8730cb35e2e959b5c3d3864de95f434f9b6871958fcb6a5c919bf5fe035"
+    },
+    {
+      "ordinal": 140,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "42505b4b181f3f9dd3a15bd784fa91dd834fce13c41990c509cdb6b421a3f6d7"
+    },
+    {
+      "ordinal": 141,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "ef3f2ee33e3751aa164952b7367099fe1eec73a360bad24e996dabe381c4f0fd"
+    },
+    {
+      "ordinal": 142,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "69c345a7939048dcd6f1b8c783166487c9c4e6fcf05b22e53d188be2158fe7f6"
+    },
+    {
+      "ordinal": 143,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "70deaea1443ce5fc94047f99f40b357572240022a94d85485f661e71d14e85d4"
+    },
+    {
+      "ordinal": 144,
+      "kind": "GRANT SELECT,INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE",
+      "sha256": "44e2c9135fb2f929c8afced7849fbf1503e6698e7834e4cac82588a70c58e653"
+    }
+  ],
+  "production_application": "not performed; read-only source capture only",
+  "excluded_absent_script_objects": [
+    "edu_wenku",
+    "ali",
+    "Sheet1"
+  ],
+  "managed_objects": "Supabase auth/storage/platform internals and extension-owned objects supplied by their runtimes; not dumped as application baseline",
+  "representation_adjustments": [
+    "SQL function bodies with CRLF or trailing whitespace (has_service_role, esg_full_text, standards_full_text) use escaped SQL string literals to preserve the observed prosrc bytes without changing repository line endings/whitespace.",
+    "Revoke excess local PostgreSQL17 MAINTAIN default grants on all 24 public tables from anon/authenticated/service_role to match production ACLs.",
+    "The legacy kb_schema_migrations relation is recreated empty with its DDL/RLS/ACL only; no applied history rows are exported."
+  ],
+  "public_catalog_scope": {
+    "tables": 24,
+    "functions": 72,
+    "enum_types": 11
+  },
+  "explicit_privilege_migration": "supabase/migrations/20261012035302_capture_explicit_kb_object_privileges.sql",
+  "explicit_privilege_capture": {
+    "relation_count": 11,
+    "function_count": 66,
+    "reason": "Preview integration reproduces missing inherited default privileges; explicit object ACLs must match captured production without importing default privileges or role memberships."
+  }
+}

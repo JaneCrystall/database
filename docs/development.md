@@ -8,8 +8,8 @@ language: en
 whenToUse: "When exporting schema, authoring migrations or selecting a database target."
 whenToUpdate: "When helper CLI contracts, dependencies or adoption steps change."
 checkPaths: [scripts/**, supabase/config.toml, .env.*.example]
-lastReviewedAt: 2026-10-11
-lastReviewedCommit: a022a6c67d6ed57565a7a433f347c815f4d88e2c
+lastReviewedAt: 2026-10-12
+lastReviewedCommit: 2cc979d30117a1491e9d1daad93cacb2001dfff5
 ---
 
 # Development
@@ -107,3 +107,11 @@ Install the binary with `cargo install docpact --version 0.1.9 --locked` if
 needed. `scripts/install-git-hooks.sh` installs the optional non-overwriting
 pre-push gate, comparing to `origin/main`. Use an explicit base for stacked
 changes. Run strict config validation and an explicit-diff lint before PRs.
+
+## Complete application baseline qualification
+
+Use `tests/consumers/README.md` for disposable target start, synthetic fixtures,
+actual Next/Edge/journal execution and cleanup. The production-derived contract
+is catalog-only and is checked by the ordinary local SQL gate. Never point
+consumer fixtures at production, and do not merge an unreconciled baseline into
+an automatically deployed main branch.

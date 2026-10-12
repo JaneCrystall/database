@@ -1,7 +1,7 @@
 version: 1
 layout: repo
-lastReviewedAt: "2026-10-11"
-lastReviewedCommit: "a022a6c67d6ed57565a7a433f347c815f4d88e2c"
+lastReviewedAt: "2026-10-12"
+lastReviewedCommit: "2cc979d30117a1491e9d1daad93cacb2001dfff5"
 repo:
   id: database
 routing:
@@ -36,6 +36,24 @@ freshness:
   warn_after_days: 90
   critical_after_days: 180
 rules:
+  - id: database-legacy-capture
+    scope: repo
+    repo: database
+    triggers:
+      - path: docs/legacy-schema-inventory.json
+        kind: schema-provenance
+      - path: tests/schema/**
+        kind: catalog-contract
+      - path: tests/consumers/**
+        kind: consumer-qualification
+      - path: scripts/test-consumers.sh
+        kind: consumer-entrypoint
+    requiredDocs:
+      - path: docs/legacy-schema-baseline.md
+        mode: review_or_update
+      - path: docs/validation.md
+        mode: review_or_update
+    reason: Public schema capture, target isolation and business qualification must share an explicit privacy and completeness contract.
   - id: database-hosted-integration
     scope: repo
     repo: database
