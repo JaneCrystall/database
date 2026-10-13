@@ -8,8 +8,8 @@ language: en
 whenToUse: "Before submitting or integrating database changes."
 whenToUpdate: "When test commands, qualification scope or CI changes."
 checkPaths: [scripts/**, tests/**, .github/workflows/**, .docpact/**]
-lastReviewedAt: 2026-10-12
-lastReviewedCommit: a17367cbb824f94b04f63779e8d68b299fdec3e4
+lastReviewedAt: 2026-10-13
+lastReviewedCommit: 223e05ccdd86505595f34166da0da2711c6d2294
 ---
 
 # Validation
@@ -78,3 +78,11 @@ business-data fixture or database mocking is permitted.
 `tests/schema/legacy_behaviors.sql` supplements catalog equality with real
 trigger/RPC/RLS/role behavior using rollback-scoped synthetic records. It runs
 in the local gate and on the verified preview, never production.
+
+M1 resource qualification additionally runs actual concurrent psql sessions and
+a prior-chain upgrade with synthetic rows using the same disposable local gate.
+The legacy catalog fixture remains unchanged; `resource_catalog.expected.json`
+contains only the additive resource objects. Both are checked exactly.
+`DATABASE_TEST_CATALOG_OUTPUT` may select a local output file for catalog-only
+review evidence; it contains definitions, not business rows or credentials.
+See [resource-contract.md](resource-contract.md) for covered cases and limits.

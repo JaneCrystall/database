@@ -124,9 +124,27 @@ if (( ${#failed_tests[@]} != 0 )); then
   printf 'Failed SQL tests: %s\n' "${failed_tests[*]}" >&2
   exit 1
 fi
+"$python_bin" "$repo_root/tests/runtime/resource_contract.py" "$db_container"
 run_sql < "$repo_root/tests/schema/legacy_behaviors.sql"
 run_sql -At < "$repo_root/tests/schema/public_catalog.sql" > "$test_root/legacy-catalog.json"
+if [[ -n "${DATABASE_TEST_CATALOG_OUTPUT:-}" ]]; then
+  # Catalog definitions only, never application/Auth rows or connection configuration.
+  cp "$test_root/legacy-catalog.json" "$DATABASE_TEST_CATALOG_OUTPUT"
+fi
 "$python_bin" "$repo_root/tests/schema/check_catalog.py" --actual "$test_root/legacy-catalog.json"
 
 SUPABASE_CLI="$supabase_bin" "$python_bin" "$repo_root/tests/runtime/qualify_toolchain.py" "$repo_root" "$test_root"
-echo "Local migration replay and ${#smoke_tests[@]} SQL smoke tests passed."
+# Upgrade from the exact prior chain with existing rows; never apply to a linked project.
+resource_migration=20261013091136_kb_resource_contract.sql
+mv "$test_root/supabase/migrations/$resource_migration" "$test_root/$resource_migration"
+"$supabase_bin" db reset --local --workdir "$test_root" --yes
+run_sql -At < "$repo_root/tests/schema/public_catalog.sql" > "$test_root/prior-catalog.json"
+"$python_bin" "$repo_root/tests/schema/check_catalog.py" --baseline-only --actual "$test_root/prior-catalog.json"
+run_sql < "$repo_root/tests/upgrade/resource_before.sql"
+mv "$test_root/$resource_migration" "$test_root/supabase/migrations/$resource_migration"
+"$supabase_bin" migration up --local --workdir "$test_root"
+run_sql < "$repo_root/tests/upgrade/resource_after.sql"
+run_sql -At < "$repo_root/tests/schema/public_catalog.sql" > "$test_root/upgraded-catalog.json"
+"$python_bin" "$repo_root/tests/schema/check_catalog.py" --actual "$test_root/upgraded-catalog.json"
+"$python_bin" "$repo_root/tests/runtime/resource_contract.py" "$db_container"
+echo "Local migration replay, ${#smoke_tests[@]} SQL smoke tests, resource concurrency and prior-schema upgrade passed."

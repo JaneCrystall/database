@@ -8,8 +8,8 @@ language: en
 whenToUse: "When deciding source ownership, schema scope or generated-path boundaries."
 whenToUpdate: "When schema ownership, imported scope or consumer contracts change."
 checkPaths: [supabase/**, scripts/**, tests/sql/**, docs/source-inventory.json]
-lastReviewedAt: 2026-10-12
-lastReviewedCommit: a17367cbb824f94b04f63779e8d68b299fdec3e4
+lastReviewedAt: 2026-10-13
+lastReviewedCommit: 223e05ccdd86505595f34166da0da2711c6d2294
 ---
 
 # Database architecture
@@ -76,3 +76,10 @@ environment names backed by ignored local env files; they do not assert that
 hosted targets through local env names. The Knowledge Base GitHub Integration
 is governed by `docs/supabase-integration.md`; Git uses one `main` trunk. LCA
 project refs, auth URLs, schemas and branch bindings are not part of this repo.
+
+## Opt-in M1 resource contract
+
+The additive resource registry and trusted-gateway RPC boundary are defined in
+[resource-contract.md](resource-contract.md). Existing metadata tables remain
+the fact source for legacy adapters. No collection/profile is activated by the
+migration; processing and review state remain separate.

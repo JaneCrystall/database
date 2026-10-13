@@ -8,8 +8,8 @@ language: en
 whenToUse: "When exporting schema, authoring migrations or selecting a database target."
 whenToUpdate: "When helper CLI contracts, dependencies or adoption steps change."
 checkPaths: [scripts/**, supabase/config.toml, .env.*.example]
-lastReviewedAt: 2026-10-12
-lastReviewedCommit: 2cc979d30117a1491e9d1daad93cacb2001dfff5
+lastReviewedAt: 2026-10-13
+lastReviewedCommit: 223e05ccdd86505595f34166da0da2711c6d2294
 ---
 
 # Development
@@ -115,3 +115,7 @@ actual Next/Edge/journal execution and cleanup. The production-derived contract
 is catalog-only and is checked by the ordinary local SQL gate. Never point
 consumer fixtures at production, and do not merge an unreconciled baseline into
 an automatically deployed main branch.
+
+For M1 resource registration/review/publication integration, use the request and
+recovery protocol in [resource-contract.md](resource-contract.md). Configure
+profiles only on explicit isolated targets; RPCs do not read NAS files.

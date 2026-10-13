@@ -8,8 +8,8 @@ language: en
 whenToUse: "When reviewing the production-derived legacy baseline or running consumer qualification."
 whenToUpdate: "When capture scope, privacy guarantees, parity or business-path validation changes."
 checkPaths: [supabase/migrations/**, tests/schema/**, tests/consumers/**, docs/legacy-schema-inventory.json]
-lastReviewedAt: 2026-10-12
-lastReviewedCommit: 1a051fd0d177c8967302adc6e35c4f8e7d783842
+lastReviewedAt: 2026-10-13
+lastReviewedCommit: 223e05ccdd86505595f34166da0da2711c6d2294
 ---
 
 # Knowledge Base legacy schema baseline
@@ -128,3 +128,11 @@ The synthetic legacy SQL behavior contract additionally executes insert/update
 triggers, full-text RPC matching, own-row role visibility, anonymous denial,
 journal-reader read-only access and out_user RLS denial. Test-only SET ROLE
 membership and all synthetic Auth/table rows are transactionally rolled back.
+
+## Additive migrations after capture
+
+The original capture fixture is immutable evidence for 24 tables, 72 functions
+and 11 enums. M1 resource objects have a separate additive catalog fixture; the
+checker combines both at head, rejects overlaps, and still rejects unexpected
+objects or changes to any legacy definition. `--baseline-only` is used solely
+for the disposable prior-chain upgrade gate before the resource migration.
