@@ -8,8 +8,8 @@ language: en
 whenToUse: "When exporting schema, authoring migrations or selecting a database target."
 whenToUpdate: "When helper CLI contracts, dependencies or adoption steps change."
 checkPaths: [scripts/**, supabase/config.toml, .env.*.example]
-lastReviewedAt: 2026-10-12
-lastReviewedCommit: 2cc979d30117a1491e9d1daad93cacb2001dfff5
+lastReviewedAt: 2026-10-13
+lastReviewedCommit: 328512cf20747fbbd00f2973e7a609b6388360cb
 ---
 
 # Development
@@ -115,3 +115,9 @@ actual Next/Edge/journal execution and cleanup. The production-derived contract
 is catalog-only and is checked by the ordinary local SQL gate. Never point
 consumer fixtures at production, and do not merge an unreconciled baseline into
 an automatically deployed main branch.
+
+The ordinary `scripts/test-database.sh` gate includes Jobs prior-schema upgrade,
+role/filter/sort regressions and the synthetic 60,000-job capacity check. It owns
+and removes its temporary local Supabase stack; never run the capacity fixture
+against a hosted or developer database containing data to preserve. No hosted
+migration is needed to reproduce or qualify the Jobs fix.

@@ -8,8 +8,8 @@ language: en
 whenToUse: "When deciding source ownership, schema scope or generated-path boundaries."
 whenToUpdate: "When schema ownership, imported scope or consumer contracts change."
 checkPaths: [supabase/**, scripts/**, tests/sql/**, docs/source-inventory.json]
-lastReviewedAt: 2026-10-12
-lastReviewedCommit: a17367cbb824f94b04f63779e8d68b299fdec3e4
+lastReviewedAt: 2026-10-13
+lastReviewedCommit: 328512cf20747fbbd00f2973e7a609b6388360cb
 ---
 
 # Database architecture
@@ -76,3 +76,16 @@ environment names backed by ignored local env files; they do not assert that
 hosted targets through local env names. The Knowledge Base GitHub Integration
 is governed by `docs/supabase-integration.md`; Git uses one `main` trunk. LCA
 project refs, auth URLs, schemas and branch bindings are not part of this repo.
+
+## Jobs list authorization
+
+`20261013091317_optimize_kb_admin_jobs_authorization.sql` resolves the actor's
+user/group principals and active grants once per `list_kb_admin_jobs` call,
+matching the existing Documents RPC and single-document helper semantics.
+Read visibility still excludes deleted documents; reindex/delete/manage grants
+still expose their jobs. Revoked/expired grants and null actors remain excluded.
+The six arguments, service-role-only ACL, 21 returned columns, precise count,
+filters, offset pagination and timestamp/UUID tiebreaks are unchanged. Empty
+pages still contain no count row, as required by existing Next consumers.
+No index, role timeout or single-document helper is changed.
+See [Jobs timeout evidence](jobs-list-timeout.md) for measured scope and limits.

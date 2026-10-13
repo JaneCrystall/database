@@ -8,8 +8,8 @@ language: en
 whenToUse: "When reviewing the production-derived legacy baseline or running consumer qualification."
 whenToUpdate: "When capture scope, privacy guarantees, parity or business-path validation changes."
 checkPaths: [supabase/migrations/**, tests/schema/**, tests/consumers/**, docs/legacy-schema-inventory.json]
-lastReviewedAt: 2026-10-12
-lastReviewedCommit: 1a051fd0d177c8967302adc6e35c4f8e7d783842
+lastReviewedAt: 2026-10-13
+lastReviewedCommit: 328512cf20747fbbd00f2973e7a609b6388360cb
 ---
 
 # Knowledge Base legacy schema baseline
@@ -128,3 +128,12 @@ The synthetic legacy SQL behavior contract additionally executes insert/update
 triggers, full-text RPC matching, own-row role visibility, anonymous denial,
 journal-reader read-only access and out_user RLS denial. Test-only SET ROLE
 membership and all synthetic Auth/table rows are transactionally rolled back.
+
+## Deliberate changes after capture
+
+The Jobs timeout fix updates only `list_kb_admin_jobs`'s `body_md5` in the live
+head catalog expectation. The original 40-file capture and provenance remain
+immutable; the new 41st migration is a reviewed forward change. The local gate
+continues enforcing all other captured attributes, including that function's
+ACL/signature/settings. The original production fingerprint is preserved in Git
+history; a current-head expectation is not evidence of production application.
