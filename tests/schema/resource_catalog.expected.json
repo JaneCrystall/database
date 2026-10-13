@@ -726,7 +726,7 @@
       "owner": "postgres",
       "strict": false,
       "returns": "jsonb",
-      "body_md5": "f608cc4eed2f157db27c8ee8e9b2bea6",
+      "body_md5": "94f106967565e86e2f708a2aa6412544",
       "language": "plpgsql",
       "parallel": "u",
       "arguments": "p_actor_id uuid, p_collection_id uuid, p_operation text, p_request_id uuid, p_payload jsonb",

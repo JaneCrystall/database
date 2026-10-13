@@ -9,7 +9,7 @@ whenToUse: "When integrating M1 resource registration, review or PDF publication
 whenToUpdate: "When resource RPCs, identity, permissions, snapshots or recovery change."
 checkPaths: [supabase/migrations/*_kb_resource_contract.sql, tests/runtime/resource_contract.py, tests/upgrade/resource_*.sql]
 lastReviewedAt: 2026-10-13
-lastReviewedCommit: 223e05ccdd86505595f34166da0da2711c6d2294
+lastReviewedCommit: fe342841ad03459337abb97fd03d29e9310151c8
 ---
 
 # M1 resource identity and document association
@@ -49,7 +49,7 @@ Metadata has one fact source:
   another `upsert` before processing can proceed.
 
 Effective fields are `source_metadata || manual_overrides`. Only `manage`
-can set or release overrides, with actor/time/reason and request audit.
+can set or release overrides, with per-field actor/time/reason and request audit.
 A source refresh behind an override records a proposal without revoking
 approval. A change to effective metadata or candidate observations revokes
 approval and fences outstanding processing work immediately. The legacy

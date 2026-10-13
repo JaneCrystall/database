@@ -193,6 +193,23 @@ check(f"kb_resource_get('{reader}','{collections[0]}','{r['entry_id']}') is not 
 sql(f"update kb_grants set expires_at=now()-interval '1 second' where principal_id='{reader}';")
 sql(f"set role service_role; select kb_resource_get('{reader}','{collections[0]}','{r['entry_id']}');",error='RESOURCE_FORBIDDEN')
 
+# Current field provenance must retain each editor, not attribute all overrides to the last one.
+editor=str(uuid.uuid4())
+sql(f"insert into kb_grants(resource_type,resource_id,principal_type,principal_id,actions,created_by) values('collection','{collections[0]}','user','{editor}',array['manage']::kb_grant_action[],'{actor}');")
+provenance=create(collections[0],'provenance',{'title':'Source','organization':'Source org','report_year':2026})
+provenance=mutate(collections[0],'override',provenance,fields={'title':'Editor one'})
+provenance=command(collections[0],'override',{'entry_id':provenance['entry_id'],'expected_revision':provenance['revision'],'fields':{'organization':'Editor two'}},as_actor=editor)
+check(f"(select field_provenance#>>'{{manual,title,actor_id}}'='{actor}' and field_provenance#>>'{{manual,organization,actor_id}}'='{editor}' from kb_resource_entries where id='{provenance['entry_id']}')",'manual overrides retain field-specific provenance')
+
+# Exact serialized 64 KiB request limit: valid request at boundary, one byte over rejected.
+limit_payload={'expected_revision':0,'binding_id':'catalog','external_key':'boundary','metadata':{},'reason':'x'}
+base_size=int(sql('select octet_length('+quote(json.dumps(limit_payload))+'::jsonb::text);'))
+limit_payload['reason']='x'*(65536-base_size+1)
+command(collections[0],'upsert',limit_payload)
+limit_payload['reason']+='x'
+command(collections[0],'upsert',limit_payload,error='RESOURCE_PAYLOAD_INVALID')
+print('PASS exact 65536/65537 JSONB request boundary',flush=True)
+
 # Real multi-session races: same idempotency key produces exactly one result/entry.
 request=str(uuid.uuid4())
 payload={'expected_revision':0,'binding_id':'catalog','external_key':'race','metadata':{}}

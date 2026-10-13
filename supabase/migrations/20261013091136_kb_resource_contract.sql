@@ -290,12 +290,18 @@ begin
     metadata := coalesce(p_payload->'fields','{}'::jsonb);
     perform public.kb_resource_validate_metadata(profile,metadata,false);
     e.manual_overrides := e.manual_overrides||metadata;
+    -- Retain attribution per current override, not just the last editor of any field.
+    for field in select jsonb_object_keys(metadata) loop
+      e.field_provenance := e.field_provenance||jsonb_build_object('manual',
+        coalesce(e.field_provenance->'manual','{}'::jsonb)||jsonb_build_object(field,jsonb_build_object(
+          'actor_id',p_actor_id,'at',now(),'reason',reason,'request_id',p_request_id)));
+    end loop;
     for field in select jsonb_array_elements_text(coalesce(p_payload->'release_fields','[]'::jsonb)) loop
       e.manual_overrides := e.manual_overrides-field;
+      e.field_provenance := e.field_provenance||jsonb_build_object('manual',
+        coalesce(e.field_provenance->'manual','{}'::jsonb)-field);
     end loop;
     changed := true;
-    e.field_provenance := e.field_provenance||jsonb_build_object('manual',jsonb_build_object(
-      'actor_id',p_actor_id,'at',now(),'reason',reason,'request_id',p_request_id));
   else
     if e.metadata_mode='legacy_ref' and public.kb_resource_legacy_metadata(e.legacy_ref)<>e.source_metadata then
       raise exception using errcode='40001',message='RESOURCE_SOURCE_CHANGED';

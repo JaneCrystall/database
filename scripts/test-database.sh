@@ -136,12 +136,17 @@ fi
 SUPABASE_CLI="$supabase_bin" "$python_bin" "$repo_root/tests/runtime/qualify_toolchain.py" "$repo_root" "$test_root"
 # Upgrade from the exact prior chain with existing rows; never apply to a linked project.
 resource_migration=20261013091136_kb_resource_contract.sql
-mv "$test_root/supabase/migrations/$resource_migration" "$test_root/$resource_migration"
+mkdir "$test_root/after-resource-baseline"
+for migration_path in "$test_root"/supabase/migrations/*.sql; do
+  if [[ ! "${migration_path##*/}" < "$resource_migration" ]]; then
+    mv "$migration_path" "$test_root/after-resource-baseline/"
+  fi
+done
 "$supabase_bin" db reset --local --workdir "$test_root" --yes
 run_sql -At < "$repo_root/tests/schema/public_catalog.sql" > "$test_root/prior-catalog.json"
 "$python_bin" "$repo_root/tests/schema/check_catalog.py" --baseline-only --actual "$test_root/prior-catalog.json"
 run_sql < "$repo_root/tests/upgrade/resource_before.sql"
-mv "$test_root/$resource_migration" "$test_root/supabase/migrations/$resource_migration"
+mv "$test_root"/after-resource-baseline/*.sql "$test_root/supabase/migrations/"
 "$supabase_bin" migration up --local --workdir "$test_root"
 run_sql < "$repo_root/tests/upgrade/resource_after.sql"
 run_sql -At < "$repo_root/tests/schema/public_catalog.sql" > "$test_root/upgraded-catalog.json"
