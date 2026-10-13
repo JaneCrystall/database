@@ -9,7 +9,7 @@ whenToUse: "When reviewing or qualifying the Jobs timeout fix."
 whenToUpdate: "When Jobs query behavior, fixtures or measured evidence changes."
 checkPaths: [supabase/migrations/20261013091317_optimize_kb_admin_jobs_authorization.sql, tests/performance/kb_admin_jobs.sql, tests/sql/kb_admin_jobs_permissions_smoke.sql, tests/runtime/qualify_jobs_upgrade.py]
 lastReviewedAt: 2026-10-13
-lastReviewedCommit: 328512cf20747fbbd00f2973e7a609b6388360cb
+lastReviewedCommit: f0bdc521cf147d4649430f25c69eda226315905d
 ---
 
 # Jobs list timeout investigation
@@ -109,16 +109,41 @@ fingerprint; all other schema attributes remain equal.
 
 ## Review and deployment boundary
 
-Claude UI consultation was attempted but its active session was concurrently
-changed by another task; no independent Jobs assessment was received. Do not
-claim that consultation passed. SQL/helper comparison and runtime qualification
-are the available review evidence; PR review remains visible in the delivery.
+On 2026-10-13, Claude Code APP independently reviewed the actual diff from
+`223e05ccdd86505595f34166da0da2711c6d2294` to
+`f0bdc521cf147d4649430f25c69eda226315905d`, after verifying the exact Jobs
+worktree and HEAD. The session used DeepSeek-V4.1-Flash 1M, Max effort and the
+user-confirmed Bypass permissions mode. The code review found no blocking
+findings. It checked latest permission-helper definitions, group/null/deleted/
+subtree/expired/revoked behavior, unchanged RPC sections, ACL preservation,
+upgrade qualification and the actual test/CI wiring. This was static review;
+the reviewer did not rerun tests or verify hosted state. The implementing agent
+separately rechecked the source comparison, existing test logs, exact-head CI
+and strict docpact/base-to-head lint.
 
-No production DDL, EXPLAIN ANALYZE, export, service restart or worker activation
-was performed. Database `main` is connected to automatic Supabase deployment;
-this work is delivered as a reviewable PR. Hosted preview evidence and explicit
-production rollout disposition are needed before merge/activation. A source PR
-does not prove that either existing web host's Jobs screen has recovered.
+Nonblocking follow-ups: measure grant-heavy distributions before extrapolating
+latency; when a future migration redefines this RPC, update the upgrade probe
+so it cannot leave the older body installed after replay; consider shared
+visibility and group action-grant fixtures. The current catalog gate would also
+reject an unexpected function body. No current authorization or upgrade failure
+was found, so these observations do not expand this fix's implementation scope.
+
+Delivery remains blocked. GitHub reports no upstream write permission for the
+available CLI and connector accounts. Supabase's branch listing contains only
+the default production branch, and PR #9 has no official Supabase Preview check.
+The absence of a preview is verified; its cause has not been established. The
+user requested completion of review and durable blocker recording while these
+conditions remain. No merge continuation, production operation or root
+integration was performed. The existing local qualification is not hosted
+preview qualification or proof that either web host's Jobs screen recovered.
+
+Before resuming: obtain an authorized GitHub identity, qualify the exact PR
+revision on its verified hosted preview, rerun the controller's fresh guarded
+merge preflight, observe the automatic deployment, then complete exact-commit
+workspace integration and original incident acceptance. Do not reuse an expired
+merge continuation. Production data-distribution evidence remains separate from
+the synthetic benchmark; do not copy production rows into a preview.
+
 Rollback, if needed after an authorized deployment, is a separately reviewed new
 migration restoring the prior Jobs definition from `202605110001`; never rewrite
 applied migration history or run the legacy filename-ledger runner on production.
