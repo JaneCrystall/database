@@ -8,8 +8,8 @@ language: en
 whenToUse: "Before submitting or integrating database changes."
 whenToUpdate: "When test commands, qualification scope or CI changes."
 checkPaths: [scripts/**, tests/**, .github/workflows/**, .docpact/**]
-lastReviewedAt: 2026-10-13
-lastReviewedCommit: 328512cf20747fbbd00f2973e7a609b6388360cb
+lastReviewedAt: 2026-10-15
+lastReviewedCommit: 951192ce32389c43c4a54f1638aea59ef7550e1a
 ---
 
 # Validation
@@ -79,6 +79,27 @@ business-data fixture or database mocking is permitted.
 trigger/RPC/RLS/role behavior using rollback-scoped synthetic records. It runs
 in the local gate and on the verified preview, never production.
 
+M1 resource qualification additionally runs actual concurrent psql sessions and
+a prior-chain upgrade with synthetic rows using the same disposable local gate.
+The pre-resource 40-file catalog uses `pre_resource_catalog.expected.json`;
+head uses the current public fixture including the Jobs optimization plus
+`resource_catalog.expected.json`. Every selected fixture is checked exactly.
+Offline regression tests reject cross-generation function bodies and ACL drift.
+`DATABASE_TEST_CATALOG_OUTPUT` may select a local output file for catalog-only
+review evidence; it contains definitions, not business rows or credentials.
+See [resource-contract.md](resource-contract.md) for covered cases and limits.
+
+The resource schema boundary gate additionally starts real local PostgREST/Kong,
+runs HTTP role/exposure/lifecycle checks, and tests a populated old-resource
+schema upgrade. `tests/schema/resource_boundary.sql` checks exact ACL/schema
+contracts; SQL statements also execute denied table operations for each API
+role. Only new private/api objects enter the additive catalog; the legacy public
+snapshot must not be regenerated to accept unrelated changes. Client type
+qualification explicitly includes public/api and excludes private tables.
+The type assertion accepts quoted and unquoted schema keys emitted by the
+official generator. CLI failure handling must preserve its exit status; the
+offline runtime-safety tests verify failed startup cleans only the owned stack.
+
 ## Jobs timeout regression
 
 The local gate also runs `tests/runtime/qualify_jobs_upgrade.py`: on its owned
@@ -101,3 +122,20 @@ not read environment credentials or production data. It is a bounded capacity
 regression, not a statement of production scale, latency or hosted remediation.
 See [the investigation record](jobs-list-timeout.md). Catalog expectations update
 only the intentionally changed Jobs function fingerprint.
+
+
+Resource/delete concurrency qualification uses two real sessions and blocking
+PID barriers. It exercises the actual resource command against actual
+`request_delete`, verifies a retryable lifecycle-busy conflict (HTTP adapter SQLSTATE `PT409`)
+instead of `40P01`, confirms no partial resource/receipt changes, and checks that deletion
+and a retry with the identical request UUID/payload preserve cleanup ownership. Fixtures run
+only in the uniquely owned disposable stack, never production.
+
+
+Hosted HTTP qualification uses an actual legacy table route to prove that the
+ordinary-user JWT reaches PostgREST; hosted OpenAPI introspection is restricted
+to secret keys. Resource semantic conflicts must return HTTP 409 promptly on
+both the pinned local runtime and hosted runtime. A rollback-scoped SQL probe
+checks private/API error separation and preserves unexpected serialization
+failures. This prevents a local-only HTTP 500 assertion from hiding hosted
+transaction retries.

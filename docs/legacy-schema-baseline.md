@@ -8,8 +8,8 @@ language: en
 whenToUse: "When reviewing the production-derived legacy baseline or running consumer qualification."
 whenToUpdate: "When capture scope, privacy guarantees, parity or business-path validation changes."
 checkPaths: [supabase/migrations/**, tests/schema/**, tests/consumers/**, docs/legacy-schema-inventory.json]
-lastReviewedAt: 2026-10-13
-lastReviewedCommit: 328512cf20747fbbd00f2973e7a609b6388360cb
+lastReviewedAt: 2026-10-15
+lastReviewedCommit: 951192ce32389c43c4a54f1638aea59ef7550e1a
 ---
 
 # Knowledge Base legacy schema baseline
@@ -129,11 +129,22 @@ triggers, full-text RPC matching, own-row role visibility, anonymous denial,
 journal-reader read-only access and out_user RLS denial. Test-only SET ROLE
 membership and all synthetic Auth/table rows are transactionally rolled back.
 
+## Additive migrations after capture
+
+The original 40-file capture is preserved byte-for-byte in
+`tests/schema/pre_resource_catalog.expected.json` (from commit `223e05cc`).
+It contains 24 tables, 72 functions and 11 enums. `--baseline-only` selects
+that fixture solely for the disposable prior-chain upgrade gate, which excludes
+both the resource and later Jobs migrations. The normal head check combines
+`public_catalog.expected.json` with the separate resource catalog, rejects
+overlaps, and requires the deliberately optimized Jobs body fingerprint.
+Mixing either generation fails; no function-body or ACL checks are skipped.
+
 ## Deliberate changes after capture
 
 The Jobs timeout fix updates only `list_kb_admin_jobs`'s `body_md5` in the live
 head catalog expectation. The original 40-file capture and provenance remain
-immutable; the new 41st migration is a reviewed forward change. The local gate
+immutable; the Jobs migration is a reviewed forward change. The local gate
 continues enforcing all other captured attributes, including that function's
 ACL/signature/settings. The original production fingerprint is preserved in Git
 history; a current-head expectation is not evidence of production application.

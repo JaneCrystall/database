@@ -128,21 +128,18 @@ visibility and group action-grant fixtures. The current catalog gate would also
 reject an unexpected function body. No current authorization or upgrade failure
 was found, so these observations do not expand this fix's implementation scope.
 
-Delivery remains blocked. GitHub reports no upstream write permission for the
-available CLI and connector accounts. Supabase's branch listing contains only
-the default production branch, and PR #9 has no official Supabase Preview check.
-The absence of a preview is verified; its cause has not been established. The
-user requested completion of review and durable blocker recording while these
-conditions remain. No merge continuation, production operation or root
-integration was performed. The existing local qualification is not hosted
-preview qualification or proof that either web host's Jobs screen recovered.
-
-Before resuming: obtain an authorized GitHub identity, qualify the exact PR
-revision on its verified hosted preview, rerun the controller's fresh guarded
-merge preflight, observe the automatic deployment, then complete exact-commit
-workspace integration and original incident acceptance. Do not reuse an expired
-merge continuation. Production data-distribution evidence remains separate from
-the synthetic benchmark; do not copy production rows into a preview.
+The prior permission and preview blockers were resolved in the authorized
+2026-10-14/15 release session. The exact `63da9066` head passed official Supabase
+Preview on an isolated branch with 41 migrations, exact 24-table/72-function
+catalog parity, all 17 SQL smoke tests and legacy role/trigger/RPC checks.
+PR #9 merged as `89dc811f4c7f11c3c3b6e3748fc92e89f6994e41`. Production then
+reported 41 migrations, the optimized body fingerprint
+`0a34859538a8ce123b8d518c99964275`, and unchanged service-role-only ACL/settings.
+The temporary preview was removed after verification. Durable release evidence
+is recorded on database#8; root integration is tracked by workspace-suite#326.
+This establishes database deployment, not observed recovery on either web host;
+knowledge-base#42 retains that application acceptance. Production distribution
+remains distinct from the synthetic benchmark; no production rows were copied.
 
 Rollback, if needed after an authorized deployment, is a separately reviewed new
 migration restoring the prior Jobs definition from `202605110001`; never rewrite

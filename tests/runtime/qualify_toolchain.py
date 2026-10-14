@@ -24,7 +24,7 @@ def main() -> None:
     # No generated export, schema workspace or type file can touch the checkout.
     workflow.REPO_ROOT = temporary_root
 
-    dump = workflow.export_remote_schema(environment="local")
+    dump = workflow.export_remote_schema(environment="local", schemas=("public","private","api"))
     document_table = re.compile(r'CREATE TABLE\s+(?:IF NOT EXISTS\s+)?"?public"?\."?kb_documents"?\s*\(', re.I)
     actual_dump = dump.read_text(encoding="utf-8")
     declarations = re.findall(r'^CREATE[^\n]*TABLE[^\n]*', actual_dump, re.I | re.M)
@@ -35,13 +35,17 @@ def main() -> None:
     table = workspace / "schemas/public/tables/kb_documents/table.sql"
     assert table.is_file(), "The actual export must produce a kb_documents object workspace"
     assert document_table.search(table.read_text(encoding="utf-8"))
-    types = workflow.build_database_types(environment="local")
+    types = workflow.build_database_types(environment="local", schemas=("public","api"))
     actual_types = types.read_text(encoding="utf-8")
     assert re.search(r'^export type Database\s*=\s*\{', actual_types, re.M), \
         "The generator must produce TypeScript, not a JSON output envelope"
     assert re.search(r'"?kb_documents"?\s*:\s*\{', actual_types), \
         "The actual local TypeScript output must include the kb_documents contract"
     assert types.resolve().is_relative_to(temporary_root)
+    assert (workspace / "schemas/private/tables/kb_resource_entries/table.sql").is_file()
+    assert 'kb_resource_command' in actual_types and re.search(r'"?api"?\s*:', actual_types), \
+        "The actual local TypeScript output must include the api resource RPC contract"
+    assert 'kb_resource_entries' not in actual_types, "API types must not expose private storage"
     print("Real local schema export, offline object workspace and TypeScript generation passed.")
 
 

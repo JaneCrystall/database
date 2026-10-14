@@ -14,8 +14,8 @@ checkPaths:
   - scripts/**
   - tests/**
   - docs/**
-lastReviewedAt: 2026-10-13
-lastReviewedCommit: f0bdc521cf147d4649430f25c69eda226315905d
+lastReviewedAt: 2026-10-15
+lastReviewedCommit: 951192ce32389c43c4a54f1638aea59ef7550e1a
 ---
 
 # Tiangong AI Database Contract
@@ -69,3 +69,8 @@ Run offline tests and local SQL qualification for migration/tooling changes.
 Run strict docpact validation and lint with an explicit diff source. New files
 must be included using `--files` or `--staged`. The wrapper pins docpact 0.1.9;
 optional hooks are installed with `scripts/install-git-hooks.sh`.
+
+New resource storage/implementation is unexposed `private`; externally callable
+resource adapters are `api`. Preserve existing public objects and historical
+migration bytes. The resource contract owns per-table authority, grants and
+actual HTTP qualification; local API config never proves hosted exposure.

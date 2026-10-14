@@ -1,7 +1,7 @@
 version: 1
 layout: repo
-lastReviewedAt: "2026-10-13"
-lastReviewedCommit: "f0bdc521cf147d4649430f25c69eda226315905d"
+lastReviewedAt: "2026-10-15"
+lastReviewedCommit: "951192ce32389c43c4a54f1638aea59ef7550e1a"
 repo:
   id: database
 routing:
@@ -140,3 +140,20 @@ rules:
       - path: .docpact/config.yaml
         mode: review_or_update
     reason: Ownership and standalone governance must remain explicit.
+
+  - id: database-resource-contract
+    scope: repo
+    repo: database
+    triggers:
+      - path: supabase/migrations/*_kb_resource*.sql
+        kind: resource-schema
+      - path: tests/runtime/resource_*.py
+        kind: resource-qualification
+      - path: tests/schema/resource_boundary.sql
+        kind: resource-access-boundary
+      - path: tests/upgrade/resource_*.sql
+        kind: resource-upgrade
+    requiredDocs:
+      - path: docs/resource-contract.md
+        mode: review_or_update
+    reason: Resource identity, approval, publication and recovery must share a versioned gateway contract.

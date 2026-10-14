@@ -8,8 +8,8 @@ language: en
 whenToUse: "When operating the Knowledge Base GitHub Integration or initial history adoption."
 whenToUpdate: "When project/repository mapping, activation gates or deployment ownership changes."
 checkPaths: [supabase/**, docs/supabase-adoption-evidence.json, scripts/**]
-lastReviewedAt: 2026-10-11
-lastReviewedCommit: a022a6c67d6ed57565a7a433f347c815f4d88e2c
+lastReviewedAt: 2026-10-15
+lastReviewedCommit: 2371302de0b5630ce3acfe739514340100e721c5
 ---
 
 # Supabase GitHub Integration
@@ -93,3 +93,19 @@ the new baseline against existing production objects.
 Preview compute is separate usage and not covered by the Spend Cap. Avoid
 abandoned PR branches. See [GitHub Integration](https://supabase.com/docs/guides/deployment/branching/github-integration)
 and [branching usage](https://supabase.com/docs/guides/platform/manage-your-usage/branching).
+
+## M1 resource schema rollout (not activated by local development)
+
+The additive boundary migration moves only the new resource objects into
+`private` and installs `api` invoker entrypoints. Before merge/deployment,
+qualify the exact chain on the official preview, including real PostgREST role
+and exposure checks. Read the hosted exposed-schema list, preserve existing
+schemas and `public` as the default, add `api`, and keep `private` unexposed.
+Never use a blanket grant on all schema objects. Exact gateway function grants
+are in the migration. The checked-in local API config alone is not evidence of
+hosted configuration. Coordinate new clients to explicitly select `api` only
+after these checks; existing public clients continue unchanged. No profile or
+resource intake is activated by schema migration. Production rollout requires explicit user authorization in the tracked task.
+The 2026-10-14/15 release session authorizes guarded main merge, database
+deployment and required hosted API exposure after preview qualification; it
+does not authorize 142/148 application/profile activation.

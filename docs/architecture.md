@@ -8,8 +8,8 @@ language: en
 whenToUse: "When deciding source ownership, schema scope or generated-path boundaries."
 whenToUpdate: "When schema ownership, imported scope or consumer contracts change."
 checkPaths: [supabase/**, scripts/**, tests/sql/**, docs/source-inventory.json]
-lastReviewedAt: 2026-10-13
-lastReviewedCommit: 328512cf20747fbbd00f2973e7a609b6388360cb
+lastReviewedAt: 2026-10-15
+lastReviewedCommit: 951192ce32389c43c4a54f1638aea59ef7550e1a
 ---
 
 # Database architecture
@@ -77,6 +77,18 @@ hosted targets through local env names. The Knowledge Base GitHub Integration
 is governed by `docs/supabase-integration.md`; Git uses one `main` trunk. LCA
 project refs, auth URLs, schemas and branch bindings are not part of this repo.
 
+## Opt-in M1 resource contract
+
+The additive resource registry and trusted-gateway RPC boundary are defined in
+[resource-contract.md](resource-contract.md). Existing metadata tables remain
+the fact source for legacy adapters. No collection/profile is activated by the
+migration; processing and review state remain separate.
+
+New M1 resource state lives in unexposed `private`; `api` contains only the two
+invoker adapters, with privilege elevation in private implementations. This
+incremental boundary does not move existing public business/control tables.
+The table-by-table authority and writer matrix lives in the resource contract.
+
 ## Jobs list authorization
 
 `20261013091317_optimize_kb_admin_jobs_authorization.sql` resolves the actor's
@@ -89,3 +101,14 @@ filters, offset pagination and timestamp/UUID tiebreaks are unchanged. Empty
 pages still contain no count row, as required by existing Next consumers.
 No index, role timeout or single-document helper is changed.
 See [Jobs timeout evidence](jobs-list-timeout.md) for measured scope and limits.
+
+
+Resource lifecycle mutations take job locks before document locks and reject
+contended locks without waiting. The forward lock-conflict migration preserves
+legacy worker/delete implementations and converts resource contention to an
+atomic, retryable lifecycle conflict. It does not activate resource intake.
+
+The invoker API command adapter translates only known resource business
+conflicts into `PT409` / HTTP 409. Private SQL semantics stay unchanged; unrelated
+serialization failures retain their original code. This transport boundary
+avoids treating a permanent business conflict as a retriable database transaction.

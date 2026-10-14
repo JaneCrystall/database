@@ -8,8 +8,8 @@ language: en
 whenToUse: "When exporting schema, authoring migrations or selecting a database target."
 whenToUpdate: "When helper CLI contracts, dependencies or adoption steps change."
 checkPaths: [scripts/**, supabase/config.toml, .env.*.example]
-lastReviewedAt: 2026-10-13
-lastReviewedCommit: 328512cf20747fbbd00f2973e7a609b6388360cb
+lastReviewedAt: 2026-10-15
+lastReviewedCommit: 951192ce32389c43c4a54f1638aea59ef7550e1a
 ---
 
 # Development
@@ -116,8 +116,35 @@ is catalog-only and is checked by the ordinary local SQL gate. Never point
 consumer fixtures at production, and do not merge an unreconciled baseline into
 an automatically deployed main branch.
 
+For M1 resource registration/review/publication integration, use the request and
+recovery protocol in [resource-contract.md](resource-contract.md). Configure
+profiles only on explicit isolated targets; RPCs do not read NAS files.
+
+The full gate now includes local PostgREST/Kong for the resource boundary. Ports
+and project IDs are unique; cleanup owns only that stack. Local gateway/user
+JWTs are ephemeral and never printed by HTTP tests. No production credentials
+are needed. Resource consumers explicitly use schema `api`; export inspection
+with `--schemas public private api`, but generate consumer types with
+`--schemas public api`. Hosted schema exposure is separately qualified as
+specified in `docs/supabase-integration.md`.
+
+The gate suppresses CLI success output that can contain ephemeral keys, filters
+failure diagnostics, and preserves the original CLI exit status for cleanup
+and failure detection.
+
 The ordinary `scripts/test-database.sh` gate includes Jobs prior-schema upgrade,
 role/filter/sort regressions and the synthetic 60,000-job capacity check. It owns
 and removes its temporary local Supabase stack; never run the capacity fixture
 against a hosted or developer database containing data to preserve. No hosted
 migration is needed to reproduce or qualify the Jobs fix.
+
+
+For resource clients, handle `RESOURCE_LIFECYCLE_BUSY` with the bounded retry
+protocol in the resource contract. The combined migration gate keeps the
+pre-resource catalog separate from the current Jobs/resource catalog and runs
+the actual resource/delete concurrency regression on its disposable database.
+
+The resource API returns known business conflicts as HTTP 409 with `PT409` and
+a stable `RESOURCE_*` message. Apply bounded retry only to lifecycle-busy;
+revision/profile/source conflicts require reloading state. Private SQL callers
+still receive the original `40001` codes.
