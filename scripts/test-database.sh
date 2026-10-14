@@ -101,6 +101,8 @@ run_sql() {
   docker exec -i "$db_container" psql -X --set ON_ERROR_STOP=1 --username postgres --dbname postgres "$@"
 }
 
+"$python_bin" "$repo_root/tests/runtime/qualify_jobs_upgrade.py" "$repo_root" "$db_container"
+
 smoke_tests=("$repo_root"/tests/sql/*_smoke.sql)
 if [[ ! -f "${smoke_tests[0]}" ]]; then
   echo "No SQL smoke tests found" >&2
@@ -124,6 +126,11 @@ if (( ${#failed_tests[@]} != 0 )); then
   printf 'Failed SQL tests: %s\n' "${failed_tests[*]}" >&2
   exit 1
 fi
+for sql_file in "$repo_root"/tests/performance/*.sql; do
+  [[ -f "$sql_file" ]] || continue
+  echo "Running ${sql_file##*/}"
+  run_sql < "$sql_file"
+done
 run_sql < "$repo_root/tests/schema/legacy_behaviors.sql"
 run_sql -At < "$repo_root/tests/schema/public_catalog.sql" > "$test_root/legacy-catalog.json"
 "$python_bin" "$repo_root/tests/schema/check_catalog.py" --actual "$test_root/legacy-catalog.json"

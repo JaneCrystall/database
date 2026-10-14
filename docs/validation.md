@@ -8,8 +8,8 @@ language: en
 whenToUse: "Before submitting or integrating database changes."
 whenToUpdate: "When test commands, qualification scope or CI changes."
 checkPaths: [scripts/**, tests/**, .github/workflows/**, .docpact/**]
-lastReviewedAt: 2026-10-12
-lastReviewedCommit: a17367cbb824f94b04f63779e8d68b299fdec3e4
+lastReviewedAt: 2026-10-13
+lastReviewedCommit: 328512cf20747fbbd00f2973e7a609b6388360cb
 ---
 
 # Validation
@@ -78,3 +78,26 @@ business-data fixture or database mocking is permitted.
 `tests/schema/legacy_behaviors.sql` supplements catalog equality with real
 trigger/RPC/RLS/role behavior using rollback-scoped synthetic records. It runs
 in the local gate and on the verified preview, never production.
+
+## Jobs timeout regression
+
+The local gate also runs `tests/runtime/qualify_jobs_upgrade.py`: on its owned
+stack it restores only the changed Jobs function from the immutable previous
+migration, checks the permission/filter/sort fixture against that definition,
+and applies the new forward migration. OID, owner, ACL, parameters, return type,
+security-definer/search-path and volatility must remain identical. All other
+prior-schema objects are unchanged; the full smoke suite then tests the new body.
+
+`tests/sql/kb_admin_jobs_permissions_smoke.sql` compares against the unchanged
+single-document permission helper for user/group, collection/subtree/document,
+owner/creator/public, revoked/expired and deleted-document cases. It covers all
+sort keys and both directions (including null timestamps/ties), filters, empty
+pages, normalization and service-role/anonymous execution privileges.
+
+`tests/performance/kb_admin_jobs.sql` inserts rollback-scoped synthetic data:
+20,000 documents, 60,000 jobs, 100 collections, 101 grants. Its seven calls must
+finish within a transaction-local 5-second statement timeout. The fixture does
+not read environment credentials or production data. It is a bounded capacity
+regression, not a statement of production scale, latency or hosted remediation.
+See [the investigation record](jobs-list-timeout.md). Catalog expectations update
+only the intentionally changed Jobs function fingerprint.
