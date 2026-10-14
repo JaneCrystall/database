@@ -32,4 +32,7 @@ begin
  foreach t in array array['kb_resource_entries','kb_resource_document_links','kb_resource_requests'] loop
   insert into m1_upgrade_proof.resource_state values('oid:'||t,to_jsonb(('public.'||t)::regclass::oid));
  end loop;
+ foreach t in array array['kb_resource_command(uuid,uuid,text,uuid,jsonb)','kb_resource_get(uuid,uuid,uuid)','kb_resource_normalize_doi(text)','kb_resource_legacy_metadata(jsonb)','kb_resource_validate_metadata(jsonb,jsonb,boolean)'] loop
+  insert into m1_upgrade_proof.resource_state values('function_oid:'||t,to_jsonb(('public.'||t)::regprocedure::oid));
+ end loop;
 end $$;

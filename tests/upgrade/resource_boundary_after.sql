@@ -7,6 +7,9 @@ begin
   if actual is distinct from (select value from m1_upgrade_proof.resource_state where key=t) then raise exception 'schema move changed rows: %',t; end if;
   if s='private' and to_jsonb((s||'.'||t)::regclass::oid) is distinct from (select value from m1_upgrade_proof.resource_state where key='oid:'||t) then raise exception 'table identity changed: %',t; end if;
  end loop;
+ foreach t in array array['kb_resource_command(uuid,uuid,text,uuid,jsonb)','kb_resource_get(uuid,uuid,uuid)','kb_resource_normalize_doi(text)','kb_resource_legacy_metadata(jsonb)','kb_resource_validate_metadata(jsonb,jsonb,boolean)'] loop
+  if to_jsonb(('private.'||t)::regprocedure::oid) is distinct from (select value from m1_upgrade_proof.resource_state where key='function_oid:'||t) then raise exception 'function identity changed: %',t; end if;
+ end loop;
  select value into replay from m1_upgrade_proof.resource_state where key='replay';
  select value into saved from m1_upgrade_proof.resource_state where key='getter';
  -- The real gateway role can still replay old receipts and read current state.

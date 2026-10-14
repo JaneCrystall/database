@@ -305,7 +305,9 @@ public/api and must omit private tables.
 Upgrade qualification seeds the old public resource layout with real approved,
 reserved/published associations, manual overrides and receipts, then applies the
 boundary migration. It compares every resource row, processing document/job/audit
-row and table OID before/after and replays an old receipt through the new API.
+row, three table OIDs and five implementation/helper function OIDs before/after,
+then replays an old receipt through the new API. Identity checks reject an
+accidental drop/recreate even if recreated objects pass behavior/ACL tests.
 The previous pre-resource legacy-row upgrade and no-automatic-backfill assertion
 remain in place. Hosted preview and consumer rollout remain separate gates.
 
