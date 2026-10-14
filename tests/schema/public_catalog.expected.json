@@ -1515,7 +1515,7 @@
         }
       ],
       "arguments": "p_actor_id uuid, p_filters jsonb, p_limit integer, p_offset integer, p_sort text, p_dir text",
-      "body_md5": "65c263f55b18d5eaaa5b0538e8e42f3c",
+      "body_md5": "0a34859538a8ce123b8d518c99964275",
       "configuration": [
         "search_path=public, pg_temp"
       ],

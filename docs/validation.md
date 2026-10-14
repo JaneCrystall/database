@@ -8,8 +8,8 @@ language: en
 whenToUse: "Before submitting or integrating database changes."
 whenToUpdate: "When test commands, qualification scope or CI changes."
 checkPaths: [scripts/**, tests/**, .github/workflows/**, .docpact/**]
-lastReviewedAt: "2026-10-14"
-lastReviewedCommit: "08c4c9c478ab7ea8cc436d4ec5430a9587d110f9"
+lastReviewedAt: 2026-10-15
+lastReviewedCommit: 2371302de0b5630ce3acfe739514340100e721c5
 ---
 
 # Validation
@@ -81,8 +81,10 @@ in the local gate and on the verified preview, never production.
 
 M1 resource qualification additionally runs actual concurrent psql sessions and
 a prior-chain upgrade with synthetic rows using the same disposable local gate.
-The legacy catalog fixture remains unchanged; `resource_catalog.expected.json`
-contains only the additive resource objects. Both are checked exactly.
+The pre-resource 40-file catalog uses `pre_resource_catalog.expected.json`;
+head uses the current public fixture including the Jobs optimization plus
+`resource_catalog.expected.json`. Every selected fixture is checked exactly.
+Offline regression tests reject cross-generation function bodies and ACL drift.
 `DATABASE_TEST_CATALOG_OUTPUT` may select a local output file for catalog-only
 review evidence; it contains definitions, not business rows or credentials.
 See [resource-contract.md](resource-contract.md) for covered cases and limits.
@@ -97,3 +99,34 @@ qualification explicitly includes public/api and excludes private tables.
 The type assertion accepts quoted and unquoted schema keys emitted by the
 official generator. CLI failure handling must preserve its exit status; the
 offline runtime-safety tests verify failed startup cleans only the owned stack.
+
+## Jobs timeout regression
+
+The local gate also runs `tests/runtime/qualify_jobs_upgrade.py`: on its owned
+stack it restores only the changed Jobs function from the immutable previous
+migration, checks the permission/filter/sort fixture against that definition,
+and applies the new forward migration. OID, owner, ACL, parameters, return type,
+security-definer/search-path and volatility must remain identical. All other
+prior-schema objects are unchanged; the full smoke suite then tests the new body.
+
+`tests/sql/kb_admin_jobs_permissions_smoke.sql` compares against the unchanged
+single-document permission helper for user/group, collection/subtree/document,
+owner/creator/public, revoked/expired and deleted-document cases. It covers all
+sort keys and both directions (including null timestamps/ties), filters, empty
+pages, normalization and service-role/anonymous execution privileges.
+
+`tests/performance/kb_admin_jobs.sql` inserts rollback-scoped synthetic data:
+20,000 documents, 60,000 jobs, 100 collections, 101 grants. Its seven calls must
+finish within a transaction-local 5-second statement timeout. The fixture does
+not read environment credentials or production data. It is a bounded capacity
+regression, not a statement of production scale, latency or hosted remediation.
+See [the investigation record](jobs-list-timeout.md). Catalog expectations update
+only the intentionally changed Jobs function fingerprint.
+
+
+Resource/delete concurrency qualification uses two real sessions and blocking
+PID barriers. It exercises the actual resource command against actual
+`request_delete`, verifies a retryable lifecycle-busy conflict instead of
+`40P01`, confirms no partial resource/receipt changes, and checks that deletion
+and a retry with the identical request UUID/payload preserve cleanup ownership. Fixtures run
+only in the uniquely owned disposable stack, never production.

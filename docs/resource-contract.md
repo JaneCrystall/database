@@ -8,8 +8,8 @@ language: en
 whenToUse: "When integrating M1 resource registration, review or PDF publication."
 whenToUpdate: "When resource RPCs, identity, permissions, snapshots or recovery change."
 checkPaths: [supabase/migrations/*_kb_resource*.sql, tests/runtime/resource_*.py, tests/schema/resource_boundary.sql, tests/upgrade/resource_*.sql]
-lastReviewedAt: "2026-10-14"
-lastReviewedCommit: "70d66ade42ce932a6670f1286dfd6b62538259b1"
+lastReviewedAt: 2026-10-15
+lastReviewedCommit: 2371302de0b5630ce3acfe739514340100e721c5
 ---
 
 # M1 resource identity and document association
@@ -215,6 +215,19 @@ mutations and approval input/snapshots are audited with actor/reason. Exceptions
 roll back all writes; rejected calls need gateway failure logging. A RAISE
 preceded by INSERT is **not** durable denial auditing.
 
+`RESOURCE_LIFECYCLE_BUSY` (`40001`) means a worker or delete transaction owns
+one of the required job/document locks. The entire resource call rolls back,
+including audit, receipt and cancellation writes. The gateway must use bounded
+retry/backoff with the same request UUID and unchanged payload, then reload
+current state if a revision/approval conflict remains. It must not blindly retry
+all semantic `40001` errors. A busy result is not a successful receipt.
+
+Resource lifecycle paths acquire ordered job locks before document locks using
+`NOWAIT`. This preserves worker ordering while avoiding cycles with existing
+document-first deletion and its job-cancellation trigger. Legacy deletion and
+worker functions remain unchanged; this does not claim to repair unrelated
+pre-existing lock inversions outside the resource API.
+
 ## Reserve, publish and recovery
 
 1. Register/observe; no `kb_documents` row exists until an actual stable,
@@ -274,8 +287,9 @@ DB with all existing smoke tests. It then resets only its uniquely owned
 unlinked local DB to the prior chain, inserts synthetic legacy/document rows,
 applies this migration, proves those rows unchanged, compares catalogs, and
 runs the new contract again. No production dump, NAS or external index is used.
-The original 24-table/72-function/11-enum capture is unchanged; a separate
-additive catalog snapshot checks the new three tables/five functions.
+The original 24-table/72-function/11-enum capture is retained as the explicit
+pre-resource fixture. The current public fixture additionally reflects the
+reviewed Jobs optimization; a separate additive catalog checks resource objects.
 
 Collection-scoped advisory locks intentionally serialize short M1 mutations
 including DOI matching; this is a six-document pilot design, not a high-volume
@@ -298,8 +312,8 @@ or real PDF/NAS/parser/index verification.
 SQL qualification additionally executes denied SELECT/INSERT/UPDATE/DELETE for
 all three roles, tests schema/EXECUTE grants and exact API function inventory,
 and reruns resource permission, concurrency and legacy regressions. Catalog
-snapshots qualify only the new schemas while the original public fixture is
-unchanged. Export covers public/private/api; client type generation covers
+snapshots qualify the new schemas alongside the current public fixture; the
+prior-chain fixture remains separate. Export covers public/private/api; client type generation covers
 public/api and must omit private tables.
 
 Upgrade qualification seeds the old public resource layout with real approved,

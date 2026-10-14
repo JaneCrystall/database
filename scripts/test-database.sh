@@ -121,6 +121,8 @@ run_sql() {
   docker exec -i "$db_container" psql -X --set ON_ERROR_STOP=1 --username postgres --dbname postgres "$@"
 }
 
+"$python_bin" "$repo_root/tests/runtime/qualify_jobs_upgrade.py" "$repo_root" "$db_container"
+
 smoke_tests=("$repo_root"/tests/sql/*_smoke.sql)
 if [[ ! -f "${smoke_tests[0]}" ]]; then
   echo "No SQL smoke tests found" >&2
@@ -145,8 +147,14 @@ if (( ${#failed_tests[@]} != 0 )); then
   exit 1
 fi
 "$python_bin" "$repo_root/tests/runtime/resource_contract.py" "$db_container"
+"$python_bin" "$repo_root/tests/runtime/resource_delete_concurrency.py" "$db_container"
 run_sql < "$repo_root/tests/schema/resource_boundary.sql"
 SUPABASE_CLI="$supabase_bin" "$python_bin" "$repo_root/tests/runtime/resource_api.py" "$db_container" "$test_root"
+for sql_file in "$repo_root"/tests/performance/*.sql; do
+  [[ -f "$sql_file" ]] || continue
+  echo "Running ${sql_file##*/}"
+  run_sql < "$sql_file"
+done
 run_sql < "$repo_root/tests/schema/legacy_behaviors.sql"
 run_sql -At < "$repo_root/tests/schema/public_catalog.sql" > "$test_root/legacy-catalog.json"
 if [[ -n "${DATABASE_TEST_CATALOG_OUTPUT:-}" ]]; then
@@ -157,6 +165,7 @@ fi
 
 SUPABASE_CLI="$supabase_bin" "$python_bin" "$repo_root/tests/runtime/qualify_toolchain.py" "$repo_root" "$test_root"
 # Upgrade from the exact prior chain with existing rows; never apply to a linked project.
+# Its expected catalog is separate from the current Jobs function fingerprint.
 resource_migration=20261013091136_kb_resource_contract.sql
 mkdir "$test_root/after-resource-baseline"
 for migration_path in "$test_root"/supabase/migrations/*.sql; do
@@ -186,6 +195,7 @@ run_sql < "$repo_root/tests/upgrade/resource_after.sql"
 run_sql -At < "$repo_root/tests/schema/public_catalog.sql" > "$test_root/upgraded-catalog.json"
 "$python_bin" "$repo_root/tests/schema/check_catalog.py" --actual "$test_root/upgraded-catalog.json"
 "$python_bin" "$repo_root/tests/runtime/resource_contract.py" "$db_container"
+"$python_bin" "$repo_root/tests/runtime/resource_delete_concurrency.py" "$db_container"
 run_sql < "$repo_root/tests/schema/resource_boundary.sql"
 SUPABASE_CLI="$supabase_bin" "$python_bin" "$repo_root/tests/runtime/resource_api.py" "$db_container" "$test_root"
 echo "Local migration replay, ${#smoke_tests[@]} SQL smoke tests, resource concurrency, PostgREST boundary and populated prior-schema upgrade passed."

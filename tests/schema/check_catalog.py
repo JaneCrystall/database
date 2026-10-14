@@ -22,7 +22,10 @@ def differences(expected,actual):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--actual',type=Path,required=True);p.add_argument('--baseline-only',action='store_true');a=p.parse_args()
-    expected=json.loads(Path(__file__).with_name('public_catalog.expected.json').read_text())
+    # The pre-resource chain predates both resource migrations and the Jobs fix.
+    # Keep its complete catalog independent from current migration expectations.
+    fixture='pre_resource_catalog.expected.json' if a.baseline_only else 'public_catalog.expected.json'
+    expected=json.loads(Path(__file__).with_name(fixture).read_text())
     if not a.baseline_only:
         additions=json.loads(Path(__file__).with_name('resource_catalog.expected.json').read_text())
         for kind in ('relations','functions'):

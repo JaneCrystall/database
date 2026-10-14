@@ -8,8 +8,8 @@ language: en
 whenToUse: "When deciding source ownership, schema scope or generated-path boundaries."
 whenToUpdate: "When schema ownership, imported scope or consumer contracts change."
 checkPaths: [supabase/**, scripts/**, tests/sql/**, docs/source-inventory.json]
-lastReviewedAt: "2026-10-14"
-lastReviewedCommit: "70d66ade42ce932a6670f1286dfd6b62538259b1"
+lastReviewedAt: 2026-10-15
+lastReviewedCommit: 2371302de0b5630ce3acfe739514340100e721c5
 ---
 
 # Database architecture
@@ -88,3 +88,22 @@ New M1 resource state lives in unexposed `private`; `api` contains only the two
 invoker adapters, with privilege elevation in private implementations. This
 incremental boundary does not move existing public business/control tables.
 The table-by-table authority and writer matrix lives in the resource contract.
+
+## Jobs list authorization
+
+`20261013091317_optimize_kb_admin_jobs_authorization.sql` resolves the actor's
+user/group principals and active grants once per `list_kb_admin_jobs` call,
+matching the existing Documents RPC and single-document helper semantics.
+Read visibility still excludes deleted documents; reindex/delete/manage grants
+still expose their jobs. Revoked/expired grants and null actors remain excluded.
+The six arguments, service-role-only ACL, 21 returned columns, precise count,
+filters, offset pagination and timestamp/UUID tiebreaks are unchanged. Empty
+pages still contain no count row, as required by existing Next consumers.
+No index, role timeout or single-document helper is changed.
+See [Jobs timeout evidence](jobs-list-timeout.md) for measured scope and limits.
+
+
+Resource lifecycle mutations take job locks before document locks and reject
+contended locks without waiting. The forward lock-conflict migration preserves
+legacy worker/delete implementations and converts resource contention to an
+atomic, retryable lifecycle conflict. It does not activate resource intake.

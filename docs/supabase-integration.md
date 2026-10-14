@@ -8,8 +8,8 @@ language: en
 whenToUse: "When operating the Knowledge Base GitHub Integration or initial history adoption."
 whenToUpdate: "When project/repository mapping, activation gates or deployment ownership changes."
 checkPaths: [supabase/**, docs/supabase-adoption-evidence.json, scripts/**]
-lastReviewedAt: "2026-10-14"
-lastReviewedCommit: "70d66ade42ce932a6670f1286dfd6b62538259b1"
+lastReviewedAt: 2026-10-15
+lastReviewedCommit: 2371302de0b5630ce3acfe739514340100e721c5
 ---
 
 # Supabase GitHub Integration
@@ -105,5 +105,7 @@ Never use a blanket grant on all schema objects. Exact gateway function grants
 are in the migration. The checked-in local API config alone is not evidence of
 hosted configuration. Coordinate new clients to explicitly select `api` only
 after these checks; existing public clients continue unchanged. No profile or
-resource intake is activated by schema migration. This development revision
-does not authorize main merge, hosted setting changes or 142/148 rollout.
+resource intake is activated by schema migration. Production rollout requires explicit user authorization in the tracked task.
+The 2026-10-14/15 release session authorizes guarded main merge, database
+deployment and required hosted API exposure after preview qualification; it
+does not authorize 142/148 application/profile activation.

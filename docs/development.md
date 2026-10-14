@@ -8,8 +8,8 @@ language: en
 whenToUse: "When exporting schema, authoring migrations or selecting a database target."
 whenToUpdate: "When helper CLI contracts, dependencies or adoption steps change."
 checkPaths: [scripts/**, supabase/config.toml, .env.*.example]
-lastReviewedAt: "2026-10-14"
-lastReviewedCommit: "08c4c9c478ab7ea8cc436d4ec5430a9587d110f9"
+lastReviewedAt: 2026-10-15
+lastReviewedCommit: 2371302de0b5630ce3acfe739514340100e721c5
 ---
 
 # Development
@@ -131,3 +131,15 @@ specified in `docs/supabase-integration.md`.
 The gate suppresses CLI success output that can contain ephemeral keys, filters
 failure diagnostics, and preserves the original CLI exit status for cleanup
 and failure detection.
+
+The ordinary `scripts/test-database.sh` gate includes Jobs prior-schema upgrade,
+role/filter/sort regressions and the synthetic 60,000-job capacity check. It owns
+and removes its temporary local Supabase stack; never run the capacity fixture
+against a hosted or developer database containing data to preserve. No hosted
+migration is needed to reproduce or qualify the Jobs fix.
+
+
+For resource clients, handle `RESOURCE_LIFECYCLE_BUSY` with the bounded retry
+protocol in the resource contract. The combined migration gate keeps the
+pre-resource catalog separate from the current Jobs/resource catalog and runs
+the actual resource/delete concurrency regression on its disposable database.
