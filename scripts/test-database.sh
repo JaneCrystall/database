@@ -71,7 +71,7 @@ config = re.sub(r'^project_id = .+$', f'project_id = "{sys.argv[2]}"', config, c
 # Choose free ports so a developer's ordinary local stack remains untouched.
 ports = []
 with contextlib.ExitStack() as sockets:
-    for _ in range(2):
+    for _ in range(3):
         sock = sockets.enter_context(socket.socket())
         sock.bind(("127.0.0.1", 0))
         ports.append(sock.getsockname()[1])
@@ -81,6 +81,10 @@ db_settings = db_section.group(1)
 db_settings = re.sub(r'^port = \d+$', f'port = {ports[0]}', db_settings, flags=re.M)
 db_settings = re.sub(r'^shadow_port = \d+$', f'shadow_port = {ports[1]}', db_settings, flags=re.M)
 config = config[:db_section.start(1)] + db_settings + config[db_section.end(1):]
+api_section = re.search(r'^\[api\]\n(.*?)(?=^\[|\Z)', config, re.S | re.M)
+assert api_section is not None
+api_settings = re.sub(r'^port = \d+$', f'port = {ports[2]}', api_section.group(1), flags=re.M)
+config = config[:api_section.start(1)] + api_settings + config[api_section.end(1):]
 path.write_text(config)
 PY
 
@@ -93,9 +97,24 @@ if docker volume ls --format '{{.Name}}' | "$python_bin" -c 'import sys; suffix=
   echo "Refusing to reuse existing volumes for $test_project_id" >&2
   exit 2
 fi
+# CLI success output can include ephemeral keys; keep it private and report
+# only the command outcome. Failure diagnostics omit credential-bearing lines.
+local_cli() {
+  if "$supabase_bin" "$@" > "$test_root/cli.log" 2>&1; then
+    echo "Local Supabase $1 succeeded."
+  else
+    "$python_bin" - "$test_root/cli.log" <<'PYLOG'
+import pathlib, re, sys
+for line in pathlib.Path(sys.argv[1]).read_text().splitlines()[-40:]:
+    if not re.search(r'(?i)(secret|key|jwt|password|postgres(?:ql)?://|eyJ)', line):
+        print(line, file=sys.stderr)
+PYLOG
+    return 1
+  fi
+}
 owns_stack=true
-"$supabase_bin" start --workdir "$test_root" -x gotrue,realtime,storage-api,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
-"$supabase_bin" db reset --local --workdir "$test_root" --yes
+local_cli start --workdir "$test_root" -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+local_cli db reset --local --workdir "$test_root" --yes
 
 run_sql() {
   docker exec -i "$db_container" psql -X --set ON_ERROR_STOP=1 --username postgres --dbname postgres "$@"
@@ -125,6 +144,8 @@ if (( ${#failed_tests[@]} != 0 )); then
   exit 1
 fi
 "$python_bin" "$repo_root/tests/runtime/resource_contract.py" "$db_container"
+run_sql < "$repo_root/tests/schema/resource_boundary.sql"
+SUPABASE_CLI="$supabase_bin" "$python_bin" "$repo_root/tests/runtime/resource_api.py" "$db_container" "$test_root"
 run_sql < "$repo_root/tests/schema/legacy_behaviors.sql"
 run_sql -At < "$repo_root/tests/schema/public_catalog.sql" > "$test_root/legacy-catalog.json"
 if [[ -n "${DATABASE_TEST_CATALOG_OUTPUT:-}" ]]; then
@@ -142,14 +163,28 @@ for migration_path in "$test_root"/supabase/migrations/*.sql; do
     mv "$migration_path" "$test_root/after-resource-baseline/"
   fi
 done
-"$supabase_bin" db reset --local --workdir "$test_root" --yes
+local_cli db reset --local --workdir "$test_root" --yes
 run_sql -At < "$repo_root/tests/schema/public_catalog.sql" > "$test_root/prior-catalog.json"
 "$python_bin" "$repo_root/tests/schema/check_catalog.py" --baseline-only --actual "$test_root/prior-catalog.json"
 run_sql < "$repo_root/tests/upgrade/resource_before.sql"
 mv "$test_root"/after-resource-baseline/*.sql "$test_root/supabase/migrations/"
-"$supabase_bin" migration up --local --workdir "$test_root"
+# Apply the original resource migration first, seed real old-layout state, then
+# move existing rows through the appended boundary migration (all later files too).
+mkdir "$test_root/schema-boundary-tail"
+for migration_path in "$test_root"/supabase/migrations/*.sql; do
+  if [[ "${migration_path##*/}" > "$resource_migration" ]]; then
+    mv "$migration_path" "$test_root/schema-boundary-tail/"
+  fi
+done
+local_cli migration up --local --workdir "$test_root"
+run_sql < "$repo_root/tests/upgrade/resource_boundary_before.sql"
+mv "$test_root"/schema-boundary-tail/*.sql "$test_root/supabase/migrations/"
+local_cli migration up --local --workdir "$test_root"
+run_sql < "$repo_root/tests/upgrade/resource_boundary_after.sql"
 run_sql < "$repo_root/tests/upgrade/resource_after.sql"
 run_sql -At < "$repo_root/tests/schema/public_catalog.sql" > "$test_root/upgraded-catalog.json"
 "$python_bin" "$repo_root/tests/schema/check_catalog.py" --actual "$test_root/upgraded-catalog.json"
 "$python_bin" "$repo_root/tests/runtime/resource_contract.py" "$db_container"
-echo "Local migration replay, ${#smoke_tests[@]} SQL smoke tests, resource concurrency and prior-schema upgrade passed."
+run_sql < "$repo_root/tests/schema/resource_boundary.sql"
+SUPABASE_CLI="$supabase_bin" "$python_bin" "$repo_root/tests/runtime/resource_api.py" "$db_container" "$test_root"
+echo "Local migration replay, ${#smoke_tests[@]} SQL smoke tests, resource concurrency, PostgREST boundary and populated prior-schema upgrade passed."

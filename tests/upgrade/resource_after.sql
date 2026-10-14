@@ -8,8 +8,7 @@ begin
     (select to_jsonb(d) from public.kb_documents d where d.id='81000000-0000-4000-8000-000000000003') then
    raise exception 'prior-schema rows changed during resource migration';
  end if;
- if exists(select from public.kb_resource_entries) or exists(select from public.kb_resource_document_links)
-   or exists(select from public.kb_resource_requests) then
-   raise exception 'resource migration must not backfill/activate any existing collection';
+ if exists(select from private.kb_resource_entries where collection_id='81000000-0000-4000-8000-000000000001') then
+   raise exception 'resource migration must not backfill/activate an existing collection';
  end if;
 end $$;

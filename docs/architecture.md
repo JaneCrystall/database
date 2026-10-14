@@ -8,8 +8,8 @@ language: en
 whenToUse: "When deciding source ownership, schema scope or generated-path boundaries."
 whenToUpdate: "When schema ownership, imported scope or consumer contracts change."
 checkPaths: [supabase/**, scripts/**, tests/sql/**, docs/source-inventory.json]
-lastReviewedAt: 2026-10-13
-lastReviewedCommit: fe342841ad03459337abb97fd03d29e9310151c8
+lastReviewedAt: "2026-10-14"
+lastReviewedCommit: "70d66ade42ce932a6670f1286dfd6b62538259b1"
 ---
 
 # Database architecture
@@ -83,3 +83,8 @@ The additive resource registry and trusted-gateway RPC boundary are defined in
 [resource-contract.md](resource-contract.md). Existing metadata tables remain
 the fact source for legacy adapters. No collection/profile is activated by the
 migration; processing and review state remain separate.
+
+New M1 resource state lives in unexposed `private`; `api` contains only the two
+invoker adapters, with privilege elevation in private implementations. This
+incremental boundary does not move existing public business/control tables.
+The table-by-table authority and writer matrix lives in the resource contract.

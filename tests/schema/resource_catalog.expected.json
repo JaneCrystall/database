@@ -45,7 +45,7 @@
       ],
       "rls": true,
       "kind": "r",
-      "name": "kb_resource_document_links",
+      "name": "private.kb_resource_document_links",
       "owner": "postgres",
       "columns": [
         {
@@ -164,23 +164,23 @@
       "indexes": [
         {
           "name": "kb_resource_active_primary",
-          "definition": "CREATE UNIQUE INDEX kb_resource_active_primary ON public.kb_resource_document_links USING btree (entry_id) WHERE active"
+          "definition": "CREATE UNIQUE INDEX kb_resource_active_primary ON private.kb_resource_document_links USING btree (entry_id) WHERE active"
         },
         {
           "name": "kb_resource_document_links_entry_id_content_revision_key",
-          "definition": "CREATE UNIQUE INDEX kb_resource_document_links_entry_id_content_revision_key ON public.kb_resource_document_links USING btree (entry_id, content_revision)"
+          "definition": "CREATE UNIQUE INDEX kb_resource_document_links_entry_id_content_revision_key ON private.kb_resource_document_links USING btree (entry_id, content_revision)"
         },
         {
           "name": "kb_resource_document_links_pkey",
-          "definition": "CREATE UNIQUE INDEX kb_resource_document_links_pkey ON public.kb_resource_document_links USING btree (id)"
+          "definition": "CREATE UNIQUE INDEX kb_resource_document_links_pkey ON private.kb_resource_document_links USING btree (id)"
         },
         {
           "name": "kb_resource_document_owner",
-          "definition": "CREATE UNIQUE INDEX kb_resource_document_owner ON public.kb_resource_document_links USING btree (document_id) WHERE (publish_state <> 'superseded'::text)"
+          "definition": "CREATE UNIQUE INDEX kb_resource_document_owner ON private.kb_resource_document_links USING btree (document_id) WHERE (publish_state <> 'superseded'::text)"
         },
         {
           "name": "kb_resource_reservation",
-          "definition": "CREATE UNIQUE INDEX kb_resource_reservation ON public.kb_resource_document_links USING btree (entry_id) WHERE (publish_state = 'reserved'::text)"
+          "definition": "CREATE UNIQUE INDEX kb_resource_reservation ON private.kb_resource_document_links USING btree (entry_id) WHERE (publish_state = 'reserved'::text)"
         }
       ],
       "policies": [],
@@ -215,7 +215,7 @@
           "name": "kb_resource_document_links_entry_id_fkey",
           "type": "f",
           "validated": true,
-          "definition": "FOREIGN KEY (entry_id) REFERENCES kb_resource_entries(id)"
+          "definition": "FOREIGN KEY (entry_id) REFERENCES private.kb_resource_entries(id)"
         },
         {
           "name": "kb_resource_document_links_job_id_fkey",
@@ -288,7 +288,7 @@
       ],
       "rls": true,
       "kind": "r",
-      "name": "kb_resource_entries",
+      "name": "private.kb_resource_entries",
       "owner": "postgres",
       "columns": [
         {
@@ -463,15 +463,15 @@
       "indexes": [
         {
           "name": "kb_resource_doi_match",
-          "definition": "CREATE INDEX kb_resource_doi_match ON public.kb_resource_entries USING btree (collection_id, kb_resource_normalize_doi(((source_metadata || manual_overrides) ->> 'doi'::text)))"
+          "definition": "CREATE INDEX kb_resource_doi_match ON private.kb_resource_entries USING btree (collection_id, private.kb_resource_normalize_doi(((source_metadata || manual_overrides) ->> 'doi'::text)))"
         },
         {
           "name": "kb_resource_entries_collection_id_primary_source_binding_id_key",
-          "definition": "CREATE UNIQUE INDEX kb_resource_entries_collection_id_primary_source_binding_id_key ON public.kb_resource_entries USING btree (collection_id, primary_source_binding_id, external_key)"
+          "definition": "CREATE UNIQUE INDEX kb_resource_entries_collection_id_primary_source_binding_id_key ON private.kb_resource_entries USING btree (collection_id, primary_source_binding_id, external_key)"
         },
         {
           "name": "kb_resource_entries_pkey",
-          "definition": "CREATE UNIQUE INDEX kb_resource_entries_pkey ON public.kb_resource_entries USING btree (id)"
+          "definition": "CREATE UNIQUE INDEX kb_resource_entries_pkey ON private.kb_resource_entries USING btree (id)"
         }
       ],
       "policies": [],
@@ -621,7 +621,7 @@
       ],
       "rls": true,
       "kind": "r",
-      "name": "kb_resource_requests",
+      "name": "private.kb_resource_requests",
       "owner": "postgres",
       "columns": [
         {
@@ -684,7 +684,7 @@
       "indexes": [
         {
           "name": "kb_resource_requests_pkey",
-          "definition": "CREATE UNIQUE INDEX kb_resource_requests_pkey ON public.kb_resource_requests USING btree (actor_id, collection_id, operation, request_id)"
+          "definition": "CREATE UNIQUE INDEX kb_resource_requests_pkey ON private.kb_resource_requests USING btree (actor_id, collection_id, operation, request_id)"
         }
       ],
       "policies": [],
@@ -721,19 +721,50 @@
         }
       ],
       "cost": 100,
-      "name": "kb_resource_command",
+      "name": "api.kb_resource_command",
       "rows": 0,
       "owner": "postgres",
       "strict": false,
       "returns": "jsonb",
-      "body_md5": "94f106967565e86e2f708a2aa6412544",
+      "body_md5": "227dcec69bec6ff6b55ea9d2bf21d9e3",
+      "language": "sql",
+      "parallel": "u",
+      "arguments": "p_actor_id uuid, p_collection_id uuid, p_operation text, p_request_id uuid, p_payload jsonb",
+      "leakproof": false,
+      "volatility": "v",
+      "configuration": [
+        "search_path=pg_catalog"
+      ],
+      "full_arguments": "p_actor_id uuid, p_collection_id uuid, p_operation text, p_request_id uuid, p_payload jsonb",
+      "security_definer": false
+    },
+    {
+      "acl": [
+        {
+          "grantee": "postgres",
+          "grantable": false,
+          "privilege": "EXECUTE"
+        },
+        {
+          "grantee": "service_role",
+          "grantable": false,
+          "privilege": "EXECUTE"
+        }
+      ],
+      "cost": 100,
+      "name": "private.kb_resource_command",
+      "rows": 0,
+      "owner": "postgres",
+      "strict": false,
+      "returns": "jsonb",
+      "body_md5": "4cac7db2fea0b6cc9fe802393d61b3b5",
       "language": "plpgsql",
       "parallel": "u",
       "arguments": "p_actor_id uuid, p_collection_id uuid, p_operation text, p_request_id uuid, p_payload jsonb",
       "leakproof": false,
       "volatility": "v",
       "configuration": [
-        "search_path=public, extensions, pg_temp"
+        "search_path=pg_catalog"
       ],
       "full_arguments": "p_actor_id uuid, p_collection_id uuid, p_operation text, p_request_id uuid, p_payload jsonb",
       "security_definer": true
@@ -752,19 +783,19 @@
         }
       ],
       "cost": 100,
-      "name": "kb_resource_get",
+      "name": "private.kb_resource_get",
       "rows": 0,
       "owner": "postgres",
       "strict": false,
       "returns": "jsonb",
-      "body_md5": "5625cdcc2e112ca5e4c7e4deeca5d722",
+      "body_md5": "59d311b840731f40be2dfc0069169a0c",
       "language": "plpgsql",
       "parallel": "u",
       "arguments": "p_actor_id uuid, p_collection_id uuid, p_entry_id uuid",
       "leakproof": false,
       "volatility": "v",
       "configuration": [
-        "search_path=public, pg_temp"
+        "search_path=pg_catalog"
       ],
       "full_arguments": "p_actor_id uuid, p_collection_id uuid, p_entry_id uuid",
       "security_definer": true
@@ -775,10 +806,41 @@
           "grantee": "postgres",
           "grantable": false,
           "privilege": "EXECUTE"
+        },
+        {
+          "grantee": "service_role",
+          "grantable": false,
+          "privilege": "EXECUTE"
         }
       ],
       "cost": 100,
-      "name": "kb_resource_legacy_metadata",
+      "name": "api.kb_resource_get",
+      "rows": 0,
+      "owner": "postgres",
+      "strict": false,
+      "returns": "jsonb",
+      "body_md5": "238bf11aef653abf06a9f37c7d86dd81",
+      "language": "sql",
+      "parallel": "u",
+      "arguments": "p_actor_id uuid, p_collection_id uuid, p_entry_id uuid",
+      "leakproof": false,
+      "volatility": "v",
+      "configuration": [
+        "search_path=pg_catalog"
+      ],
+      "full_arguments": "p_actor_id uuid, p_collection_id uuid, p_entry_id uuid",
+      "security_definer": false
+    },
+    {
+      "acl": [
+        {
+          "grantee": "postgres",
+          "grantable": false,
+          "privilege": "EXECUTE"
+        }
+      ],
+      "cost": 100,
+      "name": "private.kb_resource_legacy_metadata",
       "rows": 0,
       "owner": "postgres",
       "strict": false,
@@ -790,7 +852,7 @@
       "leakproof": false,
       "volatility": "v",
       "configuration": [
-        "search_path=public, pg_temp"
+        "search_path=pg_catalog"
       ],
       "full_arguments": "p_ref jsonb",
       "security_definer": true
@@ -804,7 +866,7 @@
         }
       ],
       "cost": 100,
-      "name": "kb_resource_normalize_doi",
+      "name": "private.kb_resource_normalize_doi",
       "rows": 0,
       "owner": "postgres",
       "strict": false,
@@ -830,7 +892,7 @@
         }
       ],
       "cost": 100,
-      "name": "kb_resource_validate_metadata",
+      "name": "private.kb_resource_validate_metadata",
       "rows": 0,
       "owner": "postgres",
       "strict": false,

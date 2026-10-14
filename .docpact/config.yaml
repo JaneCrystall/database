@@ -1,7 +1,7 @@
 version: 1
 layout: repo
-lastReviewedAt: "2026-10-13"
-lastReviewedCommit: "fe342841ad03459337abb97fd03d29e9310151c8"
+lastReviewedAt: "2026-10-14"
+lastReviewedCommit: "70d66ade42ce932a6670f1286dfd6b62538259b1"
 repo:
   id: database
 routing:
@@ -145,10 +145,12 @@ rules:
     scope: repo
     repo: database
     triggers:
-      - path: supabase/migrations/*_kb_resource_contract.sql
+      - path: supabase/migrations/*_kb_resource*.sql
         kind: resource-schema
-      - path: tests/runtime/resource_contract.py
+      - path: tests/runtime/resource_*.py
         kind: resource-qualification
+      - path: tests/schema/resource_boundary.sql
+        kind: resource-access-boundary
       - path: tests/upgrade/resource_*.sql
         kind: resource-upgrade
     requiredDocs:

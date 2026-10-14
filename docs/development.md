@@ -8,8 +8,8 @@ language: en
 whenToUse: "When exporting schema, authoring migrations or selecting a database target."
 whenToUpdate: "When helper CLI contracts, dependencies or adoption steps change."
 checkPaths: [scripts/**, supabase/config.toml, .env.*.example]
-lastReviewedAt: 2026-10-13
-lastReviewedCommit: fe342841ad03459337abb97fd03d29e9310151c8
+lastReviewedAt: "2026-10-14"
+lastReviewedCommit: "70d66ade42ce932a6670f1286dfd6b62538259b1"
 ---
 
 # Development
@@ -119,3 +119,11 @@ an automatically deployed main branch.
 For M1 resource registration/review/publication integration, use the request and
 recovery protocol in [resource-contract.md](resource-contract.md). Configure
 profiles only on explicit isolated targets; RPCs do not read NAS files.
+
+The full gate now includes local PostgREST/Kong for the resource boundary. Ports
+and project IDs are unique; cleanup owns only that stack. Local gateway/user
+JWTs are ephemeral and never printed by HTTP tests. No production credentials
+are needed. Resource consumers explicitly use schema `api`; export inspection
+with `--schemas public private api`, but generate consumer types with
+`--schemas public api`. Hosted schema exposure is separately qualified as
+specified in `docs/supabase-integration.md`.

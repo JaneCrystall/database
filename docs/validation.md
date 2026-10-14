@@ -8,8 +8,8 @@ language: en
 whenToUse: "Before submitting or integrating database changes."
 whenToUpdate: "When test commands, qualification scope or CI changes."
 checkPaths: [scripts/**, tests/**, .github/workflows/**, .docpact/**]
-lastReviewedAt: 2026-10-13
-lastReviewedCommit: fe342841ad03459337abb97fd03d29e9310151c8
+lastReviewedAt: "2026-10-14"
+lastReviewedCommit: "70d66ade42ce932a6670f1286dfd6b62538259b1"
 ---
 
 # Validation
@@ -86,3 +86,11 @@ contains only the additive resource objects. Both are checked exactly.
 `DATABASE_TEST_CATALOG_OUTPUT` may select a local output file for catalog-only
 review evidence; it contains definitions, not business rows or credentials.
 See [resource-contract.md](resource-contract.md) for covered cases and limits.
+
+The resource schema boundary gate additionally starts real local PostgREST/Kong,
+runs HTTP role/exposure/lifecycle checks, and tests a populated old-resource
+schema upgrade. `tests/schema/resource_boundary.sql` checks exact ACL/schema
+contracts; SQL statements also execute denied table operations for each API
+role. Only new private/api objects enter the additive catalog; the legacy public
+snapshot must not be regenerated to accept unrelated changes. Client type
+qualification explicitly includes public/api and excludes private tables.

@@ -7,9 +7,9 @@ owner: database
 language: en
 whenToUse: "When integrating M1 resource registration, review or PDF publication."
 whenToUpdate: "When resource RPCs, identity, permissions, snapshots or recovery change."
-checkPaths: [supabase/migrations/*_kb_resource_contract.sql, tests/runtime/resource_contract.py, tests/upgrade/resource_*.sql]
-lastReviewedAt: 2026-10-13
-lastReviewedCommit: fe342841ad03459337abb97fd03d29e9310151c8
+checkPaths: [supabase/migrations/*_kb_resource*.sql, tests/runtime/resource_*.py, tests/schema/resource_boundary.sql, tests/upgrade/resource_*.sql]
+lastReviewedAt: "2026-10-14"
+lastReviewedCommit: "70d66ade42ce932a6670f1286dfd6b62538259b1"
 ---
 
 # M1 resource identity and document association
@@ -21,6 +21,51 @@ remains the cross-repository contract. SQL now belongs here, not in KB or Next.
 This migration is additive and opt-in: no collection, profile, legacy row,
 worker or hosted target is activated. Merging `main` can trigger hosted
 Supabase deployment; local qualification does not authorize that merge.
+
+## Responsibilities and schema access
+
+A schema defines access organization, not whether a row is "business" or
+"management" data. Resource identity and PDF associations are business facts;
+they live in `private` because every mutation must follow the command protocol.
+
+| Object | Responsibility and authority | Writer / reader |
+| --- | --- | --- |
+| `private.kb_resource_entries` | Stable resource identity, source observation, manual overrides with provenance, candidates and current review state. In managed mode it owns effective resource metadata; in legacy mode the original metadata table remains authoritative and this is an observation plus explicit overrides. | Command implementation writes; authorized getter returns current state. No table access for API roles. |
+| `private.kb_resource_document_links` | Versioned PDF association, approved metadata/file snapshot, reservation/publication state and processing job reference. It does not own physical bytes or worker execution state. | Command implementation writes; getter reads historical/current associations. |
+| `private.kb_resource_requests` | Actor/collection/operation/request-scoped idempotency receipt. A receipt is a historical result, never current approval state. | Command implementation reads/writes atomically with effects; caller receives its own authorized replay. No direct query endpoint. |
+| `api.kb_resource_command` / `api.kb_resource_get` | Stable input/output boundary for authenticated, scoped gateways; no stored business rows. | `service_role` EXECUTE only. These are SECURITY INVOKER adapters. |
+| `private.kb_resource_command` / `private.kb_resource_get` | Same checked authorization and transaction rules as the original contract; privilege elevation is confined to these unexposed implementations. | Exact EXECUTE grants to `service_role` permit the invoker adapters to call them. Direct SQL invocation enforces identical rules. |
+| Three `private.kb_resource_*` helpers | DOI normalization, fixed legacy projection, metadata validation. | Internal callers only; no EXECUTE grants to `anon`, `authenticated` or `service_role`. |
+| Existing `public.journals`, `esg_meta`, `reports` | Original metadata fact sources with their existing writers. | Existing access and writer contracts unchanged. |
+| Existing `public.kb_collections`, `kb_documents`, `kb_jobs`, audit and PGMQ objects | Collection configuration, processing documents, execution state, audit and queues. | Existing contracts unchanged; resource implementations use existing functions/relationships. |
+
+The gateway has schema USAGE and exact function EXECUTE, **not** table privileges.
+All three internal tables retain RLS and zero application policies. This is an
+application-role boundary, not protection against database owners/superusers.
+Neither `private` nor its implementation/helper functions are exposed in
+PostgREST. No `util` or `archive` schema is introduced without a concrete need.
+Current review fields remain on the entry; full workflow normalization is not
+part of this storage/interface separation.
+
+### Migration and API configuration
+
+The original resource migration is preserved byte-for-byte. The appended
+`20261014105037_kb_resource_schema_boundary.sql` moves tables/functions with
+`SET SCHEMA`, retaining rows, relation identity, indexes, foreign keys and
+request receipts; then replaces textual function references and adds thin API
+adapters. The final schema has no `public.kb_resource_*` tables/functions or
+compatibility aliases. Old public business tables and RPCs are unchanged.
+The migration creates new `private` and `api` schemas; an unexpected existing
+schema fails explicitly for operator review rather than changing its grants.
+
+Local `supabase/config.toml` includes `public`, `api`, `graphql_public`, never
+`private`. Consumers must explicitly select `api` (supabase-js
+`.schema('api').rpc(...)`, or PostgREST `Content-Profile: api` for POST RPCs).
+Legacy requests continue selecting `public`. Custom-schema exposure is a
+separate hosted deployment setting: a passing local config does not establish
+hosted exposure. Preserve the hosted default `public` and existing exposed
+schemas, add `api` only after preview qualification, and never expose `private`.
+No hosted setting or 142/148 deployment is changed by this development task.
 
 ## Identity and authority
 
@@ -103,19 +148,20 @@ is outside this small version-upgrade operation.
 
 ## Gateway RPC protocol
 
-Only `service_role` can execute the two public entrypoints. There is no direct
+Only `service_role` can execute the two `api` entrypoints. There is no direct
 SELECT/DML grant on the three new tables, including for `service_role`; RLS is
-enabled. Helper functions are not executable by API roles. Security-definer
-functions use fixed search paths and schema-qualified object references.
+enabled. Helper functions are not executable by API roles. Private security-definer
+implementations and API invoker adapters use `search_path=pg_catalog` and
+schema-qualified application/extension references.
 
 The trusted gateway MUST authenticate the session/scoped API key, derive the
 actor from it (never forward a client actor), enforce the API key's scopes and
 collection restriction, then call:
 
 ```text
-kb_resource_command(p_actor_id UUID, p_collection_id UUID,
+api.kb_resource_command(p_actor_id UUID, p_collection_id UUID,
                     p_operation TEXT, p_request_id UUID, p_payload JSONB)
-kb_resource_get(p_actor_id UUID, p_collection_id UUID, p_entry_id UUID)
+api.kb_resource_get(p_actor_id UUID, p_collection_id UUID, p_entry_id UUID)
 ```
 
 The database independently checks current collection grants including
@@ -237,3 +283,33 @@ scheduler. Existing workers and legacy writers do not acquire that lock, so
 row locks, document-version checks and unique indexes remain essential. DB
 runtime tests prove SQL/queue behavior, not filesystem isolation, authenticated
 Next routes, real parsing, embeddings or externally indexed search.
+
+## Schema boundary qualification
+
+The local gate starts the CLI-pinned PostgREST and Kong against a unique,
+unlinked disposable database. Actual HTTP tests select `api`, prove an ordinary
+user JWT is valid on the legacy public surface, then reject anonymous/user RPC
+calls, all direct-table routes, helper routes, private profiles and obsolete
+public resource RPCs. A service gateway exercises registration, current-state
+reads, file attestation/review/reservation/publication, receipt replay/conflict,
+and revoked permissions. This is database HTTP qualification, not Next session
+or real PDF/NAS/parser/index verification.
+
+SQL qualification additionally executes denied SELECT/INSERT/UPDATE/DELETE for
+all three roles, tests schema/EXECUTE grants and exact API function inventory,
+and reruns resource permission, concurrency and legacy regressions. Catalog
+snapshots qualify only the new schemas while the original public fixture is
+unchanged. Export covers public/private/api; client type generation covers
+public/api and must omit private tables.
+
+Upgrade qualification seeds the old public resource layout with real approved,
+reserved/published associations, manual overrides and receipts, then applies the
+boundary migration. It compares every resource row, processing document/job/audit
+row and table OID before/after and replays an old receipt through the new API.
+The previous pre-resource legacy-row upgrade and no-automatic-backfill assertion
+remain in place. Hosted preview and consumer rollout remain separate gates.
+
+PostgREST reports the existing SQLSTATE `40001` request-conflict error as HTTP
+500 with `RESOURCE_REQUEST_CONFLICT`; the Next gateway must translate that
+semantic conflict into its documented client response. The schema move does
+not change existing SQLSTATEs or silently assume PostgREST returns HTTP 409.

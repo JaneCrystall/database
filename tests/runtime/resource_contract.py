@@ -45,7 +45,7 @@ for i, fields in enumerate(({'title':'string','organization':'string','report_ye
 def command(cid, op, payload, *, request=None, as_actor=actor, error=None):
     request=request or str(uuid.uuid4())
     body={'reason':'synthetic acceptance',**payload}
-    statement=f"select public.kb_resource_command('{as_actor}','{cid}',{quote(op)},'{request}',{quote(json.dumps(body))}::jsonb);"
+    statement=f"select api.kb_resource_command('{as_actor}','{cid}',{quote(op)},'{request}',{quote(json.dumps(body))}::jsonb);"
     out=sql('set role service_role; '+statement,error=error)
     return json.loads(out) if not error else None
 
@@ -74,10 +74,16 @@ def publish(cid,r,**extra):
 
 # Schema permission boundary: even the gateway has no direct writes to new business tables.
 for role in ('anon','authenticated','service_role'):
+    for table in ('private.kb_resource_entries','private.kb_resource_document_links','private.kb_resource_requests'):
+        check(f"not has_table_privilege('{role}','{table}','SELECT,INSERT,UPDATE,DELETE')",role+' '+table+' no direct access')
+# Execute each denied table operation, including gateway SQL access (RLS bypass
+# does not bypass missing table ACL). WHERE false still requires the privilege.
+for role in ('anon','authenticated','service_role'):
     for table in ('kb_resource_entries','kb_resource_document_links','kb_resource_requests'):
-        check(f"not has_table_privilege('{role}','public.{table}','SELECT,INSERT,UPDATE,DELETE')",role+' '+table+' no direct access')
+        for statement in (f"select * from private.{table} limit 0", f"insert into private.{table} default values", f"update private.{table} set collection_id=collection_id where false" if table != 'kb_resource_document_links' else f"update private.{table} set entry_id=entry_id where false", f"delete from private.{table} where false"):
+            sql(f"set role {role}; "+statement+';', error='permission denied')
 for role in ('anon','authenticated'):
-    sql(f"set role {role}; select kb_resource_command('{actor}','{collections[0]}','upsert',gen_random_uuid(),'{{}}');",error='permission denied')
+    sql(f"set role {role}; select api.kb_resource_command('{actor}','{collections[0]}','upsert',gen_random_uuid(),'{{}}');",error='permission denied')
 command(collections[0],'upsert',{},as_actor=outsider,error='RESOURCE_FORBIDDEN')
 
 # S01 file first, no document before complete metadata and review.
@@ -142,7 +148,7 @@ check(f"not exists(select from complete_parse_local_ready_and_enqueue_s3_check('
 check(f"not exists(select from replay_parse_local_ready_from_artifact('{first_job}','m1-old-worker','{first_document}',1,'file:///synthetic/manifest.json',gen_random_uuid()))",'stale artifact replay rejected')
 
 assert command(collections[0],'publish',pp,request=publish_request)==published_receipt
-current=json.loads(sql(f"select kb_resource_get('{actor}','{collections[0]}','{r['entry_id']}');"))
+current=json.loads(sql(f"select api.kb_resource_get('{actor}','{collections[0]}','{r['entry_id']}');"))
 assert any(l['document_id']==first_document and not l['active'] and not l['approval_current'] for l in current['links'])
 print('PASS historical receipt is distinct from authorized current state',flush=True)
 
@@ -153,13 +159,13 @@ r=approve(collections[0],r,new_candidate)
 approved=r['approved_revision']
 r=mutate(collections[0],'upsert',r,binding_id='catalog',metadata={'title':'New source title','organization':'Synthetic','report_year':2026})
 assert r['review_state']=='approved' and r['approved_revision']==approved
-check(f"(select (source_metadata||manual_overrides)->>'title'='Human title' from kb_resource_entries where id='{r['entry_id']}')",'machine proposal cannot replace human override')
+check(f"(select (source_metadata||manual_overrides)->>'title'='Human title' from private.kb_resource_entries where id='{r['entry_id']}')",'machine proposal cannot replace human override')
 r=mutate(collections[0],'override',r,release_fields=['title'])
 assert r['review_state']=='pending'
 
 # Reapproval of unchanged bytes retains content identity and starts a new document generation.
 r=approve(collections[0],r,new_candidate)
-prior_document=r.get('document_id') or sql(f"select document_id from kb_resource_document_links where entry_id='{r['entry_id']}' and active")
+prior_document=r.get('document_id') or sql(f"select document_id from private.kb_resource_document_links where entry_id='{r['entry_id']}' and active")
 prior_version=int(sql(f"select document_version from kb_documents where id='{prior_document}'"))
 r=reserve(collections[0],r)
 assert r['document_id']==prior_document and r['content_revision']==2
@@ -174,8 +180,8 @@ for extra in ({'size':0},{'stable':False},{'pdf_valid':False},{'sha256':'fake'},
     command(collections[0],'attach',{'entry_id':r['entry_id'],'expected_revision':r['revision'],'candidate':invalid},error='RESOURCE_CANDIDATE_INVALID')
 
 # Read permissions also cover observations, not only PDF processing commands.
-sql(f"set role service_role; select kb_resource_get('{outsider}','{collections[0]}','{r['entry_id']}');",error='RESOURCE_FORBIDDEN')
-check(f"(kb_resource_get('{actor}','{collections[0]}','{r['entry_id']}')->'effective_metadata'->>'title')='New source title'",'authorized current projection')
+sql(f"set role service_role; select api.kb_resource_get('{outsider}','{collections[0]}','{r['entry_id']}');",error='RESOURCE_FORBIDDEN')
+check(f"(api.kb_resource_get('{actor}','{collections[0]}','{r['entry_id']}')->'effective_metadata'->>'title')='New source title'",'authorized current projection')
 
 # Deletion owns its cleanup queue even when resource content is replaced concurrently.
 deleting_document=r['document_id']
@@ -189,9 +195,9 @@ check(f"(select status='delete_queued' and deleted_at is not null from kb_docume
 reader=str(uuid.uuid4())
 sql(f"insert into kb_grants(resource_type,resource_id,principal_type,principal_id,actions,created_by) values('collection','{collections[0]}','user','{reader}',array['read']::kb_grant_action[],'{actor}');")
 command(collections[0],'review',{'entry_id':r['entry_id'],'actor_id':actor,'expected_revision':r['revision'],'decision':'approve','candidate_id':delete_candidate['candidate_id']},as_actor=reader,error='RESOURCE_FORBIDDEN')
-check(f"kb_resource_get('{reader}','{collections[0]}','{r['entry_id']}') is not null",'reader can inspect authorized resource')
+check(f"api.kb_resource_get('{reader}','{collections[0]}','{r['entry_id']}') is not null",'reader can inspect authorized resource')
 sql(f"update kb_grants set expires_at=now()-interval '1 second' where principal_id='{reader}';")
-sql(f"set role service_role; select kb_resource_get('{reader}','{collections[0]}','{r['entry_id']}');",error='RESOURCE_FORBIDDEN')
+sql(f"set role service_role; select api.kb_resource_get('{reader}','{collections[0]}','{r['entry_id']}');",error='RESOURCE_FORBIDDEN')
 
 # Current field provenance must retain each editor, not attribute all overrides to the last one.
 editor=str(uuid.uuid4())
@@ -199,7 +205,7 @@ sql(f"insert into kb_grants(resource_type,resource_id,principal_type,principal_i
 provenance=create(collections[0],'provenance',{'title':'Source','organization':'Source org','report_year':2026})
 provenance=mutate(collections[0],'override',provenance,fields={'title':'Editor one'})
 provenance=command(collections[0],'override',{'entry_id':provenance['entry_id'],'expected_revision':provenance['revision'],'fields':{'organization':'Editor two'}},as_actor=editor)
-check(f"(select field_provenance#>>'{{manual,title,actor_id}}'='{actor}' and field_provenance#>>'{{manual,organization,actor_id}}'='{editor}' from kb_resource_entries where id='{provenance['entry_id']}')",'manual overrides retain field-specific provenance')
+check(f"(select field_provenance#>>'{{manual,title,actor_id}}'='{actor}' and field_provenance#>>'{{manual,organization,actor_id}}'='{editor}' from private.kb_resource_entries where id='{provenance['entry_id']}')",'manual overrides retain field-specific provenance')
 
 # Exact serialized 64 KiB request limit: valid request at boundary, one byte over rejected.
 limit_payload={'expected_revision':0,'binding_id':'catalog','external_key':'boundary','metadata':{},'reason':'x'}
@@ -216,7 +222,7 @@ payload={'expected_revision':0,'binding_id':'catalog','external_key':'race','met
 with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
     outcomes=list(pool.map(lambda _: command(collections[2],'upsert',payload,request=request),range(6)))
 assert all(x==outcomes[0] for x in outcomes)
-check(f"(select count(*) from kb_resource_entries where collection_id='{collections[2]}' and external_key='race')=1",'six SQL sessions converge on one registration')
+check(f"(select count(*) from private.kb_resource_entries where collection_id='{collections[2]}' and external_key='race')=1",'six SQL sessions converge on one registration')
 # Concurrent distinct requests with the same expected revision: only one may consume it.
 x=outcomes[0]
 def competing(title):
@@ -254,10 +260,10 @@ command(cid,'upsert',{'expected_revision':0,'binding_id':'catalog','external_key
 # Versioned profile upgrades require an explicit privileged CAS rebind, preserving identity/history.
 sql(f"update kb_collections set metadata_schema_json=jsonb_set(metadata_schema_json,'{{resource_profile,version}}','2') where id='{cid}';")
 command(cid,'upsert',{'entry_id':j2['entry_id'],'expected_revision':j2['revision'],'binding_id':'catalog','metadata':{}},error='RESOURCE_PROFILE_CHANGED')
-check(f"(kb_resource_get('{actor}','{cid}','{j2['entry_id']}')->>'profile_stale')::boolean",'profile change is visible and fails closed')
+check(f"(api.kb_resource_get('{actor}','{cid}','{j2['entry_id']}')->>'profile_stale')::boolean",'profile change is visible and fails closed')
 j2=mutate(cid,'rebind',j2)
 assert j2['entry_id']==j['entry_id'] and j2['review_state']=='pending'
-check(f"(kb_resource_get('{actor}','{cid}','{j2['entry_id']}')->'profile_json'->>'version')='2'",'profile rebind retains stable resource identity')
+check(f"(api.kb_resource_get('{actor}','{cid}','{j2['entry_id']}')->'profile_json'->>'version')='2'",'profile rebind retains stable resource identity')
 
 # Existing legacy tables are the only writable fact source. The adapter re-reads by UUID.
 for table,fields,insert,change in (
@@ -286,7 +292,7 @@ for table,fields,insert,change in (
     sql(change.replace('Changed','Newest').format(id=quote(row)))
     old_approval=x['approved_revision']; x=mutate(cid,'upsert',x,binding_id='catalog')
     assert x['review_state']=='approved' and x['approved_revision']==old_approval
-    check(f"(kb_resource_get('{actor}','{cid}','{x['entry_id']}')->'effective_metadata'->>'title')='Human legacy title'",table+' preserves human override across legacy writer refresh')
+    check(f"(api.kb_resource_get('{actor}','{cid}','{x['entry_id']}')->'effective_metadata'->>'title')='Human legacy title'",table+' preserves human override across legacy writer refresh')
     column='report_title' if table=='esg_meta' else 'title'
     check(f"(select {column} like 'Newest%' from {table} where id='{row}')",table+' source was not overwritten by resource RPC')
     command(cid,'upsert',{'entry_id':x['entry_id'],'expected_revision':x['revision'],'binding_id':'catalog','metadata':{'title':'illegal'}},error='RESOURCE_LEGACY_READ_ONLY')
