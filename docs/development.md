@@ -9,7 +9,7 @@ whenToUse: "When exporting schema, authoring migrations or selecting a database 
 whenToUpdate: "When helper CLI contracts, dependencies or adoption steps change."
 checkPaths: [scripts/**, supabase/config.toml, .env.*.example]
 lastReviewedAt: "2026-10-14"
-lastReviewedCommit: "70d66ade42ce932a6670f1286dfd6b62538259b1"
+lastReviewedCommit: "08c4c9c478ab7ea8cc436d4ec5430a9587d110f9"
 ---
 
 # Development
@@ -127,3 +127,7 @@ are needed. Resource consumers explicitly use schema `api`; export inspection
 with `--schemas public private api`, but generate consumer types with
 `--schemas public api`. Hosted schema exposure is separately qualified as
 specified in `docs/supabase-integration.md`.
+
+The gate suppresses CLI success output that can contain ephemeral keys, filters
+failure diagnostics, and preserves the original CLI exit status for cleanup
+and failure detection.

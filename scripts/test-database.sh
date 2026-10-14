@@ -103,13 +103,14 @@ local_cli() {
   if "$supabase_bin" "$@" > "$test_root/cli.log" 2>&1; then
     echo "Local Supabase $1 succeeded."
   else
+    local cli_result=$?
     "$python_bin" - "$test_root/cli.log" <<'PYLOG'
 import pathlib, re, sys
 for line in pathlib.Path(sys.argv[1]).read_text().splitlines()[-40:]:
     if not re.search(r'(?i)(secret|key|jwt|password|postgres(?:ql)?://|eyJ)', line):
         print(line, file=sys.stderr)
 PYLOG
-    return 1
+    return "$cli_result"
   fi
 }
 owns_stack=true

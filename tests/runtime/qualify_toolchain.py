@@ -43,7 +43,8 @@ def main() -> None:
         "The actual local TypeScript output must include the kb_documents contract"
     assert types.resolve().is_relative_to(temporary_root)
     assert (workspace / "schemas/private/tables/kb_resource_entries/table.sql").is_file()
-    assert 'kb_resource_command' in actual_types and re.search(r'\bapi\s*:', actual_types)
+    assert 'kb_resource_command' in actual_types and re.search(r'"?api"?\s*:', actual_types), \
+        "The actual local TypeScript output must include the api resource RPC contract"
     assert 'kb_resource_entries' not in actual_types, "API types must not expose private storage"
     print("Real local schema export, offline object workspace and TypeScript generation passed.")
 

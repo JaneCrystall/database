@@ -9,7 +9,7 @@ whenToUse: "Before submitting or integrating database changes."
 whenToUpdate: "When test commands, qualification scope or CI changes."
 checkPaths: [scripts/**, tests/**, .github/workflows/**, .docpact/**]
 lastReviewedAt: "2026-10-14"
-lastReviewedCommit: "70d66ade42ce932a6670f1286dfd6b62538259b1"
+lastReviewedCommit: "08c4c9c478ab7ea8cc436d4ec5430a9587d110f9"
 ---
 
 # Validation
@@ -94,3 +94,6 @@ contracts; SQL statements also execute denied table operations for each API
 role. Only new private/api objects enter the additive catalog; the legacy public
 snapshot must not be regenerated to accept unrelated changes. Client type
 qualification explicitly includes public/api and excludes private tables.
+The type assertion accepts quoted and unquoted schema keys emitted by the
+official generator. CLI failure handling must preserve its exit status; the
+offline runtime-safety tests verify failed startup cleans only the owned stack.
