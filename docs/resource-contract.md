@@ -9,7 +9,7 @@ whenToUse: "When integrating M1 resource registration, review or PDF publication
 whenToUpdate: "When resource RPCs, identity, permissions, snapshots or recovery change."
 checkPaths: [supabase/migrations/*_kb_resource*.sql, tests/runtime/resource_*.py, tests/schema/resource_boundary.sql, tests/upgrade/resource_*.sql]
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: 2371302de0b5630ce3acfe739514340100e721c5
+lastReviewedCommit: 951192ce32389c43c4a54f1638aea59ef7550e1a
 ---
 
 # M1 resource identity and document association
@@ -208,14 +208,16 @@ payload under the same key fails; concurrent identical requests return the
 same stored result. Keep receipts for the trial lifetime. Authorization is
 rechecked before any historical receipt is returned.
 
-SQLSTATE `42501` means forbidden, `P0002` not found, `40001` conflict/reload
-(including stale revision/request/profile/source/approval), `22023` malformed
-input; ordinary type/constraint failures also reject the transaction. Successful
+Internally, SQLSTATE `42501` means forbidden, `P0002` not found, `40001`
+conflict/reload (including stale revision/request/profile/source/approval), and
+`22023` malformed input. The `api` command adapter maps the exact documented
+resource business-conflict messages from `40001` to `PT409` / HTTP 409;
+unexpected genuine serialization failures retain their original SQLSTATE; ordinary type/constraint failures also reject the transaction. Successful
 mutations and approval input/snapshots are audited with actor/reason. Exceptions
 roll back all writes; rejected calls need gateway failure logging. A RAISE
 preceded by INSERT is **not** durable denial auditing.
 
-`RESOURCE_LIFECYCLE_BUSY` (`40001`) means a worker or delete transaction owns
+`RESOURCE_LIFECYCLE_BUSY` (`40001` internally; `PT409` / HTTP 409 through `api`) means a worker or delete transaction owns
 one of the required job/document locks. The entire resource call rolls back,
 including audit, receipt and cancellation writes. The gateway must use bounded
 retry/backoff with the same request UUID and unchanged payload, then reload
@@ -325,7 +327,11 @@ accidental drop/recreate even if recreated objects pass behavior/ACL tests.
 The previous pre-resource legacy-row upgrade and no-automatic-backfill assertion
 remain in place. Hosted preview and consumer rollout remain separate gates.
 
-PostgREST reports the existing SQLSTATE `40001` request-conflict error as HTTP
-500 with `RESOURCE_REQUEST_CONFLICT`; the Next gateway must translate that
-semantic conflict into its documented client response. The schema move does
-not change existing SQLSTATEs or silently assume PostgREST returns HTTP 409.
+The hosted PostgREST 14.18 qualification showed semantic `40001` requests
+repeatedly active in the database until the HTTP client timed out, although the local PostgREST 16.4
+returned HTTP 500. The forward API adapter maps only the known resource
+business-conflict messages to PostgREST's documented `PT409` code. The private
+implementation retains its SQL contract; genuine unrelated serialization
+failures are rethrown. The invoker boundary, search path, OID and ACL remain
+unchanged. HTTP tests require prompt 409 responses and verify that idempotency,
+stale-revision and lifecycle-busy conflicts cannot enter transaction retry.

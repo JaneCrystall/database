@@ -9,7 +9,7 @@ whenToUse: "When deciding source ownership, schema scope or generated-path bound
 whenToUpdate: "When schema ownership, imported scope or consumer contracts change."
 checkPaths: [supabase/**, scripts/**, tests/sql/**, docs/source-inventory.json]
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: 2371302de0b5630ce3acfe739514340100e721c5
+lastReviewedCommit: 951192ce32389c43c4a54f1638aea59ef7550e1a
 ---
 
 # Database architecture
@@ -107,3 +107,8 @@ Resource lifecycle mutations take job locks before document locks and reject
 contended locks without waiting. The forward lock-conflict migration preserves
 legacy worker/delete implementations and converts resource contention to an
 atomic, retryable lifecycle conflict. It does not activate resource intake.
+
+The invoker API command adapter translates only known resource business
+conflicts into `PT409` / HTTP 409. Private SQL semantics stay unchanged; unrelated
+serialization failures retain their original code. This transport boundary
+avoids treating a permanent business conflict as a retriable database transaction.

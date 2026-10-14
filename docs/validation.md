@@ -9,7 +9,7 @@ whenToUse: "Before submitting or integrating database changes."
 whenToUpdate: "When test commands, qualification scope or CI changes."
 checkPaths: [scripts/**, tests/**, .github/workflows/**, .docpact/**]
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: 2371302de0b5630ce3acfe739514340100e721c5
+lastReviewedCommit: 951192ce32389c43c4a54f1638aea59ef7550e1a
 ---
 
 # Validation
@@ -126,7 +126,16 @@ only the intentionally changed Jobs function fingerprint.
 
 Resource/delete concurrency qualification uses two real sessions and blocking
 PID barriers. It exercises the actual resource command against actual
-`request_delete`, verifies a retryable lifecycle-busy conflict instead of
-`40P01`, confirms no partial resource/receipt changes, and checks that deletion
+`request_delete`, verifies a retryable lifecycle-busy conflict (HTTP adapter SQLSTATE `PT409`)
+instead of `40P01`, confirms no partial resource/receipt changes, and checks that deletion
 and a retry with the identical request UUID/payload preserve cleanup ownership. Fixtures run
 only in the uniquely owned disposable stack, never production.
+
+
+Hosted HTTP qualification uses an actual legacy table route to prove that the
+ordinary-user JWT reaches PostgREST; hosted OpenAPI introspection is restricted
+to secret keys. Resource semantic conflicts must return HTTP 409 promptly on
+both the pinned local runtime and hosted runtime. A rollback-scoped SQL probe
+checks private/API error separation and preserves unexpected serialization
+failures. This prevents a local-only HTTP 500 assertion from hiding hosted
+transaction retries.

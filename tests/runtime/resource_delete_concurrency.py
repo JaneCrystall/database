@@ -124,7 +124,7 @@ def race(operation, mutation, deleting_document, locked_job):
         delete_output, delete_error = deletion.communicate(timeout=15)
         assert "40P01" not in resource_error + delete_error, (
             "Resource mutation and actual request_delete deadlocked", resource_error, delete_error)
-        assert resource.returncode != 0 and "40001" in resource_error and "RESOURCE_LIFECYCLE_BUSY" in resource_error, (
+        assert resource.returncode != 0 and "PT409" in resource_error and "RESOURCE_LIFECYCLE_BUSY" in resource_error, (
             "Resource must return a bounded retryable lifecycle conflict", resource_output, resource_error)
         assert deletion.returncode == 0, delete_error
         assert sql(f"select to_jsonb(e) from private.kb_resource_entries e where id='{r['entry_id']}';") == before_entry

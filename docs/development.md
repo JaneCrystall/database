@@ -9,7 +9,7 @@ whenToUse: "When exporting schema, authoring migrations or selecting a database 
 whenToUpdate: "When helper CLI contracts, dependencies or adoption steps change."
 checkPaths: [scripts/**, supabase/config.toml, .env.*.example]
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: 2371302de0b5630ce3acfe739514340100e721c5
+lastReviewedCommit: 951192ce32389c43c4a54f1638aea59ef7550e1a
 ---
 
 # Development
@@ -143,3 +143,8 @@ For resource clients, handle `RESOURCE_LIFECYCLE_BUSY` with the bounded retry
 protocol in the resource contract. The combined migration gate keeps the
 pre-resource catalog separate from the current Jobs/resource catalog and runs
 the actual resource/delete concurrency regression on its disposable database.
+
+The resource API returns known business conflicts as HTTP 409 with `PT409` and
+a stable `RESOURCE_*` message. Apply bounded retry only to lifecycle-busy;
+revision/profile/source conflicts require reloading state. Private SQL callers
+still receive the original `40001` codes.

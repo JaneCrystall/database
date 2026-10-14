@@ -95,7 +95,12 @@ for token in (anon,user):
 expect(request('rpc/kb_resource_command',{**args,'p_actor_id':outsider}),403,'RESOURCE_FORBIDDEN')
 r=expect(request('rpc/kb_resource_command',args),200)
 assert r == expect(request('rpc/kb_resource_command',args),200)
-expect(request('rpc/kb_resource_command',{**args,'p_payload':{**args['p_payload'],'reason':'changed'}}),500,'RESOURCE_REQUEST_CONFLICT')
+conflict_started=time.monotonic()
+conflict=expect(request('rpc/kb_resource_command',{**args,'p_payload':{**args['p_payload'],'reason':'changed'}}),409,'RESOURCE_REQUEST_CONFLICT')
+assert conflict['code']=='PT409'
+assert time.monotonic()-conflict_started<5, 'Semantic conflict must return promptly, never transaction-retry'
+stale=expect(request('rpc/kb_resource_command',{**args,'p_request_id':str(uuid.uuid4())}),409,'RESOURCE_REVISION_CONFLICT')
+assert stale['code']=='PT409'
 entry=r['entry_id']
 get={'p_actor_id':actor,'p_collection_id':cid,'p_entry_id':entry}
 current=expect(request('rpc/kb_resource_get',get),200)

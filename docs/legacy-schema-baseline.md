@@ -9,7 +9,7 @@ whenToUse: "When reviewing the production-derived legacy baseline or running con
 whenToUpdate: "When capture scope, privacy guarantees, parity or business-path validation changes."
 checkPaths: [supabase/migrations/**, tests/schema/**, tests/consumers/**, docs/legacy-schema-inventory.json]
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: 2371302de0b5630ce3acfe739514340100e721c5
+lastReviewedCommit: 951192ce32389c43c4a54f1638aea59ef7550e1a
 ---
 
 # Knowledge Base legacy schema baseline
