@@ -9,7 +9,7 @@ whenToUse: "Before submitting or integrating database changes."
 whenToUpdate: "When test commands, qualification scope or CI changes."
 checkPaths: [scripts/**, tests/**, .github/workflows/**, .docpact/**]
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: d07a7c4a1c98e63d0efd3f41b99bc40b5fe2baf9
+lastReviewedCommit: 583bbcf692a4c00e76c91f893dcdae400952a17c
 ---
 
 # Validation
@@ -145,3 +145,10 @@ transaction retries.
 
 
 S9 adds `tests/runtime/legacy_permissions.sql` and `legacy_permissions_api.py` to fresh and populated-upgrade gates. They qualify PUBLIC inheritance, actual ordinary-role SQL/HTTP denial, custom-worker minimal grants, and seven service worker RPC effects. The current catalog accepts only the reviewed 18-function/23-table ACL delta. See [legacy-permissions.md](legacy-permissions.md) for consumer coverage and release limits.
+
+With the Next #88 candidate, `run_web_edge.py --only next` requires exact safe
+403 for all six legacy groups' POST/PATCH/DELETE, anonymous-write 401, unchanged
+stored rows and no insert residue. Source hashes in its receipt bind the tested
+Route Handlers and store; durable PR evidence also records both repository SHAs.
+This fixes the previous consumer 500 blocker locally but does not qualify
+hosted defaults, actual worker login identities or authorize release.

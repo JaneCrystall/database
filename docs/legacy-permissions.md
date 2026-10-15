@@ -9,7 +9,7 @@ whenToUse: "When reviewing S9 legacy permissions or preparing its separately aut
 whenToUpdate: "When legacy ACLs, worker identities or release qualification change."
 checkPaths: [supabase/migrations/*_narrow_legacy_public_permissions.sql, tests/runtime/legacy_permissions*, tests/schema/legacy_acl_policy.json, tests/consumers/**]
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: 5908ca9096f540a578f7f24ecfc7f5d3c960975b
+lastReviewedCommit: 583bbcf692a4c00e76c91f893dcdae400952a17c
 ---
 
 # S9 legacy public access boundary
@@ -30,11 +30,14 @@ The new migration revokes INSERT, UPDATE, DELETE, REFERENCES, TRIGGER and
 TRUNCATE from PUBLIC, anon and authenticated on the 23 listed tables. It keeps
 SELECT and existing RLS, including policyless empty results. This intentionally
 changes UPDATE/DELETE that previously affected zero rows into permission errors.
-The actual Next resource DELETE handler currently maps DB 42501 to HTTP 500
-(all six tested categories); the harness pins that observed result and verifies
-no row change. This is a **release blocker**, not a claim of correct UX. A
-[Next #88](https://github.com/tiangong-ai/web-app/issues/88) must map permission
-denial to 403 before S9 deployment.
+The original Next handler mapped DB 42501 to HTTP 500. The paired candidate for
+[Next #88](https://github.com/tiangong-ai/web-app/issues/88) now maps session
+permission denial to safe 403. The updated consumer harness requires exact 403
+for POST/PATCH/DELETE in all six categories, exact 401 for anonymous writes,
+fixed error bodies and unchanged stored rows/no insert residue. Real local
+HTTP/Auth/PostgREST qualification passed with the paired candidate; neither
+candidate is merged or deployed. S9 release still requires the qualified Next
+revision, not an older checkout that returns 500.
 No existing ordinary write policy is lost: these tables had SELECT-only or no
 policies. Management SELECT remains policyless/empty; further interface/schema
 reorganization belongs to S2–S8. It does not silently enable business writes.
@@ -179,7 +182,7 @@ flows both after fresh replay and populated prior-chain upgrade. Existing
 smokes cover token authorization, routing, triggers, Jobs/index/delete, queue
 lifecycle, retry, RLS and audit. Exact catalog equality detects unrelated changes.
 
-The separate consumer harness executes unchanged Next resource/API-key/Jobs
+The separate consumer harness executes actual Next resource/API-key/Jobs
 routes, Edge search handlers including course bearer verification, journal
 code, and Unstructure's seven actual psycopg adapters. Supabase/Auth/PostgREST
 are real; external search/LLM/Redis providers are doubles. Course Redis always
@@ -195,8 +198,8 @@ does not remove the S9 worker scenarios.
 This candidate must remain unmerged. Before any separately authorized release:
 
 1. Bind exact migration/source SHAs, database target, migration history, backup,
-   application/worker revisions and deployment ordering. Resolve the Next 42501
-   error-mapping blocker and its consumer expectation first. Verify hosted pending
+   application/worker revisions and deployment ordering. Include the qualified
+   Next #88 error mapping and matching consumer expectation. Verify hosted pending
    migration set; never replay the historic baseline or expand this to S2–S8.
 2. Read target schema/table/function/column/default ACLs and role memberships
    with authorized read-only access. Identify actual Next/Edge service identity,

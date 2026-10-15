@@ -9,7 +9,7 @@ whenToUse: "When reviewing the production-derived legacy baseline or running con
 whenToUpdate: "When capture scope, privacy guarantees, parity or business-path validation changes."
 checkPaths: [supabase/migrations/**, tests/schema/**, tests/consumers/**, docs/legacy-schema-inventory.json]
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: d07a7c4a1c98e63d0efd3f41b99bc40b5fe2baf9
+lastReviewedCommit: 583bbcf692a4c00e76c91f893dcdae400952a17c
 ---
 
 # Knowledge Base legacy schema baseline
@@ -80,10 +80,13 @@ users. Existing table ACLs include broad DML/TRUNCATE grants and the helper
 new security model. RLS does not protect TRUNCATE via direct SQL. Any tightening
 belongs to a separate reviewed access-policy change.
 
-Ordinary Next resource writes are expected to be denied or affect no rows under
-these policies. The existing DELETE handler may report success for zero deleted
-rows; qualification checks the actual stored row remains unchanged. `has_service_role`
-is a database lookup helper, not validation of a service JWT.
+The original baseline's ordinary Next writes were denied or affected no rows;
+DELETE could report success for zero deleted rows. S9 narrows the ACLs separately,
+so current consumer qualification requires safe 403 for all six groups' writes
+with the paired Next #88 fix, plus unchanged rows and anonymous-write 401.
+This is an intentional delta from the historical baseline, not a replacement
+of its captured facts. `has_service_role` is a database lookup helper, not
+validation of a service JWT.
 
 ## Business qualification
 

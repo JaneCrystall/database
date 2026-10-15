@@ -35,21 +35,35 @@ try {
  for(const [name,table] of Object.entries(tables)){
   const path=`/api/kb/resources/${name}`;
   const before=await row(table,f.resource_ids[name]);
+  async function assertUnchanged(){
+   assert.deepEqual(await row(table,f.resource_ids[name]),before,`${name} denied request changed fixture`);
+   const absent=await service.from(table).select('id').eq(titleKeys[name],`${f.marker}deniedinsert`);
+   assert(!absent.error&&absent.data.length===0,`${name} INSERT left residue`);
+  }
   let result=await request(`${path}?q=${encodeURIComponent(f.marker)}&page=1&pageSize=10&sort=${encodeURIComponent(titleKeys[name])}&dir=asc`);
   assert.equal(result.status,200,`${name} list HTTP failed`);
   if(name==='greenDeal')assert.equal(result.data.total,0,'greenDeal policyless table must be empty');
   else assert(result.data.data.some(item=>String(item.id)===String(f.resource_ids[name])),`${name} fixture missing from authenticated search`);
   const anonymous=await request(path,'GET',undefined,false);assert.equal(anonymous.status,401,`${name} anonymous read admitted`);
   const post=await request(path,'POST',{[titleKeys[name]]:`${f.marker}deniedinsert`});
-  assert(post.status>=400,`${name} read-only principal INSERT admitted`);
+  assert.equal(post.status,403,`${name} INSERT must return forbidden`);
+  await assertUnchanged();
   const patch=await request(`${path}/${f.resource_ids[name]}`,'PATCH',{[titleKeys[name]]:`${f.marker}deniedupdate`});
-  assert(patch.status>=400,`${name} read-only principal UPDATE admitted`);
+  assert.equal(patch.status,403,`${name} UPDATE must return forbidden`);
+  await assertUnchanged();
   const deletion=await request(`${path}/${f.resource_ids[name]}`,'DELETE');
-  assert.equal(deletion.status,500,`${name} current permission-error mapping changed`); // Known release blocker: map DB 42501 to 403 in Next.
-  assert.deepEqual(await row(table,f.resource_ids[name]),before,`${name} denied UPDATE/DELETE changed fixture`);
-  const absent=await service.from(table).select('id').eq(titleKeys[name],`${f.marker}deniedinsert`);
-  assert(!absent.error&&absent.data.length===0,`${name} INSERT left residue`);
-  results.push({consumer:`Next resources:${name}`,passed:true,readonly_mutations_denied:true,delete_status:deletion.status});
+  assert.equal(deletion.status,403,`${name} DELETE must return forbidden`);
+  await assertUnchanged();
+  for(const denied of [post,patch,deletion]){
+   assert.deepEqual(denied.data,{error:'Resource permission denied.'},`${name} permission response must be safe`);
+  }
+  for(const [method,endpoint] of [['POST',path],['PATCH',`${path}/${f.resource_ids[name]}`],['DELETE',`${path}/${f.resource_ids[name]}`]]){
+   const denied=await request(endpoint,method,{[titleKeys[name]]:`${f.marker}deniedinsert`},false);
+   assert.equal(denied.status,401,`${name} anonymous mutation must require authentication`);
+   assert.deepEqual(denied.data,{error:'Authentication required.'},`${name} anonymous response must be safe`);
+   await assertUnchanged();
+  }
+  results.push({consumer:`Next resources:${name}`,passed:true,readonly_mutations_denied:true,post_status:post.status,patch_status:patch.status,delete_status:deletion.status,anonymous_mutations_status:401,safe_errors:true,unchanged_rows:true});
  }
  let result=await request(`/api/kb/resources/thuHumanities?q=${encodeURIComponent(f.thu_title)}&page=1&pageSize=10`);
  assert.equal(result.status,200,'thu admin list HTTP failed');
