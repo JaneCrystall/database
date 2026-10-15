@@ -12,7 +12,7 @@ checkPaths:
   - tests/consumers/worker_role_contract.json
   - tests/consumers/test_worker_role_boundary.py
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: 33c3b417182b72349e36d0b6cf44a26e4be31c2c
+lastReviewedCommit: 697163cba2e52fe0416e37341cd5b532f104b383
 ---
 
 # S9 role and consumer evidence
@@ -370,13 +370,21 @@ provenance, nonsecret configuration binding and exact hosted compatibility are
 not thereby closed. Existing auth-cache/session behavior is outside S9; this
 finding does not certify those handlers' authentication design.
 
+Subsequent SHA-256 comparison (raw bytes hashed without exposing literals) found
+that all five fetched `internet_search` files exactly match the tree at Edge
+commit `c7afb6aefa09d365efdf7a5d5f46d7850ac309ee`. This establishes a matching Git
+source tree, not which commit the deployment operator actually selected. The
+other four entrypoint paths have no matching local-ref history; their inspected
+deployed versions/digests remain the source anchors. SCI-fast shares three exact
+helper files with history, but its entrypoint/logger are not proven by that match.
+
 ### Preview inventory and LCA comparison
 
-Read-only branch inventory finds only KB `main`; there is no disposable KB
-Preview. LCA has a healthy **persistent** `dev` branch in the same Supabase
+The initial read-only branch inventory found only KB `main`, without a disposable
+Preview. LCA had a healthy **persistent** `dev` branch in the same Supabase
 organization, under a different parent project. That database contains LCA's
-schema and cannot substitute for a KB S9 target. No branch was created, changed
-or deleted by this inspection; no Preview acceptance result is claimed.
+schema and cannot substitute for a KB S9 target. That inspection itself made no
+branch changes; the subsequently authorized KB test is recorded below.
 
 LCA's [branching contract](https://github.com/tiangong-lca/database/blob/6420b929915589a88c29b683137d928226398e45/docs/agents/supabase-branching.md)
 and [workflow](https://github.com/tiangong-lca/database/blob/6420b929915589a88c29b683137d928226398e45/.github/workflows/supabase-dev.yml)
@@ -402,7 +410,7 @@ and Compute Credits do not cover Branching Compute. The actual invoice, discount
 and balance were not inspected. See [billing scope](https://supabase.com/docs/guides/platform/billing-on-supabase)
 and [branch usage](https://supabase.com/docs/guides/platform/manage-your-usage/branching).
 
-Recommended next target is a disposable KB Preview tied to the reviewed database
+The selected target was a disposable KB Preview tied to the reviewed database
 candidate and paired Next #89, with synthetic fixtures and explicit role/API
 checks. An official PR Preview requires an authorized integration path; a manually
 created isolated branch does not automatically satisfy that official-check gate.
@@ -411,7 +419,12 @@ Preview-only credential use without disclosure, and cleanup after testing.
 The resulting branch is `s9-pr18-b9c5c28-20261015`, nondefault/nonpersistent,
 with no production data copy. Management metadata confirmed ACTIVE_HEALTHY;
 the migration dry run selected only S9 and its application succeeded. This is
-an operator-created isolated branch, not an official PR-check result. Hosted
-regression is still pending at this evidence checkpoint. No production
+an operator-created isolated branch, not an official PR-check result. The hosted
+catalog, SQL/HTTP ACL, Next/Edge, journals and full worker matrices subsequently
+passed; [results and receipt hashes](s9-development-validation.md#approved-hosted-preview-follow-up--2026-10-15)
+record the exact scope and doubles. Temporary fixtures/roles and credentials
+were cleaned, and the branch was deleted with a fresh inventory confirming only
+main. The exact-head official Supabase check was still absent after branch
+association and push; no integration setting or gate was bypassed. No production
 credentials, LCA writes, 142/148 changes, merges or production deployments are
 authorized by this comparison.
