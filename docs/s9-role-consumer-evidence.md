@@ -320,7 +320,7 @@ capabilities are observed, full worker and post-S9 behavior remain unqualified.
 The named legacy-role intent and internal_use classification questions in AC4
 are closed by owner confirmation plus catalog evidence; credential retirement
 enforcement is separate follow-up. AC5 remains partial for full deployed mappings; AC6/8
-for exact preview/release and authorized integration. PR #18 remains draft;
+for exact preview/release and authorized integration. PR #18 was draft at this observation;
 Next #89, migration bytes, M1-03 and root gitlinks are unchanged.
 
 Private receipts are retained under the operator's `s9-online-20261015` artifact
@@ -330,3 +330,83 @@ directory, not committed as remote metadata dumps. SHA-256 anchors:
 - Effective privilege matrix: `3768fa1a757b1d58c19643942a8f93b7a5820419f0a43c8c5b9bad19184303c9`.
 - Successful identity receipt: `31e229bec09af2f3b4eb9251402ecf2f926a7d3f3ca36dbf294ebe2cb2c9ef88`.
 - Exact diagnostic script: `e4941d7ad9d38e3b1b3ade1d19977bfc883ac8c992aaa66b4b18e2c36a1ce789`.
+
+## Deployed Edge source supplement — 2026-10-15
+
+The owner authorized deployed-source/identity inspection and Preview acceptance,
+with no secret-value inspection, merge, production mutation or 142/148 action.
+Supabase `get_edge_function` returned the five deployed bundles absent from the
+local entrypoint inventory. Review output and retained local snapshots mask
+string literals except allowlisted environment/role/table identifiers; comments
+are removed. No secret/configuration values were requested, handlers invoked,
+NAS contacted or production data queried in this supplement.
+
+| Deployed entrypoint | Version / gateway JWT | Source-defined identity and database dependency | S9 implication |
+| --- | --- | --- | --- |
+| `internet_search` | 95 / false | Publishable-client bootstrap; password sign-in on an auth-cache miss. Redis auth cache and external search/logger; no database table/RPC call in the bundle. | No narrowed operation identified. A cache hit does not prove a fresh authenticated session. |
+| `sci_search_fast` | 14 / false | Publishable bootstrap and conditional user sign-in; global client/session, email cache and light/cache paths make identity path-dependent. Reads `journals`; no narrowed RPC or table write. | SELECT and RLS are preserved by S9. Hosted metadata-read behavior still needs qualification. Earlier `sci_fast` spelling was incorrect. |
+| `synology-file-manager` | 95 / true | Gateway JWT check; backend uses `SYNOLOGY_URL`, `SYNOLOGY_USERNAME`, `SYNOLOGY_PASSWORD` to log into NAS. No Supabase client/table/RPC. | No database ACL dependency; NAS credential values and file operations were not inspected/executed. |
+| `auth-bench-68-cache` | 8 / true | Handler unconditionally returns HTTP 410; no imports, environment reads, Auth/database client or network call. | Deployed tombstone, not an executing auth benchmark. |
+| `auth-bench-68-nocache` | 3 / true | Same HTTP 410-only behavior. | Deployed tombstone, not an executing auth benchmark. |
+
+Both search bundles choose `REMOTE_SUPABASE_URL` / publishable-key variables
+before their `SUPABASE_*` fallbacks. This proves the selection logic, **not** the
+configured target, key class/value or account used for any particular request.
+There is no service-key selection in their inspected client construction.
+`verify_jwt` is a gateway setting and cannot alone identify a database role.
+An `ACTIVE` deployment record likewise does not prove benchmark activity.
+
+Deployment-reported bundle anchors, retained with version metadata in private
+sanitized snapshots under `s9-edge-preview-20261015`:
+
+- internet_search: `a77503110d2c164860d0f4828768bdd14437309738ce16436c5305721f7e9d2d`
+- sci_search_fast: `c9a3caaf41853d4702563fb121325ae51cce0193fbb3972427f0c4be2539fd0c`
+- synology-file-manager: `f6d958da7e6ef64326d07fc839d942919e10dd6ecda6eff84f2ea71064df3f47`
+- auth-bench-68-cache: `27c1b2129db536c1e59f73103aa25f54513fc432d736cd66088baefcf9e5bcdb`
+- auth-bench-68-nocache: `31415cbc065ebd7e2e0b4652cf93b6f337060673e5fcddd7bf48fe454eac7010`
+
+Missing-source inspection is closed for these five deployed versions. Git source
+provenance, nonsecret configuration binding and exact hosted compatibility are
+not thereby closed. Existing auth-cache/session behavior is outside S9; this
+finding does not certify those handlers' authentication design.
+
+### Preview inventory and LCA comparison
+
+Read-only branch inventory finds only KB `main`; there is no disposable KB
+Preview. LCA has a healthy **persistent** `dev` branch in the same Supabase
+organization, under a different parent project. That database contains LCA's
+schema and cannot substitute for a KB S9 target. No branch was created, changed
+or deleted by this inspection; no Preview acceptance result is claimed.
+
+LCA's [branching contract](https://github.com/tiangong-lca/database/blob/6420b929915589a88c29b683137d928226398e45/docs/agents/supabase-branching.md)
+and [workflow](https://github.com/tiangong-lca/database/blob/6420b929915589a88c29b683137d928226398e45/.github/workflows/supabase-dev.yml)
+separate PR-scoped Preview, persistent dev and main production. Its custom
+Preview job excludes fork PRs before credential authority. For eligible PRs it
+requires the exact-head official Supabase Preview check, matches PR/branch/parent
+and disposable branch identity, then validates hosted API boundaries. Credentials
+are used by the background workflow with masking, not exposed as review evidence.
+KB PR #18 is a fork PR and has no official Supabase Preview check at the observed
+head `b9c5c28ea32eca3ff31a2bb6460b4ddc5b77666c`. LCA's policy does not establish
+the cause of KB's missing check; KB integration/authority must be resolved rather
+than copying LCA's project binding or claiming its check covers this PR.
+
+Supabase subscriptions are organization-scoped; a separate organization plan
+is not needed merely for another project in this organization. Preview runtime
+usage is nevertheless separately metered; default Micro starts at $0.01344/hour
+and Compute Credits do not cover Branching Compute. The actual invoice, discounts
+and balance were not inspected. See [billing scope](https://supabase.com/docs/guides/platform/billing-on-supabase)
+and [branch usage](https://supabase.com/docs/guides/platform/manage-your-usage/branching).
+
+Recommended next target is a disposable KB Preview tied to the reviewed database
+candidate and paired Next #89, with synthetic fixtures and explicit role/API
+checks. An official PR Preview requires an authorized integration path; a manually
+created isolated branch does not automatically satisfy that official-check gate.
+The owner subsequently approved temporary KB Preview creation, background
+Preview-only credential use without disclosure, and cleanup after testing.
+The resulting branch is `s9-pr18-b9c5c28-20261015`, nondefault/nonpersistent,
+with no production data copy. Management metadata confirmed ACTIVE_HEALTHY;
+the migration dry run selected only S9 and its application succeeded. This is
+an operator-created isolated branch, not an official PR-check result. Hosted
+regression is still pending at this evidence checkpoint. No production
+credentials, LCA writes, 142/148 changes, merges or production deployments are
+authorized by this comparison.

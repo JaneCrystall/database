@@ -20,8 +20,8 @@ lastReviewedCommit: d0e137fcf568d98cbfa6b93648ff3430321bfcf0
 
 Development qualification of the reviewed candidate is complete locally;
 **deployment acceptance remains pending**. This does not close S9, approve a
-merge, promote a root gitlink, or authorize deployment. Database #18 remains
-draft, paired with Next #89. No SQL migration, existing role, RLS policy,
+merge, promote a root gitlink, or authorize deployment. Database #18 is now
+ready for review; paired Next #89 remains draft. No SQL migration, existing role, RLS policy,
 application implementation or 142/148 service changed in this round.
 
 The scope is permission compatibility through actual worker orchestration.
@@ -102,26 +102,33 @@ restricted worker/helper RPCs or 23 narrowed table writes. The shared function
 logger writes to OpenSearch, not these public tables. This is source impact
 analysis, not additional handler execution or proof of deployed credentials.
 
-The previously observed hosted names internet_search, sci_fast,
-synology-file-manager and the two auth-bench-68 endpoints have no matching
-entrypoint under this checkout's `supabase/functions`. Do not invent their
-source or infer inactivity. Exact deployed bundle-to-source/credential mapping
-and their compatibility are explicit **deployment acceptance blockers**.
+The five entrypoints absent from this checkout have now had their deployed
+bundles reviewed read-only; see the dated supplement in
+[consumer evidence](s9-role-consumer-evidence.md#deployed-edge-source-supplement-2026-10-15).
+The actual slug is `sci_search_fast`, correcting the earlier `sci_fast` label.
+None calls the narrowed worker/helper RPCs or table writes; SCI-fast reads
+`journals`, whose SELECT/RLS contract is unchanged. Both auth-bench endpoints
+are HTTP 410 tombstones. This closes the missing-source dependency inspection,
+not the runtime credential binding, Git provenance or hosted compatibility gates.
 The earlier owner statement of no independent deployments/direct callers does
 not substitute for this mapping. Retired journals_reader/out_user cleanup is
 separate; other unnamed legacy principals are not automatically declared retired.
 
-## Deployment acceptance gates — not executed or authorized here
+## Deployment acceptance gates — pending; no production authorization
 
 1. Identify exact Next/Edge/worker builds and runtime credential classes,
-   including the five unmatched hosted entrypoints. Resolve each by reviewed
-   source/owner evidence or a separate decision; do not silently exclude it.
+   including nonsecret deployment binding/provenance for the five now-inspected
+   hosted entrypoints. Source credential selection is not an observed login.
 2. Fix the release tuple: database S9 plus Next #89, reviewed consumer revisions
    and lockfiles. Rebuild from clean source; current 142/148 deployment files
    cannot stand in for this tuple. Do not deploy the database ACL change alone.
 3. Run the same compatibility/negative cases on an explicitly verified Preview,
    using actual intended role attributes and hosted gateway configuration.
    External parser/storage/index and real task recovery need separate evidence.
+   The 2026-10-15 branch inventory contains only KB main, so no hosted Preview
+   acceptance has run. LCA's persistent dev belongs to another parent project
+   and is not a KB test target. See the consumer-evidence supplement for the
+   LCA workflow comparison and the unresolved fork-PR Preview path.
 4. Before any 142 worker migration, decide its identity, single-instance process
    management and trial queue scope. Current 142 Next is systemd-managed; moving
    it to PM2 is not part of this permission change. Do not run old/new consumers
