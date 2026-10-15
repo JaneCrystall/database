@@ -9,7 +9,7 @@ whenToUse: "When reviewing S9 legacy permissions or preparing its separately aut
 whenToUpdate: "When legacy ACLs, worker identities or release qualification change."
 checkPaths: [supabase/migrations/*_narrow_legacy_public_permissions.sql, tests/runtime/legacy_permissions*, tests/schema/legacy_acl_policy.json, tests/consumers/**]
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: 583bbcf692a4c00e76c91f893dcdae400952a17c
+lastReviewedCommit: 33c3b417182b72349e36d0b6cf44a26e4be31c2c
 ---
 
 # S9 legacy public access boundary

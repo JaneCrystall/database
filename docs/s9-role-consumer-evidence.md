@@ -12,7 +12,7 @@ checkPaths:
   - tests/consumers/worker_role_contract.json
   - tests/consumers/test_worker_role_boundary.py
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: ebb35ea344960c8ab675b6aaddfecab52919412c
+lastReviewedCommit: 33c3b417182b72349e36d0b6cf44a26e4be31c2c
 ---
 
 # S9 role and consumer evidence
@@ -389,6 +389,11 @@ KB PR #18 is a fork PR and has no official Supabase Preview check at the observe
 head `b9c5c28ea32eca3ff31a2bb6460b4ddc5b77666c`. LCA's policy does not establish
 the cause of KB's missing check; KB integration/authority must be resolved rather
 than copying LCA's project binding or claiming its check covers this PR.
+Further GitHub inspection found that KB PR #10 was also from the same fork and
+had a successful official Supabase Preview check. Fork origin therefore cannot
+be treated as a blanket platform prohibition. This run's disposable branch was
+subsequently associated with `feature/issue-17`; exact-head official check
+creation still needs to be observed rather than inferred from that association.
 
 Supabase subscriptions are organization-scoped; a separate organization plan
 is not needed merely for another project in this organization. Preview runtime

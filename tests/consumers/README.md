@@ -153,4 +153,44 @@ The Next web runner now includes real `runIndexWorkerOnce`/`runDeleteWorkerOnce`
 record ledger and queue completion with external artifact/index/cleanup doubles.
 Use a separate fresh consumer session with `fixtures.py setup`, so its index
 reconciliation cannot pick up Python-flow documents. Both runners are bounded
-local development qualification, not external-provider or hosted deployment E2E.
+local development qualification for these commands, not external-provider or hosted deployment E2E.
+
+## S9 explicitly authorized disposable Preview
+
+Prepare the private target with the existing `prepare-preview` command above,
+after a fresh Management API/MCP branch read. For the following commands the
+receipt must additionally contain `branch_id`, `is_default: false` and
+`persistent: false`. Its parent must be the KB production project, while its
+own ref must be different. Persistent Dev, LCA, production, stale/mismatched
+receipts and remote URL overrides are rejected before application imports or
+connections. Creation, paid usage, fixture writes and branch cleanup require
+the operator's explicit authorization; a receipt is not authorization.
+
+```sh
+../unstructure/.venv/bin/python tests/consumers/unstructure_worker_flow.py --target /private/tmp/preview-session-unique/target.json --preview-ref PREVIEW_REF
+python3 tests/consumers/preview_api_boundary.py --target /private/tmp/preview-session-unique/target.json --preview-ref PREVIEW_REF
+```
+
+The worker mode requires an empty job table and parse/S3 queues, verifies the
+actual Preview postgres login is NOSUPERUSER/BYPASSRLS, and adds **no worker
+grants**. It runs the same complete scheduler scenarios using existing Preview
+ownership/privileges. The negative scheduler uses a fresh NOINHERIT/NOBYPASSRLS
+login with no object grants, removed by exact `DROP ROLE`; hosted PG17 need not
+grant SET ROLE authority for `DROP OWNED`. Production identity/membership is
+not inferred. `--acl-upgrade` is forbidden in Preview, so this mode cannot
+reopen ordinary ACLs. External providers remain loopback/file doubles.
+
+The HTTP boundary runner uses `fixtures.py setup`'s synthetic actor and records
+26 denied calls across the 13 non-trigger restricted RPCs, ordinary table-write
+denials, journal authenticated/anonymous reads and rejection of an actual
+`private` table profile. OpenAPI-root access is not a schema-exposure probe.
+The existing Next/Edge and journal runners also accept verified Preview targets;
+run worker scenarios sequentially, with cleanup, to avoid cross-consumption.
+`verify_catalog.py` uses the canonical current-chain comparator, including
+resource objects, rather than comparing only the original public fixture.
+
+Fixture cleanup and local `stop` do not delete hosted branches or all synthetic
+archive/audit rows. Finish by deleting **only the exact disposable branch created
+for this run**, verify its absence through Management metadata, and remove local
+Preview credentials. Hosted success does not create an official GitHub App check,
+authorize merge/production deployment or qualify real provider delivery.

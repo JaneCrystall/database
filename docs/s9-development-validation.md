@@ -13,7 +13,7 @@ checkPaths:
   - tests/consumers/worker_route.ts
   - tests/consumers/next_consumer.mjs
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: d0e137fcf568d98cbfa6b93648ff3430321bfcf0
+lastReviewedCommit: 33c3b417182b72349e36d0b6cf44a26e4be31c2c
 ---
 
 # S9 development validation and deployment handoff

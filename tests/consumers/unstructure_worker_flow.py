@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Owned-local orchestration qualification; never a hosted worker launcher."""
+"""Synthetic orchestration on owned local stacks or explicitly verified Preview."""
 from __future__ import annotations
 
 import argparse
@@ -19,9 +19,11 @@ import tempfile
 import threading
 import traceback
 from unittest.mock import patch
+from urllib.parse import urlsplit
 import uuid
 
 from unstructure_role_boundary import local_target, query
+from runtime import load_private, validate_target, PRODUCTION_REF
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT.parent / 'unstructure/src'
@@ -140,15 +142,31 @@ def configuration(cls, dsn, root, base):
         embedding_timeout_seconds=5, parse_job_timeout_seconds=20, s3_ready_job_timeout_seconds=10)
 
 
-def run(target_path, acl_upgrade=False):
-    target = local_target(target_path)  # Fail before importing application code.
+def preview_target(path, expected_ref):
+    target = load_private(path)
+    validate_target(target)
+    receipt = target.get('verification_receipt', {})
+    if (target.get('mode') != 'preview' or target.get('project_ref') != expected_ref
+            or target.get('parent_project_ref') != PRODUCTION_REF
+            or receipt.get('is_default') is not False
+            or receipt.get('persistent') is not False or not receipt.get('branch_id')):
+        raise RuntimeError('Exact disposable KB Preview receipt required')
+    return target
+
+
+def run(target_path, acl_upgrade=False, preview_ref=None):
+    if preview_ref and acl_upgrade:
+        raise RuntimeError('Preview cannot reopen pre-S9 ACLs')
+    # Both paths fail before importing application code or opening a DB connection.
+    target = preview_target(target_path, preview_ref) if preview_ref else local_target(target_path)
     import psycopg2
     from psycopg2 import sql
     from psycopg2.extensions import make_dsn
     w, cp, rec, s3 = load_sources()
     owner = psycopg2.connect(target['db_url'], connect_timeout=5)
-    role = 's9_flow_' + uuid.uuid4().hex[:16]
-    denied_role = role + '_deny'
+    nonce = 's9_flow_' + uuid.uuid4().hex[:16]
+    role = 'postgres' if preview_ref else nonce
+    denied_role = nonce + '_deny'
     created = False
     denied_created = False
     report = {}
@@ -157,6 +175,9 @@ def run(target_path, acl_upgrade=False):
     server = None
     cid = None
     def admin(statement):
+        if preview_ref:
+            query(owner, statement)
+            return
         # Local platform admin is used solely for temporary role lifecycle.
         # stdin and captured diagnostics never enter command args or receipts.
         result = subprocess.run(['docker', 'exec', '-i', 'supabase_db_'+target['project_id'],
@@ -168,22 +189,33 @@ def run(target_path, acl_upgrade=False):
     # fresh NOSUPERUSER login with explicit object privileges and its own BYPASSRLS.
     # This is an observed-capability emulation, NOT a recommended production grant.
     try:
+        if preview_ref:
+            assert query(owner, 'select session_user,current_user')[0] == ('postgres', 'postgres')
+            assert query(owner, 'select rolsuper,rolbypassrls from pg_roles where rolname=current_user')[0] == (False, True)
+            # A shared/populated branch must never be consumed by this harness.
+            assert query(owner, 'select count(*) from public.kb_jobs')[0][0] == 0
+            for queue in ('kb_parse_queue', 'kb_s3_ready_queue'):
+                assert query(owner, sql.SQL('select count(*) from pgmq.{}').format(sql.Identifier('q_'+queue)))[0][0] == 0
         password = secrets.token_urlsafe(32)
-        admin(sql.SQL('create role {} login inherit nosuperuser nocreatedb nocreaterole noreplication bypassrls password {}').format(sql.Identifier(role), sql.Literal(password)))
-        created = True
+        if not preview_ref:
+            admin(sql.SQL('create role {} login inherit nosuperuser nocreatedb nocreaterole noreplication bypassrls password {}').format(sql.Identifier(role), sql.Literal(password)))
+            created = True
         admin(sql.SQL('create role {} login noinherit nosuperuser nocreatedb nocreaterole noreplication nobypassrls password {}').format(sql.Identifier(denied_role), sql.Literal(password)))
         denied_created = True
         contract = json.loads((Path(__file__).with_name('worker_role_contract.json')).read_text())
-        for signature in contract['s9_rpc'] + contract['support_rpc']:
-            query(owner, sql.SQL('grant execute on function {} to {}').format(sql.SQL(signature), sql.Identifier(role)))
-        query(owner, sql.SQL('grant usage on schema public, pgmq to {}').format(sql.Identifier(role)))
-        for table in contract['direct_read_tables']:
-            query(owner, sql.SQL('grant select on public.{} to {}').format(sql.Identifier(table), sql.Identifier(role)))
-        for table in ('q_kb_parse_queue', 'q_kb_s3_ready_queue'):
-            query(owner, sql.SQL('grant select, update on pgmq.{} to {}').format(sql.Identifier(table), sql.Identifier(role)))
-        dsn = make_dsn(target['db_url'], user=role, password=password, connect_timeout=5,
-                       options='-c statement_timeout=10000', application_name='s9-local-worker-flow')
-        denied_dsn = make_dsn(dsn, user=denied_role)
+        if not preview_ref:
+            for signature in contract['s9_rpc'] + contract['support_rpc']:
+                query(owner, sql.SQL('grant execute on function {} to {}').format(sql.SQL(signature), sql.Identifier(role)))
+            query(owner, sql.SQL('grant usage on schema public, pgmq to {}').format(sql.Identifier(role)))
+            for table in contract['direct_read_tables']:
+                query(owner, sql.SQL('grant select on public.{} to {}').format(sql.Identifier(table), sql.Identifier(role)))
+            for table in ('q_kb_parse_queue', 'q_kb_s3_ready_queue'):
+                query(owner, sql.SQL('grant select, update on pgmq.{} to {}').format(sql.Identifier(table), sql.Identifier(role)))
+        dsn = (make_dsn(target['db_url'], connect_timeout=15, application_name='s9-preview-worker-flow')
+               if preview_ref else make_dsn(target['db_url'], user=role, password=password, connect_timeout=5,
+                   options='-c statement_timeout=10000', application_name='s9-local-worker-flow'))
+        denied_user = denied_role + '.' + preview_ref if preview_ref and (urlsplit(target['db_url']).hostname or '').endswith('.pooler.supabase.com') else denied_role
+        denied_dsn = make_dsn(dsn, user=denied_user, password=password)
         real_connect = cp.connect
         real_heartbeat = cp.heartbeat_job
 
@@ -406,16 +438,16 @@ def run(target_path, acl_upgrade=False):
 
             assert objects.calls.count('get') > 0
             assert '/v1/embeddings' in Providers.calls
-            report.update({'schema_version':1,'passed':True,'mode':'local','run_id':target['run_id'],
+            report.update({'schema_version':1,'passed':True,'mode':target['mode'],'run_id':target['run_id'],
                 'chain_mode':'populated ACL delta upgrade' if acl_upgrade else 'fresh head',
-                'role_profile':'fresh LOGIN NOSUPERUSER BYPASSRLS; explicit 13 RPC/schema/queue/snapshot grants; nonowner, test-only',
-                'ownership_equivalence':'object access granted explicitly; hosted owner identity/memberships not reproduced',
+                'role_profile':('Preview postgres NOSUPERUSER BYPASSRLS; existing grants/ownership, no added worker grants' if preview_ref else 'fresh LOGIN NOSUPERUSER BYPASSRLS; explicit 13 RPC/schema/queue/snapshot grants; nonowner, test-only'),
+                'ownership_equivalence':('Preview owner login observed; production memberships/configuration not reproduced' if preview_ref else 'object access granted explicitly; hosted owner identity/memberships not reproduced'),
                 'contract_sha256':hashlib.sha256(Path(__file__).with_name('worker_role_contract.json').read_bytes()).hexdigest(),
                 'migration_sha256':hashlib.sha256(migration.read_bytes()).hexdigest(),
                 'identity_checks':counts['connections'],'scenarios':scenarios,
                 'successful_heartbeats':counts['heartbeats'],'midflight_heartbeat_barrier':True,
                 'entrypoint':'actual run_once methods; CLI argument dispatch not executed',
-                'archive_cleanup':'synthetic archive/audit rows disposed by owned stack stop',
+                'archive_cleanup':('synthetic archive/audit rows require deletion of this owned disposable Preview' if preview_ref else 'synthetic archive/audit rows disposed by owned stack stop'),
                 'database_mocked':False,'external_doubles':['loopback parser/embedding HTTP','S3 object transport'],
                 'production_qualified':False,'source_sha256':{str(p.relative_to(ROOT.parent)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((SOURCE/'kb_parse_worker').glob('*.py'))},
                 'harness_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()})
@@ -431,8 +463,14 @@ def run(target_path, acl_upgrade=False):
         if created:
             admin(sql.SQL('drop owned by {}; drop role {};').format(sql.Identifier(role), sql.Identifier(role)))
         if denied_created:
-            admin(sql.SQL('drop owned by {}; drop role {};').format(sql.Identifier(denied_role), sql.Identifier(denied_role)))
-        assert query(owner,'select count(*) from pg_roles where rolname in (%s,%s)',(role,denied_role))[0][0] == 0
+            # The Preview denial login owns nothing and receives no grants.
+            # Hosted postgres has CREATEROLE/admin authority, but not SET ROLE
+            # authority for DROP OWNED on this NOINHERIT login (PG17).
+            if preview_ref:
+                admin(sql.SQL('drop role {}').format(sql.Identifier(denied_role)))
+            else:
+                admin(sql.SQL('drop owned by {}; drop role {};').format(sql.Identifier(denied_role), sql.Identifier(denied_role)))
+        assert query(owner,'select count(*) from pg_roles where rolname in (%s,%s)',(nonce,denied_role))[0][0] == 0
         report['temporary_roles_removed'] = True
         owner.close()
 
@@ -441,9 +479,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--target', type=Path, required=True)
     parser.add_argument('--acl-upgrade', action='store_true')
+    parser.add_argument('--preview-ref', help='Opt in to the exact verified disposable KB Preview; never production/persistent Dev')
     args = parser.parse_args()
     try:
-        print(json.dumps(run(args.target, args.acl_upgrade), indent=2))
+        print(json.dumps(run(args.target, args.acl_upgrade, args.preview_ref), indent=2))
         return 0
     except Exception as exc:
         print(json.dumps({'passed':False,'error_type':type(exc).__name__,'sqlstate':getattr(exc,'pgcode',None),'locations':[(Path(f.filename).name,f.lineno) for f in traceback.extract_tb(exc.__traceback__)]}), file=sys.stderr)
