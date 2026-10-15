@@ -158,3 +158,12 @@ S9 local permission qualification and role-specific recovery are defined in [leg
 
 
 For S9 role evidence, use the separate local LOGIN probe described in `tests/consumers/README.md`; it never accepts preview. Proposed production metadata reads are itemized in [the pending read packet](s9-role-consumer-evidence.md), and are not authorized or executed by local qualification.
+
+
+The complete S9 local orchestration runner uses the existing Unstructure Python
+environment (including requests, psycopg2 and boto3), without installing or
+upgrading dependencies or loading its `.env`. Constructed fixture configuration
+points only to the owned local database, temporary file tree and loopback
+provider listener. Local platform admin is used solely for temporary role
+lifecycle; worker connections assert NOSUPERUSER and their own BYPASSRLS flag.
+All production permissions and schemas remain unchanged.

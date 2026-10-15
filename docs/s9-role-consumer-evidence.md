@@ -22,6 +22,9 @@ No application SQL, RLS policy, deployed role or worker is changed. A local
 synthetic LOGIN probe is **not** evidence of the deployed login. The authorized
 online follow-up below adds current-configuration identity evidence; S9 remains
 incomplete until the remaining deployment mapping and preview qualification exist.
+The latest development-only result is recorded in
+[S9 development validation](s9-development-validation.md); earlier rounds below
+retain their original evidence limits.
 
 ## Evidence levels and owner statement
 

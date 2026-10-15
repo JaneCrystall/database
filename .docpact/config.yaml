@@ -176,9 +176,19 @@ rules:
         kind: worker-role-contract
       - path: tests/consumers/test_worker_role_boundary.py
         kind: worker-target-isolation
+      - path: tests/consumers/unstructure_worker_flow.py
+        kind: worker-orchestration-qualification
+      - path: tests/consumers/test_worker_flow_safety.py
+        kind: worker-orchestration-isolation
+      - path: tests/consumers/worker_route.ts
+        kind: next-worker-orchestration
+      - path: tests/consumers/next_consumer.mjs
+        kind: next-permission-consumer
     requiredDocs:
       - path: docs/legacy-permissions.md
         mode: review_or_update
       - path: docs/s9-role-consumer-evidence.md
+        mode: review_or_update
+      - path: docs/s9-development-validation.md
         mode: review_or_update
     reason: Legacy grants, worker identity, compatibility and release gates must remain explicit.

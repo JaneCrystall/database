@@ -162,3 +162,9 @@ S9 intentionally narrows 18 function and 23 table ACLs; only those catalog field
 
 
 S9 follow-up consumer qualification also distinguishes direct LOGIN RPC access from queue and snapshot dependencies. [Role evidence](s9-role-consumer-evidence.md) records actual adapter tests, existing local schema/RLS gaps, source versions and owner-confirmed indirect skill/Edge callers. It does not modify the captured schema or claim a deployed identity.
+
+
+The [S9 development validation](s9-development-validation.md) now adds complete
+local scheduler lifecycles, retaining real database/Auth/PostgREST interactions.
+It records exact source hashes and separates observed-capability emulation from
+hosted role identity; no extra production grants or schema relocation follow.

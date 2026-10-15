@@ -155,3 +155,15 @@ hosted defaults, actual worker login identities or authorize release.
 
 
 The local-only `tests/consumers/unstructure_role_boundary.py` adds real LOGIN qualification and explicit queue/snapshot failure boundaries; run it through the owned consumer runtime. `test_worker_role_boundary.py` rejects mismatched ports, ownership and nonlocal targets without DB access. See [S9 role evidence](s9-role-consumer-evidence.md). This is a separate consumer test, not automatically part of database-only CI.
+
+
+For S9 complete local worker orchestration, use `unstructure_worker_flow.py` in
+`tests/consumers/README.md`. It runs the real five Unstructure `run_once` paths
+with a fresh non-superuser LOGIN and real PostgreSQL/pgmq. Run both fresh-head
+and `--acl-upgrade` modes; the latter reconstructs only the precise pre-S9 ACL
+delta with a queued fixture, not all old function bodies. The full database
+gate independently covers prior-chain replay/upgrade. Next consumer qualification
+also runs actual index/delete schedulers with real PostgREST and index ledger.
+Only external provider/artifact transports are doubled. These consumers remain
+separate from database-only CI and require reviewed sibling sources/dependencies.
+See [the development result and deployment gates](s9-development-validation.md).

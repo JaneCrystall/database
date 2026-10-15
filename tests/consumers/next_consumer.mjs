@@ -114,6 +114,45 @@ try {
   const jobsClean=await service.from('kb_jobs').delete().in('id',jobIds);assert(!jobsClean.error,'Worker jobs cleanup failed');
   const docsClean=await service.from('kb_documents').delete().in('id',docs);assert(!docsClean.error,'Worker documents cleanup failed');
  }
+ // Complete actual scheduler/store lifecycles with only external transports doubled.
+ const flowDoc=crypto.randomUUID(), flowCollection=crypto.randomUUID(), flowPartition=crypto.randomUUID();
+ const artifactId=crypto.randomUUID();
+ async function checked(operation,label){const response=await operation;assert(!response.error,label);return response.data;}
+ try {
+  await checked(service.from('kb_search_partitions').insert({id:flowPartition,key:'s9-'+flowPartition,name:'Synthetic S9',opensearch_read_alias:'synthetic',opensearch_write_alias:'synthetic',opensearch_concrete_index:'synthetic-v1',pinecone_index_name:'synthetic',pinecone_namespace:'synthetic'}),'Flow partition fixture failed');
+  await checked(service.from('kb_collections').insert({id:flowCollection,name:'Synthetic S9 flow',path:'/s9-flow',search_partition_id:flowPartition}),'Flow collection fixture failed');
+  await checked(service.from('kb_grants').insert({resource_type:'collection',resource_id:flowCollection,principal_type:'user',principal_id:target.user.id,actions:['manage'],created_by:target.user.id}),'Flow manage grant fixture failed');
+  await checked(service.from('kb_documents').insert({id:flowDoc,primary_collection_id:flowCollection,dedupe_scope:flowDoc,original_filename:'synthetic.pdf',file_ext:'pdf',sha256:'b'.repeat(64),created_by:target.user.id,owner_user_id:target.user.id,status:'processed_s3_ready',processed_manifest_s3_key:'synthetic/manifest.json',processed_artifact_uuid:artifactId,chunk_count:1}),'Flow document fixture failed');
+  const flowBody={documentId:flowDoc,collectionId:flowCollection,artifactId};
+  const indexed=await request('/api/s9-workers','POST',{...flowBody,action:'index'});
+  assert.equal(indexed.status,200,'Full index scheduler HTTP failed');
+  assert.equal(indexed.data.result.results[0]?.status,'completed','Full index lifecycle not completed');
+  assert.equal(indexed.data.result.results[0]?.archived,true,'Index message not archived');
+  assert.equal(indexed.data.effects.length,1,'Index transport not invoked');
+  assert.equal((await row('kb_documents',flowDoc)).status,'completed','Index document state incorrect');
+  const ledger=await checked(service.from('kb_index_records').select('*').eq('document_id',flowDoc).is('deleted_at',null),'Index ledger query failed');
+  assert.equal(ledger.length,1,'Index ledger missing');
+  const emptyIndex=await request('/api/s9-workers','POST',{...flowBody,action:'index'});
+  assert.equal(emptyIndex.data.result.readCount,0,'Completed index was re-enqueued');
+  const deleted=await checked(service.rpc('request_delete',{p_document_id:flowDoc,p_actor_id:target.user.id,p_reason:'S9 fixture',p_request_id:'s9-'+flowDoc}),'Delete enqueue failed');
+  assert(deleted[0]?.job_id,'Delete enqueue missing job');
+  const cleanup=await request('/api/s9-workers','POST',{...flowBody,action:'delete'});
+  assert.equal(cleanup.status,200,'Full delete scheduler HTTP failed');
+  assert.equal(cleanup.data.result.results[0]?.status,'completed','Full delete lifecycle not completed');
+  assert.equal(cleanup.data.result.results[0]?.archived,true,'Delete message not archived');
+  assert.equal(cleanup.data.effects.length,1,'Delete transport not invoked');
+  assert.equal((await row('kb_documents',flowDoc)).status,'deleted','Delete document state incorrect');
+  const emptyDelete=await request('/api/s9-workers','POST',{...flowBody,action:'delete'});
+  assert.equal(emptyDelete.data.result.readCount,0,'Completed delete was re-enqueued');
+  results.push({consumer:'Next full index/delete schedulers with real PostgREST and queue',passed:true,external_doubles:['artifact reader','index write/delete','external cleanup']});
+ } finally {
+  await checked(service.from('kb_index_records').delete().eq('document_id',flowDoc),'Flow ledger cleanup failed');
+  await checked(service.from('kb_jobs').delete().eq('document_id',flowDoc),'Flow jobs cleanup failed');
+  await checked(service.from('kb_documents').delete().eq('id',flowDoc),'Flow document cleanup failed');
+  await checked(service.from('kb_grants').delete().eq('resource_id',flowCollection),'Flow grant cleanup failed');
+  await checked(service.from('kb_collections').delete().eq('id',flowCollection),'Flow collection cleanup failed');
+  await checked(service.from('kb_search_partitions').delete().eq('id',flowPartition),'Flow partition cleanup failed');
+ }
  const jobs=await request('/api/kb/admin/jobs?page=1&pageSize=10');
  assert.equal(jobs.status,200,'Next Jobs service RPC failed');
  results.push({consumer:'Next Jobs',passed:true});

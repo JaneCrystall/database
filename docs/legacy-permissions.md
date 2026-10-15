@@ -227,3 +227,11 @@ migration; do not edit an applied migration or claim a backup restore was tested
 ## Follow-up identity qualification
 
 See [role/consumer evidence and authorized online follow-up](s9-role-consumer-evidence.md). A true synthetic LOGIN proves seven S9 and six support adapters with explicit grants, while direct pgmq/snapshot paths expose additional schema/RLS dependencies. The online read confirms service_role lacks pgmq USAGE too, but a temporary PM2 identity probe using 148's current worker configuration connects as postgres (BYPASSRLS, not SUPERUSER) with the required object privileges. This narrows the current-identity compatibility concern; it does not qualify full processing, historical PM2 overrides, a new 142 role or post-S9 behavior. Both Next deployments still contain pre-#89 resource-store code. No permissions, application code or migrations were changed; the probe was stopped and removed.
+
+
+The subsequent [development-validation round](s9-development-validation.md)
+qualifies complete local worker scheduling against the same S9 migration,
+including a non-superuser capability-equivalent direct login and the paired
+Next #89 index/delete schedulers. Its external transports are doubles; hosted
+source/identity binding, preview, rollout and operational qualification remain
+separate release gates. This does not authorize merge or permission changes.

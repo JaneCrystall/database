@@ -122,3 +122,35 @@ For the stronger S9 identity boundary probe, run from this repository:
 ```
 
 It requires an owned local session, verifies container labels and its database port, then creates a fresh restricted LOGIN and runs actual adapters with test-only grants. The JSON distinguishes passing RPCs from queue/snapshot schema and RLS gaps, and always sets whole_worker_qualified/production_role_verified to false. It does not accept production or preview. The test login/grants are removed even on failure; stop the owned stack to remove synthetic rows. Do not use generic fixture cleanup as a substitute for stop. Source hashes, the phase grant contract and safe diagnostics exclude credentials. `python3 -m unittest discover -s tests/consumers -p 'test_*.py'` includes its offline targeting checks. See [the source inventory and pending online read packet](../../docs/s9-role-consumer-evidence.md).
+
+
+## S9 complete local worker scheduling
+
+From database, using a newly started owned local session:
+
+```sh
+../unstructure/.venv/bin/python tests/consumers/unstructure_worker_flow.py --target /private/tmp/consumer-session-unique/target.json
+../unstructure/.venv/bin/python tests/consumers/unstructure_worker_flow.py --target /private/tmp/consumer-session-unique/target.json --acl-upgrade
+```
+
+The runtime requires Unstructure's existing requests/psycopg2/boto3 dependencies.
+It never loads operator environment files. Five unchanged schedulers execute
+actual SQL/queue operations as a fresh NOSUPERUSER/BYPASSRLS login with explicit
+13 RPC, schema, snapshot and queue grants; this nonowner test profile emulates
+needed observed postgres capabilities, not its identity or complete ownership.
+A second restricted login runs the same scheduler and must fail with 42501
+before claim. Temporary role lifecycle uses only the owned container's platform
+admin. No production role/grant recipe is implied.
+
+Parser/embedding HTTP is loopback-only, NAS is a temporary directory, and only
+S3 object transport is replaced; artifact writes, S3 manifest/size/hash checks,
+lease/claim/finalization/retry/reconciliation remain real. Receipts distinguish
+fresh head from a populated **ACL-delta** upgrade; full prior-chain replay
+remains in `scripts/test-database.sh`. Stop the stack afterwards to remove all
+synthetic archives/audit records, even if a run fails.
+
+The Next web runner now includes real `runIndexWorkerOnce`/`runDeleteWorkerOnce`,
+record ledger and queue completion with external artifact/index/cleanup doubles.
+Use a separate fresh consumer session with `fixtures.py setup`, so its index
+reconciliation cannot pick up Python-flow documents. Both runners are bounded
+local development qualification, not external-provider or hosted deployment E2E.
