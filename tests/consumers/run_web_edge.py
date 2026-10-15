@@ -105,11 +105,20 @@ def run_next(target_file: Path, temporary: Path, facts: dict) -> dict:
     (app/"node_modules").symlink_to(NEXT/"node_modules",target_is_directory=True)
     for relative in ["package.json", "tsconfig.json",
                      "lib/kb/resource-config.ts","lib/kb/resource-store.ts",
-                     "lib/supabase/admin.ts","lib/supabase/service-role.ts",
+                     "lib/supabase/admin.ts","lib/supabase/service-role.ts","lib/server/env.ts",
                      "lib/supabase/env.ts","lib/supabase/server.ts",
                      "app/api/kb/resources/[collection]/route.ts",
                      "app/api/kb/resources/[collection]/[id]/route.ts"]:
         source_copy(NEXT/relative,app/relative,facts)
+    # S9 executes the existing API-key/Jobs routes and their source dependencies.
+    for relative in ["app/api/kb/admin/api-keys/route.ts",
+                     "app/api/kb/admin/api-keys/[keyId]/revoke/route.ts",
+                     "app/api/kb/admin/api-keys/[keyId]/rotate/route.ts",
+                     "app/api/kb/admin/jobs/route.ts"]:
+        source_copy(NEXT/relative,app/relative,facts)
+    for source in sorted((NEXT/"lib/kb").rglob("*.ts")):
+        source_copy(source,app/source.relative_to(NEXT),facts)
+    source_copy(HERE/"worker_route.ts",app/"app/api/s9-workers/route.ts",facts)
     # The isolated app has only API routes. No consumer product UI or proxy is
     # replaced; their source is not needed to execute the actual route modules.
     (app/"next.config.mjs").write_text("export default {devIndicators:false};\n",encoding="utf-8")
@@ -153,7 +162,7 @@ def run_edge(target_file: Path, temporary: Path, facts: dict) -> dict:
     app.mkdir()
     for source in sorted((EDGE/"supabase/functions/_shared").glob("*.ts")):
         source_copy(source,app/"functions/_shared"/source.name,facts)
-    for name in ["edu_search","esg_search","standard_search","sci_search"]:
+    for name in ["edu_search","esg_search","standard_search","sci_search","course_search"]:
         source_copy(EDGE/f"supabase/functions/{name}/index.ts",app/f"functions/{name}/index.ts",facts)
     source_copy(HERE/"edge_consumer.ts",app/"edge_consumer.ts",facts)
     source_copy(HERE/"external_mocks/providers.ts",app/"external_mocks/providers.ts",facts)

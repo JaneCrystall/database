@@ -151,6 +151,8 @@ fi
 run_sql < "$repo_root/tests/schema/resource_boundary.sql"
 run_sql < "$repo_root/tests/schema/resource_http_errors.sql"
 SUPABASE_CLI="$supabase_bin" "$python_bin" "$repo_root/tests/runtime/resource_api.py" "$db_container" "$test_root"
+run_sql < "$repo_root/tests/runtime/legacy_permissions.sql"
+SUPABASE_CLI="$supabase_bin" "$python_bin" "$repo_root/tests/runtime/legacy_permissions_api.py" "$db_container" "$test_root"
 for sql_file in "$repo_root"/tests/performance/*.sql; do
   [[ -f "$sql_file" ]] || continue
   echo "Running ${sql_file##*/}"
@@ -200,4 +202,6 @@ run_sql -At < "$repo_root/tests/schema/public_catalog.sql" > "$test_root/upgrade
 run_sql < "$repo_root/tests/schema/resource_boundary.sql"
 run_sql < "$repo_root/tests/schema/resource_http_errors.sql"
 SUPABASE_CLI="$supabase_bin" "$python_bin" "$repo_root/tests/runtime/resource_api.py" "$db_container" "$test_root"
+run_sql < "$repo_root/tests/runtime/legacy_permissions.sql"
+SUPABASE_CLI="$supabase_bin" "$python_bin" "$repo_root/tests/runtime/legacy_permissions_api.py" "$db_container" "$test_root"
 echo "Local migration replay, ${#smoke_tests[@]} SQL smoke tests, resource concurrency, PostgREST boundary and populated prior-schema upgrade passed."

@@ -152,3 +152,6 @@ The resource API returns known business conflicts as HTTP 409 with `PT409` and
 a stable `RESOURCE_*` message. Apply bounded retry only to lifecycle-busy;
 revision/profile/source conflicts require reloading state. Private SQL callers
 still receive the original `40001` codes.
+
+
+S9 local permission qualification and role-specific recovery are defined in [legacy-permissions.md](legacy-permissions.md). No merge/deploy is authorized by local test success.

@@ -101,3 +101,15 @@ Run offline runtime safety checks with:
 ```sh
 python3 -m unittest discover -s tests/consumers -p 'test_runtime_safety.py'
 ```
+
+
+## S9 permission consumers
+
+`run_web_edge.py` also exercises actual Next API-key create/list/rotate/revoke,
+Jobs and course-search bearer authorization. Course Redis is a cache-miss double;
+valid/invalid/revoked tokens are verified against the real local database.
+Use `knowledge-base/.venv/bin/python tests/consumers/unstructure_permissions.py
+<owned-local-target.json>` from the workspace (adjust script path from root)
+for seven unchanged Unstructure psycopg adapters under service_role. Its source
+SHA-256 is reported. Only the local target mode is allowed. S9 adapter/HTTP
+fixtures are removed by stopping the owned stack, not generic fixture cleanup.

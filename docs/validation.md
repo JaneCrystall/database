@@ -142,3 +142,6 @@ both the pinned local runtime and hosted runtime. A rollback-scoped SQL probe
 checks private/API error separation and preserves unexpected serialization
 failures. This prevents a local-only HTTP 500 assertion from hiding hosted
 transaction retries.
+
+
+S9 adds `tests/runtime/legacy_permissions.sql` and `legacy_permissions_api.py` to fresh and populated-upgrade gates. They qualify PUBLIC inheritance, actual ordinary-role SQL/HTTP denial, custom-worker minimal grants, and seven service worker RPC effects. The current catalog accepts only the reviewed 18-function/23-table ACL delta. See [legacy-permissions.md](legacy-permissions.md) for consumer coverage and release limits.

@@ -153,3 +153,6 @@ immutable; the Jobs migration is a reviewed forward change. The local gate
 continues enforcing all other captured attributes, including that function's
 ACL/signature/settings. The original production fingerprint is preserved in Git
 history; a current-head expectation is not evidence of production application.
+
+
+S9 intentionally narrows 18 function and 23 table ACLs; only those catalog fields change. All legacy objects and policy behavior remain, except ordinary writes now fail explicitly. See [the exact matrix and release boundary](legacy-permissions.md).

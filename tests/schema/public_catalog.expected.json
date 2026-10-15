@@ -213,27 +213,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -383,27 +368,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -785,27 +755,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -955,27 +910,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -1187,27 +1127,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -1262,27 +1187,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -1368,27 +1278,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -1691,27 +1586,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -1737,27 +1617,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -1783,27 +1648,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -1891,27 +1741,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -1968,27 +1803,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -2169,27 +1989,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -2215,27 +2020,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -2323,27 +2113,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -2369,27 +2144,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -2415,27 +2175,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -2569,27 +2314,12 @@
       "acl": [
         {
           "grantable": false,
-          "grantee": "anon",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
           "grantee": "postgres",
           "privilege": "EXECUTE"
         },
         {
           "grantable": false,
           "grantee": "service_role",
-          "privilege": "EXECUTE"
-        },
-        {
-          "grantable": false,
-          "grantee": "PUBLIC",
           "privilege": "EXECUTE"
         }
       ],
@@ -2659,72 +2389,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -2930,72 +2600,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -3209,72 +2819,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -3413,72 +2963,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -3617,72 +3107,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -4057,72 +3487,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -4379,72 +3749,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -4646,72 +3956,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -4956,72 +4206,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -5175,72 +4365,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -5571,72 +4701,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -5861,72 +4931,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -6222,72 +5232,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -6815,72 +5765,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -7131,72 +6021,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -7355,72 +6185,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -7933,72 +6703,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -8335,72 +7045,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -8667,72 +7317,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -8855,72 +7445,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -9195,72 +7725,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -9458,72 +7928,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,
@@ -9933,72 +8343,12 @@
         {
           "grantable": false,
           "grantee": "anon",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "SELECT"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "anon",
-          "privilege": "UPDATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "DELETE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "INSERT"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "REFERENCES"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
           "privilege": "SELECT"
         },
         {
           "grantable": false,
           "grantee": "authenticated",
-          "privilege": "TRIGGER"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "TRUNCATE"
-        },
-        {
-          "grantable": false,
-          "grantee": "authenticated",
-          "privilege": "UPDATE"
+          "privilege": "SELECT"
         },
         {
           "grantable": false,

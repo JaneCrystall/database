@@ -1,0 +1,47 @@
+-- S9: ACL only. Review docs/legacy-permissions.md before release.
+-- Do not deploy until actual direct-worker roles and external consumers are verified.
+-- Keep all function bodies, public object locations, policies and named role grants.
+begin;
+REVOKE EXECUTE ON FUNCTION public.authorize_kb_api_key_collection_action(text, text, text[], jsonb, text, jsonb) FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.claim_parse_two_stage_task(text, integer) FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.fail_job_v2(uuid, text, boolean, text, public.kb_job_stage) FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.has_service_role(uuid) FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.kb_default_collection_search_partition() FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.kb_normalize_collection_path(text) FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.kb_set_updated_at() FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.mark_parse_local_ready(uuid, text, uuid, integer, text, uuid, text, integer, jsonb) FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.mark_parse_two_stage_task_state(uuid, text, text, text, integer) FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.mark_processed_s3_ready(uuid, text, uuid, integer, text, text, uuid, text, integer) FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.register_parse_two_stage_task(uuid, text, text, text, text, text, bigint, integer, jsonb) FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.replay_parse_local_ready_from_artifact(uuid, text, uuid, integer, text, uuid, text, integer, jsonb, jsonb, text) FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.resolve_document_search_partition(uuid) FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.resolve_query_search_partitions(uuid[], boolean, boolean) FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.set_created_by() FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.set_last_updated_by() FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.set_last_updated_time() FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.verify_kb_api_key(text, text, text[], jsonb) FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.edu_meta FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.edu_textbooks FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.esg_category FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.esg_country FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.esg_meta FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.green_deal_meta FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.internal_use FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.journals FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.journals_issn FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.kb_api_keys FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.kb_audit_events FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.kb_collections FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.kb_documents FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.kb_grants FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.kb_group_members FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.kb_groups FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.kb_jobs FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.kb_query_logs FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.kb_schema_migrations FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.kb_search_partitions FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.reports FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.standards FROM PUBLIC, anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE ON TABLE public.user_roles FROM PUBLIC, anon, authenticated;
+NOTIFY pgrst, 'reload schema';
+commit;

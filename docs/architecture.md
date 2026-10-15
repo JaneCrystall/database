@@ -112,3 +112,6 @@ The invoker API command adapter translates only known resource business
 conflicts into `PT409` / HTTP 409. Private SQL semantics stay unchanged; unrelated
 serialization failures retain their original code. This transport boundary
 avoids treating a permanent business conflict as a retriable database transaction.
+
+
+S9 narrows only legacy public ACLs under [legacy-permissions.md](legacy-permissions.md). It keeps object locations, bodies, RLS, M1-03 and legacy-role explicit grants; deployment is separately gated.

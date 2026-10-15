@@ -1,7 +1,7 @@
 version: 1
 layout: repo
 lastReviewedAt: "2026-10-15"
-lastReviewedCommit: "d07a7c4a1c98e63d0efd3f41b99bc40b5fe2baf9"
+lastReviewedCommit: "5908ca9096f540a578f7f24ecfc7f5d3c960975b"
 repo:
   id: database
 routing:
@@ -157,3 +157,20 @@ rules:
       - path: docs/resource-contract.md
         mode: review_or_update
     reason: Resource identity, approval, publication and recovery must share a versioned gateway contract.
+
+  - id: database-legacy-permissions
+    scope: repo
+    repo: database
+    triggers:
+      - path: supabase/migrations/*_narrow_legacy_public_permissions.sql
+        kind: legacy-acl
+      - path: tests/runtime/legacy_permissions*
+        kind: permission-qualification
+      - path: tests/schema/legacy_acl_policy.json
+        kind: permission-scope
+      - path: tests/consumers/unstructure_permissions.py
+        kind: worker-consumer
+    requiredDocs:
+      - path: docs/legacy-permissions.md
+        mode: review_or_update
+    reason: Legacy grants, worker identity, compatibility and release gates must remain explicit.

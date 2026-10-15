@@ -14,6 +14,8 @@ configure(target.fixtures);
 for (const [name, value] of Object.entries({
   REMOTE_SUPABASE_URL:url, REMOTE_SUPABASE_PUBLISHABLE_KEY:key,
   SUPABASE_URL:url,SUPABASE_PUBLISHABLE_KEY:key,
+  SUPABASE_SECRET_KEYS:JSON.stringify({default:target.service_role_key}),
+  PINECONE_NAMESPACE_COURSE:'edu',OPENSEARCH_COURSE_INDEX_NAME:'edu',
   OPENAI_API_KEY:'synthetic',OPENAI_EMBEDDING_MODEL:'synthetic',
   PINECONE_API_KEY_US_EAST_1:'synthetic',PINECONE_INDEX_NAME:'synthetic',
   PINECONE_NAMESPACE_EDU:'edu',PINECONE_NAMESPACE_ESG:'esg',
@@ -32,7 +34,7 @@ let loading = '';
   handlers.set(loading,handler);
   return {finished:Promise.resolve(),shutdown:async()=>{}};
 };
-for (const name of ['edu_search','esg_search','standard_search','sci_search']) {
+for (const name of ['edu_search','esg_search','standard_search','sci_search','course_search']) {
   loading=name;
   await import(new URL(`./functions/${name}/index.ts`,import.meta.url).href);
 }
@@ -53,6 +55,24 @@ async function request(name:string,body:unknown,authorized=true) {
 }
 try {
   const fixture=target.fixtures;
+  const {createClient}=await import('@supabase/supabase-js@2');
+  const service=createClient(url,target.service_role_key,{auth:{persistSession:false}});
+  const token='tgkb_s9_'+crypto.randomUUID().replaceAll('-','');
+  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token));
+  const hash=Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  const inserted=await service.from('kb_api_keys').insert({name:'S9 course',client_id:fixture.marker,actor_user_id:target.user.id,token_prefix:token.slice(0,18),token_hash:hash,scopes:['kb:read'],created_by:target.user.id}).select('id').single();
+  assert(!inserted.error,'Course token fixture insert failed');
+  try {
+    const call=async(bearer:string)=>await fetch(base+'/course_search',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+bearer},body:JSON.stringify({query:fixture.marker,topK:1})});
+    assert((await call(token+'invalid')).status===401,'Course invalid bearer was not rejected');
+    const valid=await call(token);
+    assert(valid.status===200 && JSON.stringify(await valid.json()).includes(fixture.marker),'Course valid bearer search failed');
+    const revoked=await service.from('kb_api_keys').update({revoked_at:new Date().toISOString()}).eq('id',inserted.data.id);
+    assert(!revoked.error,'Course revoke failed');
+    assert((await call(token)).status===401,'Course revoked bearer admitted without cache');
+    results.push({consumer:'course_search:real bearer RPC valid/invalid/revoked',passed:true,cache:'external double always misses'});
+  }finally{const cleanup=await service.from('kb_api_keys').delete().eq('id',inserted.data.id);assert(!cleanup.error,'Course fixture cleanup failed');}
+
   let response=await request('edu_search',{action:'list_filter_options',fields:['course','name','chapter_number'],filter:{course:[fixture.edu_course]}});
   assert(response.status===200,'edu facet authenticated HTTP failed');
   assert(response.data.matched_records>=1,'edu facet returned no synthetic records');

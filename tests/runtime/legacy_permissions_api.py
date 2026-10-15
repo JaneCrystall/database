@@ -28,7 +28,7 @@ else:
 from urllib.parse import urlsplit
 assert urlsplit(url).hostname in ('127.0.0.1','localhost') and urlsplit(url).scheme == 'http'
 labels=json.loads(subprocess.check_output(['docker','inspect','--format','{{json .Config.Labels}}',container]))
-assert labels['com.supabase.cli.workdir'] == workdir, 'Disposable ownership mismatch'
+assert Path(labels['com.supabase.cli.workdir']).resolve() == Path(workdir).resolve(), 'Disposable ownership mismatch'
 
 def sql(query):
     result=subprocess.run(['docker','exec','-i',container,'psql','-XAtq','-v','ON_ERROR_STOP=1','-U','postgres','-d','postgres'],input=query,text=True,capture_output=True)
@@ -71,7 +71,7 @@ for f in catalog['functions']:
 assert ok(request('/rest/v1/user_roles?select=user_id',token=user))==[]
 for token in (anon,user):
     for method in ('POST','PATCH','DELETE'):
-        code,data=request('/rest/v1/edu_meta',{} if method!='DELETE' else None,token,method)
+        code,data=request('/rest/v1/edu_meta?id=eq.'+uid,{'name':'S9 denied write'} if method!='DELETE' else None,token,method)
         assert code in (401,403) and data.get('code')=='42501', ('table write',method,code)
 
 cid=str(uuid.uuid4()); actor=identity['id']
@@ -110,7 +110,9 @@ assert ok(rpc('mark_processed_s3_ready',s3)) is False
 sql(f"update public.kb_jobs set locked_until=now()+interval '5 minutes' where id='{job}'; update public.kb_documents set deleted_at=now() where id='{doc}';")
 assert ok(rpc('mark_parse_local_ready',local)) is False
 assert ok(rpc('mark_processed_s3_ready',s3)) is False
-sql(f"update public.kb_documents set deleted_at=null where id='{doc}';")
+# The existing deletion trigger cancels jobs; restore this synthetic fixture explicitly.
+assert sql(f"select status from public.kb_jobs where id='{job}'")=='cancelled'
+sql(f"update public.kb_documents set deleted_at=null where id='{doc}'; update public.kb_jobs set status='running',locked_by='s9-finalizer',locked_until=now()+interval '5 minutes' where id='{job}';")
 assert ok(rpc('mark_parse_local_ready',local)) is True
 assert ok(rpc('mark_processed_s3_ready',{**s3,'p_document_version':2})) is False
 assert ok(rpc('mark_processed_s3_ready',s3)) is True

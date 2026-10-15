@@ -32,9 +32,35 @@ class PriorCatalogTests(unittest.TestCase):
         self.assertEqual(code, 0, report)
         code, report = self.qualify(current, baseline_only=True)
         self.assertNotEqual(code, 0)
-        self.assertEqual(len(report['differences']), 1)
-        self.assertEqual(report['differences'][0]['fields'], ['body_md5'])
-        self.assertTrue(report['differences'][0]['name'].startswith('list_kb_admin_jobs('))
+        policy = json.loads((SCHEMA / 'legacy_acl_policy.json').read_text())
+        expected_acl = {s.removeprefix('public.').split('(')[0] for s in policy['restricted_functions']} | set(policy['restricted_tables'])
+        self.assertEqual(len(report['differences']), len(expected_acl) + 1)
+        for difference in report['differences']:
+            name = difference['name'].split('(')[0]
+            if name == 'list_kb_admin_jobs':
+                self.assertEqual(difference['fields'], ['body_md5'])
+            else:
+                self.assertIn(name, expected_acl)
+                self.assertEqual(difference['fields'], ['acl'])
+                expected_acl.remove(name)
+        self.assertFalse(expected_acl)
+
+    def test_s9_acl_delta_preserves_every_unselected_grant(self):
+        prior = json.loads((SCHEMA / 'pre_resource_catalog.expected.json').read_text())
+        current = json.loads((SCHEMA / 'public_catalog.expected.json').read_text())
+        policy = json.loads((SCHEMA / 'legacy_acl_policy.json').read_text())
+        functions = {s.removeprefix('public.').split('(')[0] for s in policy['restricted_functions']}
+        self.assertEqual(len(functions), 18)
+        self.assertEqual(len(policy['restricted_tables']), 23)
+        for kind in ('relations', 'functions'):
+            for before, after in zip(prior[kind], current[kind], strict=True):
+                self.assertEqual(before['name'], after['name'])
+                expected = before['acl']
+                if kind == 'functions' and before['name'] in functions:
+                    expected = [a for a in expected if a['grantee'] not in ('PUBLIC', 'anon', 'authenticated')]
+                if kind == 'relations' and before['name'] in policy['restricted_tables']:
+                    expected = [a for a in expected if not (a['grantee'] in ('PUBLIC', 'anon', 'authenticated') and a['privilege'] in policy['table_revocations'])]
+                self.assertEqual(after['acl'], expected, before['name'])
 
     def test_current_chain_still_requires_optimized_jobs_and_resource_objects(self):
         current = json.loads((SCHEMA / 'public_catalog.expected.json').read_text())

@@ -15,7 +15,7 @@ checkPaths:
   - tests/**
   - docs/**
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: d07a7c4a1c98e63d0efd3f41b99bc40b5fe2baf9
+lastReviewedCommit: 5908ca9096f540a578f7f24ecfc7f5d3c960975b
 ---
 
 # Tiangong AI Database Contract
@@ -74,3 +74,6 @@ New resource storage/implementation is unexposed `private`; externally callable
 resource adapters are `api`. Preserve existing public objects and historical
 migration bytes. The resource contract owns per-table authority, grants and
 actual HTTP qualification; local API config never proves hosted exposure.
+
+S9 legacy ACL changes follow `docs/legacy-permissions.md`: isolate qualification,
+retain explicit consumer-role evidence and keep release authorization separate.

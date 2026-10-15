@@ -45,7 +45,7 @@ try {
   const patch=await request(`${path}/${f.resource_ids[name]}`,'PATCH',{[titleKeys[name]]:`${f.marker}deniedupdate`});
   assert(patch.status>=400,`${name} read-only principal UPDATE admitted`);
   const deletion=await request(`${path}/${f.resource_ids[name]}`,'DELETE');
-  assert(deletion.status>=200,'Invalid deletion response');
+  assert.equal(deletion.status,500,`${name} current permission-error mapping changed`); // Known release blocker: map DB 42501 to 403 in Next.
   assert.deepEqual(await row(table,f.resource_ids[name]),before,`${name} denied UPDATE/DELETE changed fixture`);
   const absent=await service.from(table).select('id').eq(titleKeys[name],`${f.marker}deniedinsert`);
   assert(!absent.error&&absent.data.length===0,`${name} INSERT left residue`);
@@ -58,6 +58,51 @@ try {
   result=await request(path,method,{title:'readonly'});assert.equal(result.status,405,'thu readonly method admitted');
  }
  results.push({consumer:'Next resources:thuHumanities',passed:true,admin_scoped_read:true,readonly_405:true});
+ // S9: actual API-key management service calls retain create/list/rotate/revoke.
+ const keyPath='/api/kb/admin/api-keys';
+ const created=await request(keyPath,'POST',{name:'S9 synthetic',client_id:f.marker,scopes:['kb:read'],collection_scope:[]});
+ assert.equal(created.status,200,'API-key create failed');
+ const first=created.data.apiKey.id;
+ let second;
+ try {
+  assert(!JSON.stringify(created.data.apiKey).includes('token_hash'),'API-key metadata leaks hash');
+  const listed=await request(keyPath);
+  assert.equal(listed.status,200,'API-key list failed');
+  assert(listed.data.data.some(x=>x.id===first),'Created API-key missing');
+  const rotated=await request(`${keyPath}/${first}/rotate`,'POST',{});
+  assert.equal(rotated.status,200,'API-key rotate failed');
+  second=rotated.data.apiKey.id;
+  assert(second!==first,'Rotation did not create replacement');
+  const revoked=await request(`${keyPath}/${second}/revoke`,'POST',{reason:'S9 synthetic cleanup'});
+  assert.equal(revoked.status,200,'API-key revoke failed');
+  assert(revoked.data.revoked,'API-key not revoked');
+  results.push({consumer:'Next API-key lifecycle',passed:true});
+ }finally{
+  const deleted=await service.from('kb_api_keys').delete().in('id',[first,second].filter(Boolean));
+  assert(!deleted.error,'API-key fixture cleanup failed');
+ }
+ const docs=[crypto.randomUUID(),crypto.randomUUID()];
+ const jobIds=[crypto.randomUUID(),crypto.randomUUID()];
+ try {
+  for(let i=0;i<2;i++) {
+   const inserted=await service.from('kb_documents').insert({id:docs[i],primary_collection_id:f.thu_collection_id,dedupe_scope:docs[i],original_filename:'s9-next.pdf',file_ext:'pdf',sha256:'a'.repeat(64),created_by:target.user.id,owner_user_id:target.user.id});
+   assert(!inserted.error,'Worker document fixture failed');
+   const seeded=await service.from('kb_jobs').insert({id:jobIds[i],document_id:docs[i],document_version:1,stage:i===0?'index':'delete',status:'running',locked_by:'s9-next',locked_until:new Date(Date.now()+300000).toISOString()});
+   assert(!seeded.error,'Worker job fixture failed');
+  }
+  const workers=await request('/api/s9-workers','POST',{indexJob:jobIds[0],deleteJob:jobIds[1],documentId:docs[0]});
+  assert.equal(workers.status,200,'Next worker adapters failed');
+  assert.equal(workers.data.failedIndex.status,'dead','Index fail callback changed');
+  assert.equal(workers.data.failedDelete,'dead','Delete fail callback changed');
+  assert.deepEqual(workers.data.records,[],'Index ledger read changed');
+  results.push({consumer:'Next actual index and delete adapters',passed:true});
+ }finally{
+  const jobsClean=await service.from('kb_jobs').delete().in('id',jobIds);assert(!jobsClean.error,'Worker jobs cleanup failed');
+  const docsClean=await service.from('kb_documents').delete().in('id',docs);assert(!docsClean.error,'Worker documents cleanup failed');
+ }
+ const jobs=await request('/api/kb/admin/jobs?page=1&pageSize=10');
+ assert.equal(jobs.status,200,'Next Jobs service RPC failed');
+ results.push({consumer:'Next Jobs',passed:true});
  if(target.outsider){
   await client.auth.signOut();
   const outsider=await client.auth.signInWithPassword(target.outsider);

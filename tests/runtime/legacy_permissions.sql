@@ -1,6 +1,7 @@
 -- S9 effective privileges and actual execution, including PUBLIC inheritance.
 begin;
 create role s9_untrusted nologin;
+grant s9_untrusted to postgres with set true;
 grant usage on schema public to s9_untrusted;
 create temp table s9_functions(signature text, invocation text);
 insert into s9_functions values ('public.authorize_kb_api_key_collection_action(text, text, text[], jsonb, text, jsonb)', 'select public.authorize_kb_api_key_collection_action(NULL::text, NULL::text, NULL::text[], NULL::jsonb, NULL::text, NULL::jsonb)');
@@ -46,7 +47,7 @@ do $$
 declare t text; r text; p text;
 begin
  foreach t in array array['edu_meta','edu_textbooks','esg_category','esg_country','esg_meta','green_deal_meta','internal_use','journals','journals_issn','kb_api_keys','kb_audit_events','kb_collections','kb_documents','kb_grants','kb_group_members','kb_groups','kb_index_records','kb_jobs','kb_query_logs','kb_schema_migrations','kb_search_partitions','reports','standards','user_roles'] loop
-  foreach r in array array['anon','authenticated'] loop
+  foreach r in array array['anon','authenticated','s9_untrusted'] loop
    foreach p in array array['INSERT','UPDATE','DELETE','TRUNCATE','TRIGGER','REFERENCES'] loop
     if has_table_privilege(r,'public.'||t,p) then
      raise exception 'S9 unexpected table privilege: % % %',r,t,p;
@@ -60,6 +61,24 @@ set local role anon;
 do $$ begin
  begin truncate public.edu_meta;
  raise exception 'S9 anonymous TRUNCATE was allowed';
+ exception when insufficient_privilege then null;
+ end;
+end $$;
+reset role;
+-- A dedicated worker role needs explicit grants; PUBLIC is never its credential.
+create role s9_worker nologin noinherit nobypassrls;
+grant s9_worker to postgres with set true;
+grant usage on schema public to s9_worker;
+grant execute on function public.claim_parse_two_stage_task(text,integer) to s9_worker;
+set local role s9_worker;
+select * from public.claim_parse_two_stage_task('s9-custom-worker',1);
+do $$ begin
+ begin perform count(*) from public.kb_jobs;
+ raise exception 'custom worker can read jobs directly';
+ exception when insufficient_privilege then null;
+ end;
+ begin perform public.has_service_role(gen_random_uuid());
+ raise exception 'custom worker inherited unrelated function';
  exception when insufficient_privilege then null;
  end;
 end $$;
