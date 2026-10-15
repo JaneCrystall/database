@@ -19,6 +19,7 @@ import tempfile
 import uuid
 
 from runtime import load_private, validate_target
+from workspace_sources import sibling_source
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKSPACE = ROOT.parent
@@ -167,8 +168,8 @@ def run(target: dict, kb_root: Path, skills_root: Path) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--target", required=True, type=Path, help="Private disposable runtime target.json")
-    parser.add_argument("--kb-root", type=Path, default=WORKSPACE / "TianGong-AI-KB")
-    parser.add_argument("--skills-root", type=Path, default=WORKSPACE / "skills")
+    parser.add_argument("--kb-root", type=Path, default=sibling_source(WORKSPACE, "knowledge-base", "TianGong-AI-KB"))
+    parser.add_argument("--skills-root", type=Path, default=sibling_source(WORKSPACE, "agent-skills", "skills"))
     arguments = parser.parse_args()
     try:
         target = load_private(arguments.target)

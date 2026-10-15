@@ -9,7 +9,7 @@ whenToUse: "When exporting schema, authoring migrations or selecting a database 
 whenToUpdate: "When helper CLI contracts, dependencies or adoption steps change."
 checkPaths: [scripts/**, supabase/config.toml, .env.*.example]
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: 951192ce32389c43c4a54f1638aea59ef7550e1a
+lastReviewedCommit: d07a7c4a1c98e63d0efd3f41b99bc40b5fe2baf9
 ---
 
 # Development
@@ -111,7 +111,11 @@ changes. Run strict config validation and an explicit-diff lint before PRs.
 ## Complete application baseline qualification
 
 Use `tests/consumers/README.md` for disposable target start, synthetic fixtures,
-actual Next/Edge/journal execution and cleanup. The production-derived contract
+actual Next/Edge/journal execution and cleanup. Sibling discovery prefers the
+workspace directories `web-app`, `edge-functions`, `knowledge-base` and
+`agent-skills`; older directory names remain fallback candidates. Journal
+`--kb-root` and `--skills-root` arguments explicitly select other checkouts.
+The production-derived contract
 is catalog-only and is checked by the ordinary local SQL gate. Never point
 consumer fixtures at production, and do not merge an unreconciled baseline into
 an automatically deployed main branch.

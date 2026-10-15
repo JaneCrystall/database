@@ -9,7 +9,7 @@ whenToUse: "When reviewing the production-derived legacy baseline or running con
 whenToUpdate: "When capture scope, privacy guarantees, parity or business-path validation changes."
 checkPaths: [supabase/migrations/**, tests/schema/**, tests/consumers/**, docs/legacy-schema-inventory.json]
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: 951192ce32389c43c4a54f1638aea59ef7550e1a
+lastReviewedCommit: d07a7c4a1c98e63d0efd3f41b99bc40b5fe2baf9
 ---
 
 # Knowledge Base legacy schema baseline
@@ -117,6 +117,11 @@ reviewed sibling source checkouts and their existing locked dependencies; the
 public database repository does not vendor their private source or credentials.
 The database-only hosted CI replays schema/SQL tests and enforces catalog parity;
 consumer qualification requires those checkouts and is recorded separately.
+Current workspace directories follow the GitHub repository names, with legacy
+sibling names accepted for existing checkouts. The keys and SHAs in
+`tests/consumers/source-revisions.json` preserve the historical source identities
+reviewed for the original qualification; directory discovery does not rewrite
+that evidence or qualify a newer consumer revision.
 
 The first real Preview failed catalog parity and the Next humanities route
 because inherited KB privileges were absent. The explicit ACL migration is the

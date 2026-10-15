@@ -21,11 +21,12 @@ from urllib.error import URLError
 from urllib.request import urlopen
 
 import runtime
+from workspace_sources import sibling_source
 
 HERE = Path(__file__).resolve().parent
 WORKSPACE = HERE.parents[2]
-NEXT = WORKSPACE / "tiangong-ai-next"
-EDGE = WORKSPACE / "tiangong-ai-edge-function"
+NEXT = sibling_source(WORKSPACE, "web-app", "tiangong-ai-next")
+EDGE = sibling_source(WORKSPACE, "edge-functions", "tiangong-ai-edge-function")
 
 
 class ConsumerFailure(Exception):
