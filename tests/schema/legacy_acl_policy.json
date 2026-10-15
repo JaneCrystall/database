@@ -1,0 +1,59 @@
+{
+  "restricted_functions": [
+    "public.authorize_kb_api_key_collection_action(text, text, text[], jsonb, text, jsonb)",
+    "public.claim_parse_two_stage_task(text, integer)",
+    "public.fail_job_v2(uuid, text, boolean, text, kb_job_stage)",
+    "public.has_service_role(uuid)",
+    "public.kb_default_collection_search_partition()",
+    "public.kb_normalize_collection_path(text)",
+    "public.kb_set_updated_at()",
+    "public.mark_parse_local_ready(uuid, text, uuid, integer, text, uuid, text, integer, jsonb)",
+    "public.mark_parse_two_stage_task_state(uuid, text, text, text, integer)",
+    "public.mark_processed_s3_ready(uuid, text, uuid, integer, text, text, uuid, text, integer)",
+    "public.register_parse_two_stage_task(uuid, text, text, text, text, text, bigint, integer, jsonb)",
+    "public.replay_parse_local_ready_from_artifact(uuid, text, uuid, integer, text, uuid, text, integer, jsonb, jsonb, text)",
+    "public.resolve_document_search_partition(uuid)",
+    "public.resolve_query_search_partitions(uuid[], boolean, boolean)",
+    "public.set_created_by()",
+    "public.set_last_updated_by()",
+    "public.set_last_updated_time()",
+    "public.verify_kb_api_key(text, text, text[], jsonb)"
+  ],
+  "restricted_tables": [
+    "edu_meta",
+    "edu_textbooks",
+    "esg_category",
+    "esg_country",
+    "esg_meta",
+    "green_deal_meta",
+    "internal_use",
+    "journals",
+    "journals_issn",
+    "kb_api_keys",
+    "kb_audit_events",
+    "kb_collections",
+    "kb_documents",
+    "kb_grants",
+    "kb_group_members",
+    "kb_groups",
+    "kb_jobs",
+    "kb_query_logs",
+    "kb_schema_migrations",
+    "kb_search_partitions",
+    "reports",
+    "standards",
+    "user_roles"
+  ],
+  "table_revocations": [
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "REFERENCES",
+    "TRIGGER",
+    "TRUNCATE"
+  ],
+  "preserved_fulltext": [
+    "esg_full_text(text)",
+    "standards_full_text(text)"
+  ]
+}
