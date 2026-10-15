@@ -155,3 +155,6 @@ still receive the original `40001` codes.
 
 
 S9 local permission qualification and role-specific recovery are defined in [legacy-permissions.md](legacy-permissions.md). No merge/deploy is authorized by local test success.
+
+
+For S9 role evidence, use the separate local LOGIN probe described in `tests/consumers/README.md`; it never accepts preview. Proposed production metadata reads are itemized in [the pending read packet](s9-role-consumer-evidence.md), and are not authorized or executed by local qualification.

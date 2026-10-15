@@ -170,7 +170,15 @@ rules:
         kind: permission-scope
       - path: tests/consumers/unstructure_permissions.py
         kind: worker-consumer
+      - path: tests/consumers/unstructure_role_boundary.py
+        kind: worker-login-qualification
+      - path: tests/consumers/worker_role_contract.json
+        kind: worker-role-contract
+      - path: tests/consumers/test_worker_role_boundary.py
+        kind: worker-target-isolation
     requiredDocs:
       - path: docs/legacy-permissions.md
+        mode: review_or_update
+      - path: docs/s9-role-consumer-evidence.md
         mode: review_or_update
     reason: Legacy grants, worker identity, compatibility and release gates must remain explicit.

@@ -159,3 +159,6 @@ history; a current-head expectation is not evidence of production application.
 
 
 S9 intentionally narrows 18 function and 23 table ACLs; only those catalog fields change. All legacy objects and policy behavior remain, except ordinary writes now fail explicitly. See [the exact matrix and release boundary](legacy-permissions.md).
+
+
+S9 follow-up consumer qualification also distinguishes direct LOGIN RPC access from queue and snapshot dependencies. [Role evidence](s9-role-consumer-evidence.md) records actual adapter tests, existing local schema/RLS gaps, source versions and owner-confirmed indirect skill/Edge callers. It does not modify the captured schema or claim a deployed identity.

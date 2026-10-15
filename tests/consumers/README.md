@@ -113,3 +113,12 @@ Use `knowledge-base/.venv/bin/python tests/consumers/unstructure_permissions.py
 for seven unchanged Unstructure psycopg adapters under service_role. Its source
 SHA-256 is reported. Only the local target mode is allowed. S9 adapter/HTTP
 fixtures are removed by stopping the owned stack, not generic fixture cleanup.
+
+
+For the stronger S9 identity boundary probe, run from this repository:
+
+```sh
+../knowledge-base/.venv/bin/python tests/consumers/unstructure_role_boundary.py --target /private/tmp/consumer-session-unique/target.json
+```
+
+It requires an owned local session, verifies container labels and its database port, then creates a fresh restricted LOGIN and runs actual adapters with test-only grants. The JSON distinguishes passing RPCs from queue/snapshot schema and RLS gaps, and always sets whole_worker_qualified/production_role_verified to false. It does not accept production or preview. The test login/grants are removed even on failure; stop the owned stack to remove synthetic rows. Do not use generic fixture cleanup as a substitute for stop. Source hashes, the phase grant contract and safe diagnostics exclude credentials. `python3 -m unittest discover -s tests/consumers -p 'test_*.py'` includes its offline targeting checks. See [the source inventory and pending online read packet](../../docs/s9-role-consumer-evidence.md).

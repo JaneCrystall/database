@@ -1,0 +1,32 @@
+{
+  "scope": "Synthetic local login only; not a deployment role or grant migration",
+  "s9_rpc": [
+    "public.claim_parse_two_stage_task(text, integer)",
+    "public.fail_job_v2(uuid, text, boolean, text, kb_job_stage)",
+    "public.mark_parse_local_ready(uuid, text, uuid, integer, text, uuid, text, integer, jsonb)",
+    "public.mark_parse_two_stage_task_state(uuid, text, text, text, integer)",
+    "public.mark_processed_s3_ready(uuid, text, uuid, integer, text, text, uuid, text, integer)",
+    "public.register_parse_two_stage_task(uuid, text, text, text, text, text, bigint, integer, jsonb)",
+    "public.replay_parse_local_ready_from_artifact(uuid, text, uuid, integer, text, uuid, text, integer, jsonb, jsonb, text)"
+  ],
+  "support_rpc": [
+    "public.claim_job_from_pgmq_message(uuid, text, bigint, text, integer)",
+    "public.heartbeat_job(uuid, text, integer, integer)",
+    "public.complete_parse_local_ready_and_enqueue_s3_check(uuid, text, uuid, integer, text, uuid, text, integer, jsonb, jsonb)",
+    "public.complete_s3_ready_check(uuid, text, uuid, integer, text, text, uuid, text, integer)",
+    "public.archive_job_message(uuid, text)",
+    "public.archive_job_message_by_id(text, bigint)"
+  ],
+  "direct_read_tables": [
+    "kb_jobs",
+    "kb_documents",
+    "kb_collections"
+  ],
+  "queue_call": "pgmq.read(queue_name, visibility_timeout, 1); target overload must be inspected",
+  "unresolved": [
+    "deployed login/current role and memberships",
+    "queue schema/function/table effective grants",
+    "snapshot/reconciler SELECT plus RLS visibility",
+    "deployed revisions and key role mapping"
+  ]
+}

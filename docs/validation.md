@@ -152,3 +152,6 @@ stored rows and no insert residue. Source hashes in its receipt bind the tested
 Route Handlers and store; durable PR evidence also records both repository SHAs.
 This fixes the previous consumer 500 blocker locally but does not qualify
 hosted defaults, actual worker login identities or authorize release.
+
+
+The local-only `tests/consumers/unstructure_role_boundary.py` adds real LOGIN qualification and explicit queue/snapshot failure boundaries; run it through the owned consumer runtime. `test_worker_role_boundary.py` rejects mismatched ports, ownership and nonlocal targets without DB access. See [S9 role evidence](s9-role-consumer-evidence.md). This is a separate consumer test, not automatically part of database-only CI.

@@ -71,7 +71,7 @@ remain with postgres. This task removes untrusted access, not all backend trust.
 | esg_country | ESG country dictionary; Next options | SELECT; authenticated read policy |
 | esg_meta | ESG reports; Next and Edge full-text | SELECT; authenticated read, FORCE RLS remains true |
 | green_deal_meta | Green Deal catalog; Next | SELECT; no policy, preserve empty reads |
-| internal_use | Internal library metadata; Next | SELECT; existing authenticated policy preserved; sensitivity classification remains a release review item |
+| internal_use | Internal library metadata; Next | SELECT; existing authenticated policy preserved; owner confirmed all authenticated users may read (2026-10-15); target enforcement still needs verification |
 | journals | Paper metadata; journal pipeline, SCI Edge | SELECT; authenticated policy and journals_reader SELECT preserved |
 | journals_issn | Journal reference metadata | SELECT; authenticated policy |
 | reports | Report metadata; Next | SELECT; authenticated policy |
@@ -204,7 +204,9 @@ This candidate must remain unmerged. Before any separately authorized release:
 2. Read target schema/table/function/column/default ACLs and role memberships
    with authorized read-only access. Identify actual Next/Edge service identity,
    Unstructure direct-DB login and inherited roles, journals_reader and out_user.
-   Check external clients and internal_use data classification with owners.
+   Verify target enforcement of the owner-confirmed internal_use reader scope
+   (all authenticated users). Owner reports no independent deployments/direct
+   DB callers; this does not replace the deployed identity inventory.
 3. Stage the same versions on a verified preview, repeat SQL/HTTP/consumer gates,
    and ensure worker identities have only required explicit grants. No missing
    role should be invented or broad service_role membership granted by default.
@@ -220,3 +222,8 @@ and proves unrelated function/table access stays denied; rollback removes the
 test role/grant. A production compensation cannot be preapproved without its
 actual consumer role. Table/data rollback is unnecessary for this ACL-only
 migration; do not edit an applied migration or claim a backup restore was tested.
+
+
+## Follow-up identity qualification
+
+See [role/consumer evidence and pending target read packet](s9-role-consumer-evidence.md). A true synthetic LOGIN now proves seven S9 and six support adapters with explicit grants, while direct pgmq/snapshot paths expose additional schema/RLS dependencies. In the local chain even service_role lacks pgmq USAGE; do not describe RPC success as full worker compatibility. No deployed role has been read or changed.

@@ -77,3 +77,6 @@ actual HTTP qualification; local API config never proves hosted exposure.
 
 S9 legacy ACL changes follow `docs/legacy-permissions.md`: isolate qualification,
 retain explicit consumer-role evidence and keep release authorization separate.
+
+S9 role/consumer evidence and proposed read-only target scopes are maintained in
+`docs/s9-role-consumer-evidence.md`; synthetic roles never establish deployed identities.
