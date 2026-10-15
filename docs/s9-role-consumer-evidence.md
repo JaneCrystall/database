@@ -12,15 +12,16 @@ checkPaths:
   - tests/consumers/worker_role_contract.json
   - tests/consumers/test_worker_role_boundary.py
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: 1d98ac400ff07d0829f59f177290e0a1ff8799d2
+lastReviewedCommit: ebb35ea344960c8ab675b6aaddfecab52919412c
 ---
 
 # S9 role and consumer evidence
 
 This extends [S9's ACL contract](legacy-permissions.md), not its migration.
 No application SQL, RLS policy, deployed role or worker is changed. A local
-LOGIN probe is **not** evidence of the deployed login. S9 remains incomplete
-until the actual deployment-to-role mapping and preview qualification exist.
+synthetic LOGIN probe is **not** evidence of the deployed login. The authorized
+online follow-up below adds current-configuration identity evidence; S9 remains
+incomplete until the remaining deployment mapping and preview qualification exist.
 
 ## Evidence levels and owner statement
 
@@ -37,9 +38,11 @@ until the actual deployment-to-role mapping and preview qualification exist.
 - **Owner policy decision (2026-10-15):** `internal_use` may be read by all
   authenticated users. Preserve that reader boundary; it does not authorize
   anonymous reads or ordinary-user writes. This records intent only, with no
-  permission or RLS change. Target enforcement still needs verification.
-- **Target:** none read this round. No .env, credentials, NAS, production rows,
-  live APIs, or 142/148 services inspected. Actual role mapping is still unknown.
+  permission or RLS change. Catalog enforcement was subsequently checked in the
+  authorized follow-up below; no business-row query was performed.
+- **Initial local round:** no online information was read. The separate,
+  subsequently authorized online round is dated and scoped below; it does not
+  retroactively upgrade the synthetic identity evidence.
 
 ## Reviewed source versions
 
@@ -68,7 +71,7 @@ are source versions, not a claim about installed CLI/skill or hosted versions.
 | Unstructure parse / submitter / finalizer / s3-ready | Direct psycopg login selected from DSN/config; no code-level `SET ROLE` | Queue + control-plane RPCs + direct snapshot reads. New local LOGIN probe separates these three access layers. |
 | Unstructure reconciler / snapshot commands | Same config-selected direct login | SELECT jobs/documents/collections through existing RLS; reconciler additionally replay + archive-by-ID. RPC-only grants do not authorize these reads. No PDF/NAS scanning performed. |
 | Journal collection and legacy processing scripts | Collector and scripts' configured direct DB login, not necessarily `journals_reader` | Existing journal qualification proves selected collector behavior under fixture credentials. Scripts under Unstructure `src/journals` use `POSTGRES_USER`; no source-only claim about deployed login, schedules or role membership. |
-| `journals_reader`, `out_user` | Named roles from captured SQL, not a proven consumer mapping | Reader probe and out_user isolated RLS denial remain valid. Real LOGIN/inheritance/owner mapping still required; do not assume these names identify an active process. |
+| `journals_reader`, `out_user` | Named roles from captured SQL, not a proven consumer mapping | Reader probe and out_user isolated RLS denial remain valid. Online role attributes and owner retirement confirmation are recorded below; do not equate retained grants with active use. |
 
 Source anchors:
 [Unstructure config](https://github.com/tiangong-ai/unstructure/blob/c4d0aa3a28836d0a5425ec1c538ff295d3aa6c67/src/kb_parse_worker/config.py),
@@ -134,10 +137,11 @@ The seven S9 names include legacy `mark_parse_local_ready` and
 uses archive-by-ID. Keep adapter coverage separate from active orchestration.
 The snapshot query is used by normal worker processing, not only recovery.
 
-## Pending target read packet — NOT EXECUTED OR AUTHORIZED
+## Original target read packet — authorization and results below
 
-The requested outputs below are metadata/identity facts only. Agree target,
-operator and time window before any execution; no connection from this round.
+The original request below was metadata/identity only. The owner subsequently
+authorized its execution on 2026-10-15. Remaining unknowns are not implicitly
+authorized writes or permission changes.
 
 | ID / target | Exact scope of proposed read | Output / purpose |
 | --- | --- | --- |
@@ -159,7 +163,7 @@ If privilege to inspect metadata is missing, report the gap; do not grant extra
 roles. Receipts stay private until reviewed and sanitized. Later preview tests
 must reproduce the actual role mapping without copying production credentials.
 
-## Acceptance disposition
+## Initial local acceptance disposition
 
 Source consumer inventory and owner questionnaire are recorded. Dedicated LOGIN
 RPC evidence and negative dependency boundaries are now stronger. AC2 still
@@ -169,3 +173,157 @@ reader scope; the owner classification decision is closed. AC5's known caller
 list includes skill/Edge users, while deployed identity confirmation remains.
 AC6/8 still require exact preview/release versions and authorized integration.
 No merge, root pin update, migration or 142/148 action follows from this report.
+
+## Authorized online follow-up — 2026-10-15
+
+The owner authorized the read packet, then confirmed all KB workers are stopped,
+were previously on 148, and will later move to 142. The owner additionally
+authorized a short PM2 start/check/stop. This was implemented as a **separate
+configuration/identity probe**, not by starting the consuming worker loops.
+The owner subsequently confirmed `journals_reader` and `out_user` are retired,
+with cleanup deferred to separate work. Their existing roles, memberships and
+grants are retained; this is owner attestation, not a credential-revocation audit.
+No password/token/configuration value was displayed, exported or retained.
+The probe let the existing application loader use its existing configuration
+internally for normal authentication. No credential file or process environment
+was dumped, no secret-management API was queried, and no key was decoded.
+
+Only identity/catalog SELECTs and session-local read-only/timeout settings were
+used. No queue/RPC operation, business row, PDF/NAS access, external search,
+permission change, merge, deployment or Next restart occurred. Remote mutations
+were limited to the explicitly authorized temporary probe and its cleanup.
+
+### Target and effective permission findings
+
+Knowledge Base project binding was verified through the connector before SQL.
+PostgreSQL is **17.6**, pgmq **1.5.1**. SQL used read-only transactions with bounded
+timeouts. Both original ledgers were read without exporting stored statements:
+45 Supabase versions through `20261014162521`; 34 legacy filenames. The explicit
+ACL capture `20261012035302` is recorded; S9 `20261015081907` is **not applied**.
+Live ACLs independently confirm the expected pre-S9 broad grants.
+
+| Observed item | Finding / consequence |
+| --- | --- |
+| Old public tables | 24 exist with RLS enabled. anon/authenticated retain all six S9-targeted mutation/object privileges on 23 tables; kb_index_records remains excluded from these ordinary grants. In particular, 23 effective TRUNCATE grants remain. No destructive call was attempted. |
+| Internal public functions | All 18 S9 targets remain executable by anon/authenticated and PUBLIC-inheriting roles. Six support functions are separately restricted. service_role and postgres have EXECUTE on all 24 inspected functions. These are privilege predicates, not live RPC invocations. |
+| pgmq direct read | `pgmq.read(text,integer,integer,jsonb)` is INVOKER with default PUBLIC EXECUTE. service_role has no schema USAGE or SELECT/UPDATE on the four inspected parse/S3 queue/archive tables; postgres does. Queue RLS is enabled with no policies. PUBLIC EXECUTE alone does not make the queue callable. |
+| Snapshot tables | jobs/documents/collections have RLS with no ordinary reader policies. postgres owns them and has BYPASSRLS; service_role has SELECT and BYPASSRLS. Neither fact makes a new custom role viable. |
+| internal_use | SELECT policy is `TO authenticated USING (true)`; no ordinary write policy or anon read policy was found. Reader intent matches the owner's decision. The old table-level mutation/TRUNCATE grants remain for S9 to remove. This is catalog proof, not a user-session data query. |
+| journals_reader | LOGIN, INHERIT, no SUPERUSER/BYPASSRLS; journals SELECT and its explicit read policy exist. No general worker/queue entitlement. Owner confirms retired; separate cleanup, no grants changed here. |
+| out_user | NOLOGIN, no BYPASSRLS; one named login inherits this role. ESG SELECT and esg_meta DML grants exist, but no matching RLS policy permits that role. Owner confirms retired; membership observation is not proof of active use or revocation. |
+| Additional legacy identities | A separate admin login has BYPASSRLS and inherits authenticated; two named logins inherit standard_user. Personal role names stay in the private receipt. Do not revoke these or assume the owner's no-external-consumers statement means the roles do not exist. Their intended use still needs an owner decision. |
+| Column/default/enum privileges | No explicit public column ACLs were found. Broad public defaults for postgres/supabase_admin still grant ordinary roles future table/sequence/function privileges. Enum USAGE and effective schema/table/function matrices were captured. Future-object default hardening remains separate scope. |
+
+The isolated captured baseline deliberately creates journals_reader as NOLOGIN
+(`tests/test_legacy_schema.py` asserts this); live LOGIN is an observed difference,
+not proof the isolated role reproduces every deployed property. Preserve both
+evidence levels and use live attributes for the retirement follow-up.
+
+A one-time connection aggregate contained two postgres/Supavisor sessions and
+no identified KB application class. No query text, client SQL, raw application
+strings or business data was read. This cannot identify a stopped worker or
+prove absence of other consumers. Role membership also does **not** inherit the
+special LOGIN/SUPERUSER/BYPASSRLS attributes; inspect the effective role's own
+flags rather than inferring them from service_role membership.
+
+### Deployment and actual current-configuration identity
+
+| Host / consumer | Observed deployment facts | Remaining limit |
+| --- | --- | --- |
+| 142 Next | `/home/dell/projects/tiangong-ai-next`; user systemd `tiangong-next.service` active/running, PID 4162748 on 7300. The dell PM2 daemon has no apps. | It is currently systemd-managed, despite the expected PM2 arrangement. No manager conversion was performed. |
+| 148 Next | `/home/david/apps/tiangong-ai-next`; PM2 `tiangong-kb-next` online, PM2 app PID 3437, Next PID 3628 on 7300. No KB workers in that PM2 list. | Stale PID files are historical remnants, not running-worker evidence. Other users/containers are not exhaustively certified absent. |
+| Both Next checkouts | Same BUILD_ID `nhfBW00kDQ7S1bodJHUWO`; service/server client and index/delete adapter hashes match reviewed local files. Both resource-store hashes match pre-#89 `0420f0a`, not #89 `1c28a03`. | Selected source/BUILD_ID equality does not identify the complete release SHA or prove which credential class the running processes use. Later release must include the paired 403 fix. |
+| 148 Unstructure checkout | `/home/david/projects/TianGong-AI-Unstructure`, HEAD `07f65ef100300d7cb44996476af8a033a9ae8bbc`; existing .venv Python available. config/control-plane/queue/snapshot bytes match reviewed local source despite different repository HEAD. | No claim of complete repository/build parity or historical PM2 environment parity. |
+
+Both deployed package.json hashes are
+`f20df19b20bbc957a23a6d0493f26890af906dc9571db23e8223baf47f47fcd3`,
+matching historical `7060634`, and differ from reviewed Next #89. Selected
+application files matching newer source does not qualify this dependency/build
+combination. A later release must rebuild from a clean, exact reviewed commit
+and lockfile; do not reuse the current deployment directory as a release proof.
+
+At **18:44:34 Asia/Shanghai** the PM2 probe using that Unstructure configuration
+established `session_user=current_user=postgres`, LOGIN/INHERIT/BYPASSRLS true,
+**SUPERUSER false**. It used the discrete-field configuration branch and the
+pooler. This role has public/pgmq/api/private USAGE, all thirteen worker/support
+RPC EXECUTEs plus pgmq.read EXECUTE, and SELECT/UPDATE on the inspected queue
+and snapshot tables. Together with ownership/BYPASSRLS, the catalog explains
+why the synthetic custom-role and service_role direct-queue gaps do not apply
+to this current configured postgres identity.
+
+The initial two probes exited before catalog reads because startup options did
+not persist through the connection path. The successful probe enforced and
+verified **transaction_read_only=on, statement_timeout=5s, lock_timeout=1s**
+inside its transaction; observed startup defaults were off/2min. It rolled back
+and closed. This changes only the diagnostic transaction, not server defaults.
+All attempts had no autorestart and a 30-second outer timeout. The final probe
+was explicitly stopped/deleted; temporary script/log files were removed.
+The 148 Next PID and unrelated existing PM2 app were unchanged; 142 was
+observed running and received no probe or service operation.
+
+This is observed identity for **a new connection using today's checkout/config
+loading path**. It does not prove historical PM2 overrides, the future 142
+identity, full worker initialization/processing, or behavior after S9. Predicting
+that S9 preserves this postgres role's grants is narrower than certifying a
+production worker restart. Do not replace this with the false claim that
+postgres is a superuser on hosted Supabase.
+
+### Edge consumers and evidence limits
+
+The same project reports 18 active Edge Functions. Relevant query versions:
+edu 144, ESG 155, SCI 141, course 12, standard 97, patent/report 129,
+textbook 51, internal 65, Green Deal 19, SCI-fast 14. Other enabled names include
+internet_search, question_generation, kg_generate, info_extract,
+synology-file-manager and two auth-bench-68 functions. No handler was invoked,
+secret read, function body downloaded or deployment modified.
+
+Version and bundle digest metadata establishes enabled deployment inventory,
+not an exact source-commit or runtime key-role binding. Existing source/harness
+proof covers the stated subset only; unreviewed enabled endpoints and the two
+benchmark endpoints require owner/deployment mapping before a complete consumer
+claim. `verify_jwt=false` alone does not establish missing authorization because
+some handlers implement application authentication.
+
+### Remaining blockers and proposed disposition
+
+1. **Narrow the direct-worker blocker:** current 148 configuration uses postgres
+   with the required ACL/RLS capabilities. No grant repair is indicated for that
+   identity by this read-only evidence. Keep the runtime/preview gate open; test
+   the same role properties with synthetic fixtures against S9 before release.
+   Future migration to a dedicated role on 142 requires a separate design for
+   controlled queue/snapshot access and RLS. Do not broaden grants in S9.
+2. **Keep the paired application gate:** both deployed resource-store files are
+   pre-#89. Any later S9 rollout must pair the reviewed Next #89 fix, exact source
+   versions and preview tests. Do not deploy database ACL changes alone.
+3. **Close the answered policy items, defer legacy cleanup:** internal_use's
+   intended and catalog reader boundary are established; the owner confirms no
+   independent deployments/direct callers and stopped KB workers. The owner also
+   confirms journals_reader/out_user are retired, with later separate cleanup.
+   Additional unnamed legacy identities are not automatically certified retired
+   by that named-role confirmation. Do not delete roles or broaden S9 here.
+4. **Finish deployed consumer mapping:** Next/Edge runtime credential class,
+   exact deployed source mapping and enabled endpoint coverage remain partial.
+   Use nonsecret operator/deployment evidence and controlled preview checks;
+   no passwords/tokens are needed in an audit receipt.
+5. **Separate operations decisions:** converting 142 Next from systemd to PM2,
+   migrating/re-enabling workers, least-privilege role design, default-ACL
+   hardening and benchmark-endpoint cleanup are not implemented by this audit.
+   Coordinate the intended runtime/role before the 142 worker migration. Repeat
+   identity verification after configuration changes: adding a higher-priority
+   DSN variable can change the login selected over today's discrete fields.
+
+AC2 is stronger but not fully closed: configuration identity and effective
+capabilities are observed, full worker and post-S9 behavior remain unqualified.
+The named legacy-role intent and internal_use classification questions in AC4
+are closed by owner confirmation plus catalog evidence; credential retirement
+enforcement is separate follow-up. AC5 remains partial for full deployed mappings; AC6/8
+for exact preview/release and authorized integration. PR #18 remains draft;
+Next #89, migration bytes, M1-03 and root gitlinks are unchanged.
+
+Private receipts are retained under the operator's `s9-online-20261015` artifact
+directory, not committed as remote metadata dumps. SHA-256 anchors:
+
+- Role/ACL/ledger/Edge metadata: `707985f7eeff827fc860f7c5b5f7bb2b277feab9c11e54d0f0fb06573c3b72d6`.
+- Effective privilege matrix: `3768fa1a757b1d58c19643942a8f93b7a5820419f0a43c8c5b9bad19184303c9`.
+- Successful identity receipt: `31e229bec09af2f3b4eb9251402ecf2f926a7d3f3ca36dbf294ebe2cb2c9ef88`.
+- Exact diagnostic script: `e4941d7ad9d38e3b1b3ade1d19977bfc883ac8c992aaa66b4b18e2c36a1ce789`.

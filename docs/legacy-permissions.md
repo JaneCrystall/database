@@ -71,7 +71,7 @@ remain with postgres. This task removes untrusted access, not all backend trust.
 | esg_country | ESG country dictionary; Next options | SELECT; authenticated read policy |
 | esg_meta | ESG reports; Next and Edge full-text | SELECT; authenticated read, FORCE RLS remains true |
 | green_deal_meta | Green Deal catalog; Next | SELECT; no policy, preserve empty reads |
-| internal_use | Internal library metadata; Next | SELECT; existing authenticated policy preserved; owner confirmed all authenticated users may read (2026-10-15); target enforcement still needs verification |
+| internal_use | Internal library metadata; Next | SELECT; existing authenticated policy preserved; owner confirmed all authenticated users may read and online catalog confirmed TO authenticated USING (true) (2026-10-15); no user data queried |
 | journals | Paper metadata; journal pipeline, SCI Edge | SELECT; authenticated policy and journals_reader SELECT preserved |
 | journals_issn | Journal reference metadata | SELECT; authenticated policy |
 | reports | Report metadata; Next | SELECT; authenticated policy |
@@ -226,4 +226,4 @@ migration; do not edit an applied migration or claim a backup restore was tested
 
 ## Follow-up identity qualification
 
-See [role/consumer evidence and pending target read packet](s9-role-consumer-evidence.md). A true synthetic LOGIN now proves seven S9 and six support adapters with explicit grants, while direct pgmq/snapshot paths expose additional schema/RLS dependencies. In the local chain even service_role lacks pgmq USAGE; do not describe RPC success as full worker compatibility. No deployed role has been read or changed.
+See [role/consumer evidence and authorized online follow-up](s9-role-consumer-evidence.md). A true synthetic LOGIN proves seven S9 and six support adapters with explicit grants, while direct pgmq/snapshot paths expose additional schema/RLS dependencies. The online read confirms service_role lacks pgmq USAGE too, but a temporary PM2 identity probe using 148's current worker configuration connects as postgres (BYPASSRLS, not SUPERUSER) with the required object privileges. This narrows the current-identity compatibility concern; it does not qualify full processing, historical PM2 overrides, a new 142 role or post-S9 behavior. Both Next deployments still contain pre-#89 resource-store code. No permissions, application code or migrations were changed; the probe was stopped and removed.
