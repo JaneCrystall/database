@@ -9,7 +9,7 @@ whenToUse: "Before submitting or integrating database changes."
 whenToUpdate: "When test commands, qualification scope or CI changes."
 checkPaths: [scripts/**, tests/**, .github/workflows/**, .docpact/**]
 lastReviewedAt: 2026-10-15
-lastReviewedCommit: 951192ce32389c43c4a54f1638aea59ef7550e1a
+lastReviewedCommit: d07a7c4a1c98e63d0efd3f41b99bc40b5fe2baf9
 ---
 
 # Validation
@@ -71,8 +71,11 @@ do not authorize repairing unapplied history entries.
 The legacy baseline requires exact parity for 24 public tables, 72 functions
 and all 11 enum definitions, plus the real consumer matrix in
 `docs/legacy-schema-baseline.md`. Run `unittest discover -s tests/consumers -p
-'test_*.py'` for lifecycle safety checks. Empty local and verified preview
-targets must independently pass catalog and consumer qualification; no production
+'test_*.py'` for lifecycle safety and sibling-source discovery checks. The offline
+source checks cover canonical precedence, legacy fallback, missing directories and
+explicit journal path overrides without opening a database connection.
+Empty local and verified preview targets must independently pass catalog and
+consumer qualification; no production
 business-data fixture or database mocking is permitted.
 
 `tests/schema/legacy_behaviors.sql` supplements catalog equality with real

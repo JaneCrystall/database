@@ -58,7 +58,13 @@ python3 tests/consumers/run_web_edge.py --target /private/tmp/consumer-session-u
 
 Use a new report path for each run. Always invoke fixture cleanup on failures
 before stopping the session. The journal runner uses the KB/skills code and
-its frozen Python dependencies. The web/Edge runner requires the owning Next
+its frozen Python dependencies. Sibling discovery prefers `web-app`,
+`edge-functions`, `knowledge-base` and `agent-skills`, then accepts the older
+`tiangong-ai-next`, `tiangong-ai-edge-function`, `TianGong-AI-KB` and `skills`
+directories when the corresponding current directory is absent. Explicit
+`--kb-root` and `--skills-root` journal arguments take precedence. The recorded
+keys and SHAs in `source-revisions.json` remain historical source identities;
+they are not rewritten when workspace directories move. The web/Edge runner requires the owning Next
 checkout's installed dependencies, Node and Deno. Its receipt identifies exact
 Route Handler/source hashes, real local HTTP/Auth/PostgREST qualification, and
 external provider doubles. Its Edge tests execute the unchanged handler source
